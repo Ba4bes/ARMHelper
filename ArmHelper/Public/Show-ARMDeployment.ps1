@@ -1,11 +1,13 @@
 <#
 .SYNOPSIS
-Tests an azure deployment for error and outputs the recources that will be deployed
+Gives output that shows all resources that would be deployed by an ARMtemplate
 
 .DESCRIPTION
-This function will first test an Arm deployment with Test-AzureRmResourceGroupDeployment.
-If a generic error pops up, it will search for details in Azure.
-If this test succeeds, an output will be generated that will show what resources will be deployed
+When you enter a ARM template and a parameter file, this function will show what would be deployed
+To do this, it used the debug output of Test-AzureRMResourceGroupDeployment.
+A list of all the resources is provided with the most important properties.
+Some resources have seperated functions to structure the output.
+If no function is available, a generic output will be given.
 
 .PARAMETER ResourceGroup
 The resourcegroup where the resources would be deployed to. If it doesn't exist, it will be created
@@ -16,25 +18,30 @@ The path to the deploymentfile
 .PARAMETER ParametersPath
 The path to the parameterfile
 
+.EXAMPLE
+Show-ARMDeployment -ResourceGroupName Armtest -TemplateFile .\azuredeploy.json -TemplateParameterFile .\azuredeploy.parameters.json
+
+
 .NOTES
-This script should be ran within a CI/CD pipeline.
-If you want to run it manually, use TestarmPSlocal.ps1
-Created by Barbara Forbes, 18-12-2018
+Script can be used in a CICD pipeline
+Author: Barbara Forbes
+Module: ARMHelper
+https://4bes.nl
+@Ba4bes
 Source for more output: #Source https://blog.mexia.com.au/testing-arm-templates-with-pester
 #>
 function Show-ARMDeployment {
     Param(
-        [string] [Parameter(Mandatory = $true)] $ResourceGroupName,
-        [string] [Parameter(Mandatory = $true)] $TemplateFile,
-        [string] [Parameter(Mandatory = $true)] $TemplateParameterFile
+        [Parameter(Position = 1, Mandatory = $true)]
+        [ValidateNotNullorEmpty()]
+        [string] $ResourceGroupName,
+        [Parameter(Position = 2, Mandatory = $true)]
+        [ValidateNotNullorEmpty()]
+        [string] $TemplateFile,
+        [Parameter(Position = 3, Mandatory = $true)]
+        [string] $TemplateParameterFile
 
     )
-
-    #give the parameters back to caller
-    # Write-Output " Parameters set:"
-    # Write-Output $ResourceGroup
-    # Write-Output $TemplatePath
-    # Write-Output $ParametersPath
 
     #make sure the debugpreference is right, as otherwise the simpletest will give confusing results
     $DebugPreference = "SilentlyContinue"
@@ -101,7 +108,7 @@ function Show-ARMDeployment {
 
         Write-Output "Resource: $ResourceTypeShort `n"
 
-        $ResourceReadable
+        $ResourceReadable | Format-List
 
     }
 }

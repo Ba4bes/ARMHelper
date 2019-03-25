@@ -1,4 +1,4 @@
-Function Test-ARMexistingResources {
+Function Test-ARMExistingResource {
     Param(
         [string] [Parameter(Mandatory = $true)] $ResourceGroupName,
         [string] [Parameter(Mandatory = $true)] $TemplateFile,
@@ -21,7 +21,7 @@ Function Test-ARMexistingResources {
     #set debugpreference to continue so the Test-AzureRmResourceGroupDeployment runs with more output
     $DebugPreference = "Continue"
 
-    $Output = Test-AzureRmResourceGroupDeployment @parameters 5>&1
+    $Output = Test-AzureRmResourceGroupDeployment @parameters 5>&1 -ErrorAction Stop
 
     #Set DebugPreference back to normal
     $DebugPreference = "SilentlyContinue"

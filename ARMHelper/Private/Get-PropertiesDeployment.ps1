@@ -1,4 +1,4 @@
-function Get-PropertiesDeployments {
+function Get-PropertiesDeployment {
     param (
         # Parameter help description
         [Parameter(Position = 1)]

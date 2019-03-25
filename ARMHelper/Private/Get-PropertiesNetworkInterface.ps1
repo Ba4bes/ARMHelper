@@ -1,4 +1,4 @@
-Function Get-PropertiesNetworkInterfaces {
+Function Get-PropertiesNetworkInterface {
     param (
         # Parameter help description
         [Parameter(Position = 1)]
@@ -28,6 +28,7 @@ Function Get-PropertiesNetworkInterfaces {
                 $key = "Public IP id $($Config.name)"
                 $value = $config.properties.publicIpAddress.id
                 $PropertiesReadable.add($key, $value)
+
             }
 
         }

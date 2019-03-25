@@ -1,4 +1,4 @@
-Function Get-PropertiesVirtualMachines {
+Function Get-PropertiesVirtualMachine {
     param (
         # Parameter help description
         [Parameter(Position = 1)]
