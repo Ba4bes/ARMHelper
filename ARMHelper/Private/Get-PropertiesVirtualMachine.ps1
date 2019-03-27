@@ -59,25 +59,18 @@ Function Get-PropertiesVirtualMachine {
             $PropertiesReadable.add($key, $value)
             $propadded = $true
         }
-            # foreach ($config in  $resource.properties.ipConfigurations) {
-            #     $key = "SubnetID  $($config.name)"
-            #     $value = $config.properties.subnet.id
-            #     $PropertiesReadable.add($key, $value)
+        if ($propname -eq "diagnosticsProfile"){
 
-            #     $key = "Private IP $($config.name)"
-            #     $value = $config.properties.privateIPAddress
-            #     $PropertiesReadable.add($key, $value)
+            $key = "BootDiagnostics Enabled"
+            $value = $resource.properties.diagnosticsProfile.bootDiagnostics.enabled
+            $PropertiesReadable.add($key, $value)
 
-            #     $key = "Private IP allocation $($Config.name)"
-            #     $value = $config.properties.privateIPAllocationMethod
-            #     $PropertiesReadable.add($key, $value)
-
-            #     $key = "Public IP id $($Config.name)"
-            #     $value = $config.properties.publicIpAddress.id
-            #     $PropertiesReadable.add($key, $value)
-            #}
-
-            if ($propadded -eq $false) {
+            $key = "BootDiagnostics uri"
+            $value = $resource.properties.diagnosticsProfile.bootDiagnostics.storageUri
+            $PropertiesReadable.add($key, $value)
+            $propadded = $true
+        }
+             if ($propadded -eq $false) {
 
             $PropertiesReadable.add($key, $value)
                 }

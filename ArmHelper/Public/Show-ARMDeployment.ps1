@@ -93,16 +93,16 @@ function Show-ARMDeployment {
         #$ResourceReadable = New-Object -TypeName psobject @hash
         $PropertiesReadable = @{}
         switch ($Resource.type) {
-            "Microsoft.Resources/deployments" {  $PropertiesReadable = Get-PropertiesDeployments $Resource  }
-            "Microsoft.Network/networkSecurityGroups" { $PropertiesReadable = Get-PropertiesnetworkSecurityGroups $Resource }
-            "Microsoft.Network/virtualNetworks" { $PropertiesReadable = Get-PropertiesVirtualNetworks $Resource }
-            "Microsoft.Network/networkInterfaces" { $PropertiesReadable = Get-PropertiesNetworkInterfaces $Resource }
-            "Microsoft.Compute/virtualMachines" { $PropertiesReadable = Get-PropertiesVirtualMachines $Resource }
+            "Microsoft.Resources/deployments" {  $PropertiesReadable = Get-PropertiesDeployment $Resource  }
+            "Microsoft.Network/networkSecurityGroups" { $PropertiesReadable = Get-PropertiesnetworkSecurityGroup $Resource }
+            "Microsoft.Network/virtualNetworks" { $PropertiesReadable = Get-PropertiesVirtualNetwork $Resource }
+            "Microsoft.Network/networkInterfaces" { $PropertiesReadable = Get-PropertiesNetworkInterface $Resource }
+            "Microsoft.Compute/virtualMachines" { $PropertiesReadable = Get-PropertiesVirtualMachine $Resource }
             Default {  $PropertiesReadable = Get-propertiesDefault $Resource }
         }
 
         foreach ($Property in $PropertiesReadable.keys) {
-            $ResourceReadable | Add-Member -MemberType NoteProperty -Name $Property -Value ($PropertiesReadable.$property)
+            $ResourceReadable | Add-Member -MemberType NoteProperty -Name $Property -Value ($PropertiesReadable.$property) -ErrorAction SilentlyContinue
 
         }
 

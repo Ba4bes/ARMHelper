@@ -1,8 +1,58 @@
+<#
+.SYNOPSIS
+Show if resource that are set to be deployed already exist
+
+.DESCRIPTION
+This function uses Test-AzureRMResourceGroupDeployment with debug output to find out what resources are deployed.
+After that, it checks if those resources exist in Azure.
+It will output the results when using complete mode or incremental mode (depending on the ARM template)
+
+.PARAMETER ResourceGroupName
+The resourcegroup where the resources would be deployed to. This resourcegroup needs to exist.
+
+.PARAMETER TemplateFile
+The path to the deploymentfile
+
+.PARAMETER TemplateParameterFile
+The path to the parameterfile
+
+.PARAMETER Mode
+The mode in which the deployment will run. Choose between Incremental or Complete.
+Defaults to incremental.
+
+.EXAMPLE
+Get-ARMDeployErrorMessage -ResourceGroupName ArmTest -TemplateFile .\azuredeploy.json -TemplateParameterFile .\azuredeploy.parameters.json
+
+--------
+the output is a generic error message. The log is searched for a more clear errormessageGeneral Error. Find info below:
+ErrorCode: InvalidDomainNameLabel
+Errormessage: The domain name label LABexample is invalid. It must conform to the following regular expression: ^[a-z][a-z0-9-]{1,61}[a-z0-9]$.
+
+.EXAMPLE
+Get-ARMDeployErrorMessage Armtesting .VM01\azuredeploy.json .VM01\azuredeploy.parameters.json
+
+--------
+deployment is correct
+
+.NOTES
+Author: Barbara Forbes
+Module: ARMHelper
+https://4bes.nl
+@Ba4bes
+#>
 Function Test-ARMExistingResource {
     Param(
-        [string] [Parameter(Mandatory = $true)] $ResourceGroupName,
-        [string] [Parameter(Mandatory = $true)] $TemplateFile,
-        [string] [Parameter(Mandatory = $true)] $TemplateParameterFile
+        [Parameter(Position = 1, Mandatory = $true)]
+        [ValidateNotNullorEmpty()]
+        [string] $ResourceGroupName,
+        [Parameter(Position = 2, Mandatory = $true)]
+        [ValidateNotNullorEmpty()]
+        [string] $TemplateFile,
+        [Parameter(Position = 3, Mandatory = $true)]
+        [string] $TemplateParameterFile,
+        [parameter ()]
+        [ValidateSet("Incremental", "Complete")]
+        [string] $Mode = "Incremental"
 
     )
     #make sure the debugpreference is right, as otherwise the simpletest will give confusing results
@@ -13,6 +63,7 @@ Function Test-ARMExistingResource {
         ResourceGroupName     = $ResourceGroupName
         TemplateFile          = $TemplateFile
         TemplateParameterFile = $TemplateParameterFile
+        Mode                  = $Mode
     }
     #Write-Output "Test is starting"
 

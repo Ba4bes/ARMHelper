@@ -70,8 +70,12 @@ function Get-ARMDeployErrorMessage {
         TemplateParameterFile = $TemplateParameterFile
     }
 
+    try {
     $Output = Test-AzureRmResourceGroupDeployment @parameters
-
+    }
+    catch {
+        throw "Could not test deployment because of following error $_"
+    }
     #Check for a specific output. This output is a very generic error-message.
     #So this script looks for the more clear errormessage in the AzureLogs.
     if ($Output.Message -like "*s not valid according to the validation procedure*") {
