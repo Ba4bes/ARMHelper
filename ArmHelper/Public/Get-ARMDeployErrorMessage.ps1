@@ -27,7 +27,7 @@ ErrorCode: InvalidDomainNameLabel
 Errormessage: The domain name label LABexample is invalid. It must conform to the following regular expression: ^[a-z][a-z0-9-]{1,61}[a-z0-9]$.
 
 .EXAMPLE
-Get-ARMDeployErrorMessage Armtesting .VM01\azuredeploy.json .VM01\azuredeploy.parameters.json
+Get-ARMDeployErrorMessage Armtesting .\VM01\azuredeploy.json .\VM01\azuredeploy.parameters.json
 
 --------
 deployment is correct

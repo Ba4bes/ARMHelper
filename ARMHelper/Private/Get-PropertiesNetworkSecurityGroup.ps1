@@ -1,4 +1,4 @@
-Function Get-PropertiesnetworkSecurityGroups {
+Function Get-PropertiesnetworkSecurityGroup {
     param (
         # Parameter help description
         [Parameter(Position = 1)]

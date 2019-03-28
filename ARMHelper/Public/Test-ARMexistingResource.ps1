@@ -29,7 +29,7 @@ ErrorCode: InvalidDomainNameLabel
 Errormessage: The domain name label LABexample is invalid. It must conform to the following regular expression: ^[a-z][a-z0-9-]{1,61}[a-z0-9]$.
 
 .EXAMPLE
-Get-ARMDeployErrorMessage Armtesting .VM01\azuredeploy.json .VM01\azuredeploy.parameters.json
+Get-ARMexistingResource Armtesting .\VM01\azuredeploy.json .\VM01\azuredeploy.parameters.json
 
 --------
 deployment is correct
@@ -88,26 +88,47 @@ Function Test-ARMExistingResource {
     Write-Output "Mode for deployment is $($Result.Mode)"
 
     $ValidatedResources = $Result.ValidatedResources
-    Write-Output "The following Resources will be deployed: `n"
-
+    $NewResources =[System.Collections.ArrayList]@()
+    $ExistingResources = [System.Collections.ArrayList]@()
+    $OverwrittenResources =[System.Collections.ArrayList]@()
     #go through each deployed Resource
     foreach ($Resource in $ValidatedResources) {
         $Check = Get-AzureRmResource -Name $Resource.name -ResourceType $resource.type
         if ([string]::IsNullOrEmpty($check)){
-            Write-output "Resource $($Resource.name) does not exist, it will be created"
+            Write-Verbose "Resource $($Resource.name) does not exist, it will be created"
+            $null = $NewResources.Add($resource.Name)
         }
         else {
             if ($Result.Mode -eq "Complete"){
-                Write-Output "Resource $($Resource.name) already exists and mode is set to Complete"
-                Write-output "RESOURCE WILL BE OVERWRITTEN!"
+                Write-Verbose "Resource $($Resource.name) already exists and mode is set to Complete"
+                Write-Verbose "RESOURCE WILL BE OVERWRITTEN!"
+                $null = $OverwrittenResources.Add($resource.Name)
             }
             elseif ($Result.Mode -eq "Incremental"){
-                Write-Output "Resource $($Resource.name) already exists, mode is set to incremental"
-                Write-output "New properties might be added"
+                Write-Verbose "Resource $($Resource.name) already exists, mode is set to incremental"
+                Write-Verbose "New properties might be added"
+                $null = $ExistingResources.Add($resource.Name)
             }
             else {
-                Write-Output "Resource mode is not clear"
+                Write-Error "Resource mode for$($Resource.name) is not clear, please check manually"
             }
         }
+    }
+    if (-not [string]::IsNullOrEmpty($NewResources)){
+    Write-output "The following resources do not exist and will be created"
+    $NewResources
+    Write-Output ""
+    }
+
+    if (-not [string]::IsNullOrEmpty($ExistingResources)){
+    Write-Output "The following resources exist.mode is set to incremental. New properties might be added"
+    $ExistingResources
+    Write-Output ""
+    }
+
+    if (-not [string]::IsNullOrEmpty($OverwrittenResources)){
+    Write-Output "THE FOLLOWING RESOURCES WILL BE OVERWRITTEN! `n Resources exist and mode is complete. THESE RESOURCES WILL BE OVERWRITTEN!"
+    $OverwrittenResources
+    Write-Output ""
     }
 }
