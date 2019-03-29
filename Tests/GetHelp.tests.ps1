@@ -1,3 +1,9 @@
+$projectRoot = Resolve-Path "$PSScriptRoot\.."
+$moduleRoot = Split-Path (Resolve-Path "$projectRoot\*\*.psm1")
+$moduleName = Split-Path $moduleRoot -Leaf
+
+Import-Module (Join-Path $moduleRoot "$moduleName.psd1") -force
+
 Describe 'Check Comment-based help' {
     Context 'All functions should contain Comment-based Help' {
         $Commands = (Get-Module ARMHelper).ExportedCommands
