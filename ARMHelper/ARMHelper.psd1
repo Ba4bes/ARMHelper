@@ -28,7 +28,7 @@
     Copyright         = '(c) Barbara Forbes. All rights reserved.'
 
     # Description of the functionality provided by this module
-    Description       = 'A wrapper around the Azure DevOps REST API so they can be called with Powershell cmdlets.'
+    Description       = 'Functions to help with the deployment of ARM Templates.'
 
     # Minimum version of the PowerShell engine required by this module
     # PowerShellVersion = ''
