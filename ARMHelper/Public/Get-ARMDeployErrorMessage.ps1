@@ -3,7 +3,7 @@
 Tests an azure deployment for errors, Use the azure Logs if a generic message is given.
 
 .DESCRIPTION
-This function uses Test-AzureRMResourceGroupDeployment. There is a specific errormessage that's very generic.
+This function uses Test-AzureRmResourceGroupDeployment. There is a specific errormessage that's very generic.
 If this is the output, the correct errormessage is retrieved from the Azurelog
 
 .PARAMETER ResourceGroupName
@@ -39,6 +39,7 @@ https://4bes.nl
 @Ba4bes
 #>
 function Get-ARMDeployErrorMessage {
+    [CmdletBinding()]
     Param(
         [Parameter(Position = 1, Mandatory = $true)]
         [ValidateNotNullorEmpty()]
@@ -53,13 +54,11 @@ function Get-ARMDeployErrorMessage {
     )
 
     Try{
-        $null = Get-AzureRMContext
+        $null = Get-AzureRmContext
         }
     Catch {
         Throw "AzureRM module is not loaded or no connection is made with Azure. Please connect to Azure"
     }
-
-    $DebugPreference = "SilentlyContinue"
 
     #set variables
     $Output = $null
@@ -69,7 +68,6 @@ function Get-ARMDeployErrorMessage {
         TemplateFile          = $TemplateFile
         TemplateParameterFile = $TemplateParameterFile
     }
-
     try {
     $Output = Test-AzureRmResourceGroupDeployment @parameters
     }
@@ -79,21 +77,21 @@ function Get-ARMDeployErrorMessage {
     #Check for a specific output. This output is a very generic error-message.
     #So this script looks for the more clear errormessage in the AzureLogs.
     if ($Output.Message -like "*s not valid according to the validation procedure*") {
-        Write-output "the output is a generic error message. The log is searched for a more clear errormessage"
+        Write-Output "the output is a generic error message. The log is searched for a more clear errormessage"
         Start-Sleep 30
         #use regex to find the ID of the log
         $Regex = '[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}'
         $IDs = $Output.Message | Select-String $Regex -AllMatches
-        $trackingID = $IDs.Matches.Value | select-object -Last 1
+        $trackingID = $IDs.Matches.Value | Select-Object -Last 1
 
         #Get Relevant logentry
-        $LogContent = (Get-AzureRMLog -CorrelationId $trackingID -WarningAction ignore).Properties.Content
+        $LogContent = (Get-AzureRmLog -CorrelationId $trackingID -WarningAction ignore).Properties.Content
         $DetailedError = $LogContent[0].statusMessage
-        $ErrorCode = ($DetailedError | convertfrom-json ).error.details.code
-        $ErrorMessage = ($DetailedError | convertfrom-json ).error.details.message
+        $ErrorCode = ($DetailedError | ConvertFrom-Json ).error.details.details.code
+        $ErrorMessage = ($DetailedError | ConvertFrom-Json ).error.details.details.message
     }
 
-    if ($Output) {
+    if ($null -ne $Output) {
 
         #check if DetailedError has been used. if it is, return the value
         if (-not[string]::IsNullOrEmpty($DetailedError))  {
@@ -103,7 +101,7 @@ function Get-ARMDeployErrorMessage {
         }
         #if not, output the original message
         if ([string]::IsNullOrEmpty($DetailedError)) {
-            Write-output "Error, Find info below:"
+            Write-Output "Error, Find info below:"
             Write-Output $Output.Message
         }
         #exit code 1 is for Azure DevOps to stop the build in failed state. locally it just stops the script

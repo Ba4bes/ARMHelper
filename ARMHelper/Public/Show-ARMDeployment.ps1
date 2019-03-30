@@ -4,7 +4,7 @@ Gives output that shows all resources that would be deployed by an ARMtemplate
 
 .DESCRIPTION
 When you enter a ARM template and a parameter file, this function will show what would be deployed
-To do this, it used the debug output of Test-AzureRMResourceGroupDeployment.
+To do this, it used the debug output of Test-AzureRmResourceGroupDeployment.
 A list of all the resources is provided with the most important properties.
 Some resources have seperated functions to structure the output.
 If no function is available, a generic output will be given.
@@ -21,7 +21,6 @@ The path to the parameterfile
 .EXAMPLE
 Show-ARMDeployment -ResourceGroupName Armtest -TemplateFile .\azuredeploy.json -TemplateParameterFile .\azuredeploy.parameters.json
 
-
 .NOTES
 Script can be used in a CICD pipeline
 Author: Barbara Forbes
@@ -31,6 +30,7 @@ https://4bes.nl
 Source for more output: #Source https://blog.mexia.com.au/testing-arm-templates-with-pester
 #>
 function Show-ARMDeployment {
+    [CmdletBinding()]
     Param(
         [Parameter(Position = 1, Mandatory = $true)]
         [ValidateNotNullorEmpty()]
@@ -40,35 +40,16 @@ function Show-ARMDeployment {
         [string] $TemplateFile,
         [Parameter(Position = 3, Mandatory = $true)]
         [string] $TemplateParameterFile
-
     )
-
-
-    #set variables
     $Parameters = @{
         ResourceGroupName     = $ResourceGroupName
         TemplateFile          = $TemplateFile
         TemplateParameterFile = $TemplateParameterFile
     }
-    #Write-Output "Test is starting"
-
-
-    $Output = $null
-    #set debugpreference to continue so the Test-AzureRmResourceGroupDeployment runs with more output
-    $DebugPreference = "Continue"
-
-    $Output = Test-AzureRmResourceGroupDeployment @parameters 5>&1
-
-    #Set DebugPreference back to normal
-    $DebugPreference = "SilentlyContinue"
-
-    #Write-Output "collected Output"
-
-    #Grap the specific part of the output that tells you about the deployed Resources
-    $Response = $Output | where-object {$_.Message -like "*http response*"}
-    #get the jsonpart en convert it to work with it.
-    $Result = (($Response -split "Body:")[1] | ConvertFrom-Json).Properties
-
+    $Result = Get-ARMResource @Parameters
+    if ([string]::IsNullOrEmpty($Result.Mode)){
+        Throw "Something is wrong with the output, no resources found. Please check your deployment with Get-ARMdeployErrorMessage"
+    }
     #tell the user if de mode is complete or incremental
     Write-Output "Mode for deployment is $($Result.Mode)"
 
@@ -86,29 +67,14 @@ function Show-ARMDeployment {
             Type     = $Resource.type
             ID       = $Resource.id
             Location = $Resource.location
-
         }
-        #$ResourceReadable = New-Object -TypeName psobject @hash
-        # $PropertiesReadable = @{}
-        # switch ($Resource.type) {
-        #     "Microsoft.Resources/deployments" {  $PropertiesReadable = Get-PropertiesDeployment $Resource  }
-        #     "Microsoft.Network/networkSecurityGroups" { $PropertiesReadable = Get-PropertiesnetworkSecurityGroup $Resource }
-        #     "Microsoft.Network/virtualNetworks" { $PropertiesReadable = Get-PropertiesVirtualNetwork $Resource }
-        #     "Microsoft.Network/networkInterfaces" { $PropertiesReadable = Get-PropertiesNetworkInterface $Resource }
-        #     "Microsoft.Compute/virtualMachines" { $PropertiesReadable = Get-PropertiesVirtualMachine $Resource }
-        #     Default {  $PropertiesReadable = Get-propertiesDefault $Resource }
-        # }
-        $PropertiesReadable = Get-ReSourceProperties -Object $Resource
-
+        $PropertiesReadable = Get-ResourceProperty -Object $Resource
 
         foreach ($Property in $PropertiesReadable.keys) {
-            $ResourceReadable | Add-Member -MemberType NoteProperty -Name $Property -Value ($PropertiesReadable.$property) -ErrorAction SilentlyContinue
-
+            $ResourceReadable | Add-Member -MemberType NoteProperty -Name $Property -Value ($PropertiesReadable.$Property) -ErrorAction SilentlyContinue
         }
 
         Write-Output "`n Resource: $ResourceTypeShort "
-
         $ResourceReadable
-
     }
 }
