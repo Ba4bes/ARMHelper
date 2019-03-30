@@ -43,8 +43,6 @@ function Show-ARMDeployment {
 
     )
 
-    #make sure the debugpreference is right, as otherwise the simpletest will give confusing results
-    $DebugPreference = "SilentlyContinue"
 
     #set variables
     $Parameters = @{
@@ -91,24 +89,26 @@ function Show-ARMDeployment {
 
         }
         #$ResourceReadable = New-Object -TypeName psobject @hash
-        $PropertiesReadable = @{}
-        switch ($Resource.type) {
-            "Microsoft.Resources/deployments" {  $PropertiesReadable = Get-PropertiesDeployment $Resource  }
-            "Microsoft.Network/networkSecurityGroups" { $PropertiesReadable = Get-PropertiesnetworkSecurityGroup $Resource }
-            "Microsoft.Network/virtualNetworks" { $PropertiesReadable = Get-PropertiesVirtualNetwork $Resource }
-            "Microsoft.Network/networkInterfaces" { $PropertiesReadable = Get-PropertiesNetworkInterface $Resource }
-            "Microsoft.Compute/virtualMachines" { $PropertiesReadable = Get-PropertiesVirtualMachine $Resource }
-            Default {  $PropertiesReadable = Get-propertiesDefault $Resource }
-        }
+        # $PropertiesReadable = @{}
+        # switch ($Resource.type) {
+        #     "Microsoft.Resources/deployments" {  $PropertiesReadable = Get-PropertiesDeployment $Resource  }
+        #     "Microsoft.Network/networkSecurityGroups" { $PropertiesReadable = Get-PropertiesnetworkSecurityGroup $Resource }
+        #     "Microsoft.Network/virtualNetworks" { $PropertiesReadable = Get-PropertiesVirtualNetwork $Resource }
+        #     "Microsoft.Network/networkInterfaces" { $PropertiesReadable = Get-PropertiesNetworkInterface $Resource }
+        #     "Microsoft.Compute/virtualMachines" { $PropertiesReadable = Get-PropertiesVirtualMachine $Resource }
+        #     Default {  $PropertiesReadable = Get-propertiesDefault $Resource }
+        # }
+        $PropertiesReadable = Get-ReSourceProperties -Object $Resource
+
 
         foreach ($Property in $PropertiesReadable.keys) {
             $ResourceReadable | Add-Member -MemberType NoteProperty -Name $Property -Value ($PropertiesReadable.$property) -ErrorAction SilentlyContinue
 
         }
 
-        Write-Output "Resource: $ResourceTypeShort `n"
+        Write-Output "`n Resource: $ResourceTypeShort "
 
-        $ResourceReadable | Format-List
+        $ResourceReadable
 
     }
 }
