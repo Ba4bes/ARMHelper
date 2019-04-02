@@ -2,9 +2,9 @@
 <helpItems schema="maml" xmlns="http://msh">
   <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
     <command:details>
-      <command:name>Get-ARMDeployErrorMessage</command:name>
+      <command:name>Get-ARMDeploymentErrorMessage</command:name>
       <command:verb>Get</command:verb>
-      <command:noun>ARMDeployErrorMessage</command:noun>
+      <command:noun>ARMDeploymentErrorMessage</command:noun>
       <maml:description>
         <maml:para>Tests an azure deployment for errors, Use the azure Logs if a generic message is given.</maml:para>
       </maml:description>
@@ -14,7 +14,7 @@
     </maml:description>
     <command:syntax>
       <command:syntaxItem>
-        <maml:name>Get-ARMDeployErrorMessage</maml:name>
+        <maml:name>Get-ARMDeploymentErrorMessage</maml:name>
         <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="2" aliases="none">
           <maml:name>ResourceGroupName</maml:name>
           <maml:Description>
@@ -124,14 +124,14 @@
     <command:examples>
       <command:example>
         <maml:title>-------------------------- EXAMPLE 1 --------------------------</maml:title>
-        <dev:code>Get-ARMDeployErrorMessage -ResourceGroupName ArmTest -TemplateFile .\azuredeploy.json -TemplateParameterFile .\azuredeploy.parameters.json</dev:code>
+        <dev:code>Get-ARMDeploymentErrorMessage -ResourceGroupName ArmTest -TemplateFile .\azuredeploy.json -TemplateParameterFile .\azuredeploy.parameters.json</dev:code>
         <dev:remarks>
           <maml:para>-------- the output is a generic error message. The log is searched for a more clear errormessageGeneral Error. Find info below: ErrorCode: InvalidDomainNameLabel Errormessage: The domain name label LABexample is invalid. It must conform to the following regular expression: ^[a-z][a-z0-9-]{1,61}[a-z0-9]$.</maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
         <maml:title>-------------------------- EXAMPLE 2 --------------------------</maml:title>
-        <dev:code>Get-ARMDeployErrorMessage Armtesting .\VM01\azuredeploy.json .\VM01\azuredeploy.parameters.json</dev:code>
+        <dev:code>Get-ARMDeploymentErrorMessage Armtesting .\VM01\azuredeploy.json .\VM01\azuredeploy.parameters.json</dev:code>
         <dev:remarks>
           <maml:para>-------- deployment is correct</maml:para>
         </dev:remarks>
@@ -373,7 +373,7 @@
     <command:examples>
       <command:example>
         <maml:title>-------------------------- EXAMPLE 1 --------------------------</maml:title>
-        <dev:code>Get-ARMDeployErrorMessage -ResourceGroupName ArmTest -TemplateFile .\azuredeploy.json -TemplateParameterFile .\azuredeploy.parameters.json</dev:code>
+        <dev:code>Get-ARMDeploymentErrorMessage -ResourceGroupName ArmTest -TemplateFile .\azuredeploy.json -TemplateParameterFile .\azuredeploy.parameters.json</dev:code>
         <dev:remarks>
           <maml:para>-------- the output is a generic error message. The log is searched for a more clear errormessageGeneral Error. Find info below: ErrorCode: InvalidDomainNameLabel Errormessage: The domain name label LABexample is invalid. It must conform to the following regular expression: ^[a-z][a-z0-9-]{1,61}[a-z0-9]$.</maml:para>
         </dev:remarks>

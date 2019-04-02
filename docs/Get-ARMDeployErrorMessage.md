@@ -5,7 +5,7 @@ online version:
 schema: 2.0.0
 ---
 
-# Get-ARMDeployErrorMessage
+# Get-ARMDeploymentErrorMessage
 
 ## SYNOPSIS
 Tests an azure deployment for errors, Use the azure Logs if a generic message is given.
@@ -13,7 +13,7 @@ Tests an azure deployment for errors, Use the azure Logs if a generic message is
 ## SYNTAX
 
 ```
-Get-ARMDeployErrorMessage [-ResourceGroupName] <String> [-TemplateFile] <String>
+Get-ARMDeploymentErrorMessage [-ResourceGroupName] <String> [-TemplateFile] <String>
  [-TemplateParameterFile] <String> [-Pipeline] [<CommonParameters>]
 ```
 
@@ -26,7 +26,7 @@ If this is the output, the correct errormessage is retrieved from the Azurelog
 
 ### EXAMPLE 1
 ```
-Get-ARMDeployErrorMessage -ResourceGroupName ArmTest -TemplateFile .\azuredeploy.json -TemplateParameterFile .\azuredeploy.parameters.json
+Get-ARMDeploymentErrorMessage -ResourceGroupName ArmTest -TemplateFile .\azuredeploy.json -TemplateParameterFile .\azuredeploy.parameters.json
 ```
 
 --------
@@ -36,7 +36,7 @@ Errormessage: The domain name label LABexample is invalid. It must conform to th
 
 ### EXAMPLE 2
 ```
-Get-ARMDeployErrorMessage Armtesting .\VM01\azuredeploy.json .\VM01\azuredeploy.parameters.json
+Get-ARMDeploymentErrorMessage Armtesting .\VM01\azuredeploy.json .\VM01\azuredeploy.parameters.json
 ```
 
 --------

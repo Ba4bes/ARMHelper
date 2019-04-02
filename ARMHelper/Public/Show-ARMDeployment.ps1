@@ -48,7 +48,7 @@ function Show-ARMDeployment {
     }
     $Result = Get-ARMResource @Parameters
     if ([string]::IsNullOrEmpty($Result.Mode)){
-        Throw "Something is wrong with the output, no resources found. Please check your deployment with Get-ARMdeployErrorMessage"
+        Throw "Something is wrong with the output, no resources found. Please check your deployment with Get-ARMdeploymentErrorMessage"
     }
     #tell the user if de mode is complete or incremental
     Write-Output "Mode for deployment is $($Result.Mode)"

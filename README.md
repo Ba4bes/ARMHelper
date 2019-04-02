@@ -32,7 +32,7 @@ Import-Module ARMHelper
 ### Get a detailed output for a general error
 
 ```cmd
-C:\> Get-ARMDeployErrorMessage -ResourceGroupName ARMTest -TemplateFile .\azuredeploy.json -TemplateParameterFile .\azuredeploy.parameters.json
+C:\> Get-ARMDeploymentErrorMessage -ResourceGroupName ARMTest -TemplateFile .\azuredeploy.json -TemplateParameterFile .\azuredeploy.parameters.json
 
 the output is a generic error message. The log is searched for a more clear errormessage
 General Error. Find info below:

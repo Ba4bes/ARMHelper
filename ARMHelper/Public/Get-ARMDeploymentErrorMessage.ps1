@@ -19,7 +19,7 @@ The path to the parameterfile
 Use this parameter if this script is used in a CICDpipeline. It will make the step fail.
 
 .EXAMPLE
-Get-ARMDeployErrorMessage -ResourceGroupName ArmTest -TemplateFile .\azuredeploy.json -TemplateParameterFile .\azuredeploy.parameters.json
+Get-ARMDeploymentErrorMessage -ResourceGroupName ArmTest -TemplateFile .\azuredeploy.json -TemplateParameterFile .\azuredeploy.parameters.json
 
 --------
 the output is a generic error message. The log is searched for a more clear errormessageGeneral Error. Find info below:
@@ -27,7 +27,7 @@ ErrorCode: InvalidDomainNameLabel
 Errormessage: The domain name label LABexample is invalid. It must conform to the following regular expression: ^[a-z][a-z0-9-]{1,61}[a-z0-9]$.
 
 .EXAMPLE
-Get-ARMDeployErrorMessage Armtesting .\VM01\azuredeploy.json .\VM01\azuredeploy.parameters.json
+Get-ARMDeploymentErrorMessage Armtesting .\VM01\azuredeploy.json .\VM01\azuredeploy.parameters.json
 
 --------
 deployment is correct
@@ -38,7 +38,7 @@ Module: ARMHelper
 https://4bes.nl
 @Ba4bes
 #>
-function Get-ARMDeployErrorMessage {
+function Get-ARMDeploymentErrorMessage {
     [CmdletBinding()]
     Param(
         [Parameter(Position = 1, Mandatory = $true)]
@@ -53,9 +53,9 @@ function Get-ARMDeployErrorMessage {
         [switch] $Pipeline
     )
 
-    Try{
+    Try {
         $null = Get-AzureRmContext
-        }
+    }
     Catch {
         Throw "AzureRM module is not loaded or no connection is made with Azure. Please connect to Azure"
     }
@@ -69,7 +69,7 @@ function Get-ARMDeployErrorMessage {
         TemplateParameterFile = $TemplateParameterFile
     }
     try {
-    $Output = Test-AzureRmResourceGroupDeployment @parameters
+        $Output = Test-AzureRmResourceGroupDeployment @parameters
     }
     catch {
         throw "Could not test deployment because of following error $_"
@@ -91,10 +91,10 @@ function Get-ARMDeployErrorMessage {
         $ErrorMessage = ($DetailedError | ConvertFrom-Json ).error.details.details.message
     }
 
-    if ($null -ne $Output) {
+    if (-not [string]::IsNullOrEmpty($Output) ) {
 
         #check if DetailedError has been used. if it is, return the value
-        if (-not[string]::IsNullOrEmpty($DetailedError))  {
+        if (-not[string]::IsNullOrEmpty($DetailedError)) {
             Write-Output "General Error. Find info below:"
             Write-Output "ErrorCode: $ErrorCode"
             Write-Output "Errormessage: $ErrorMessage"
@@ -105,7 +105,7 @@ function Get-ARMDeployErrorMessage {
             Write-Output $Output.Message
         }
         #exit code 1 is for Azure DevOps to stop the build in failed state. locally it just stops the script
-        if ($Pipeline){
+        if ($Pipeline) {
             [Environment]::Exit(1)
         }
     }
