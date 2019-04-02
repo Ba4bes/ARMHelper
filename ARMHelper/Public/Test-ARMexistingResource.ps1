@@ -21,7 +21,7 @@ The mode in which the deployment will run. Choose between Incremental or Complet
 Defaults to incremental.
 
 .EXAMPLE
-Get-ARMDeployErrorMessage -ResourceGroupName ArmTest -TemplateFile .\azuredeploy.json -TemplateParameterFile .\azuredeploy.parameters.json
+Get-ARMDeploymentErrorMessage -ResourceGroupName ArmTest -TemplateFile .\azuredeploy.json -TemplateParameterFile .\azuredeploy.parameters.json
 
 --------
 the output is a generic error message. The log is searched for a more clear errormessageGeneral Error. Find info below:
@@ -110,7 +110,7 @@ Function Test-ARMExistingResource {
     }
 
     if (-not [string]::IsNullOrEmpty($OverwrittenResources)) {
-        Write-Output "THE FOLLOWING RESOURCES WILL BE OVERWRITTEN! `n Resources exist and mode is complete. THESE RESOURCES WILL BE OVERWRITTEN!"
+        Write-Output "THE FOLLOWING RESOURCES WILL BE OVERWRITTEN! `n Resources exist and mode is complete."
         $OverwrittenResources
         Write-Output ""
     }
