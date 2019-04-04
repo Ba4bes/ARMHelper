@@ -43,7 +43,7 @@ Errormessage: arm-aqkc32cvb2qmmw is not a valid storage account name. Storage ac
 ### Get an overview of the new resources that would be deployed
 
 ```cmd
-C:\> Show-ARMDeployment -ResourceGroupName ARMTest -TemplateFile .\azuredeploy.json -TemplateParameterFile .\azuredeploy.parameters.json
+C:\> Get-ARMDeploymentResource -ResourceGroupName ARMTest -TemplateFile .\azuredeploy.json -TemplateParameterFile .\azuredeploy.parameters.json
 
 Mode for deployment is Incremental
 The following Resources will be deployed:

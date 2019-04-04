@@ -5,7 +5,7 @@ online version:
 schema: 2.0.0
 ---
 
-# Show-ARMDeployment
+# Get-ARMDeploymentResource
 
 ## SYNOPSIS
 Gives output that shows all resources that would be deployed by an ARMtemplate
@@ -13,7 +13,7 @@ Gives output that shows all resources that would be deployed by an ARMtemplate
 ## SYNTAX
 
 ```
-Show-ARMDeployment [-ResourceGroupName] <String> [-TemplateFile] <String> [-TemplateParameterFile] <String>
+Get-ARMDeploymentResource [-ResourceGroupName] <String> [-TemplateFile] <String> [-TemplateParameterFile] <String>
  [<CommonParameters>]
 ```
 
@@ -28,7 +28,7 @@ If no function is available, a generic output will be given.
 
 ### EXAMPLE 1
 ```
-Show-ARMDeployment -ResourceGroupName Armtest -TemplateFile .\azuredeploy.json -TemplateParameterFile .\azuredeploy.parameters.json
+Get-ARMDeploymentResource -ResourceGroupName Armtest -TemplateFile .\azuredeploy.json -TemplateParameterFile .\azuredeploy.parameters.json
 ```
 
 ## PARAMETERS
