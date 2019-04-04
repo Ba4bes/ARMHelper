@@ -73,6 +73,7 @@ Function Test-ARMExistingResource {
     $NewResources = [System.Collections.ArrayList]@()
     $ExistingResources = [System.Collections.ArrayList]@()
     $OverwrittenResources = [System.Collections.ArrayList]@()
+    $DifferentResourcegroup = @{}
 
     #go through each deployed Resource
     foreach ($Resource in $ValidatedResources) {
@@ -82,6 +83,7 @@ Function Test-ARMExistingResource {
             $null = $NewResources.Add($Resource.Name)
         }
         else {
+            if ($Check.ResourceGroupName -eq $ResourceGroupName ){
             if ($Result.Mode -eq "Complete") {
                 Write-Verbose "Resource $($Resource.name) already exists and mode is set to Complete"
                 Write-Verbose "RESOURCE WILL BE OVERWRITTEN!"
@@ -93,8 +95,13 @@ Function Test-ARMExistingResource {
                 $null = $ExistingResources.Add($Resource.Name)
             }
             else {
-                Write-Error "Resource mode for$($Resource.name) is not clear, please check manually"
+                Write-Error "Resource mode for $($Resource.name) is not clear, please check manually"
             }
+        }
+        else{
+            Write-Verbose "$($Resource.name) exists, but in another ResourceGroup. Deployment might fail."
+            $DifferentResourcegroup.Add($Resource.Name, $Check.ResourceGroupName)
+        }
         }
     }
     if (-not [string]::IsNullOrEmpty($NewResources)) {
@@ -112,6 +119,12 @@ Function Test-ARMExistingResource {
     if (-not [string]::IsNullOrEmpty($OverwrittenResources)) {
         Write-Output "THE FOLLOWING RESOURCES WILL BE OVERWRITTEN! `n Resources exist and mode is complete."
         $OverwrittenResources
+        Write-Output ""
+    }
+    if (-not [string]::IsNullOrEmpty($DifferentResourcegroup)) {
+        Write-Output "The following resources exists, but in a different ResourceGroup. This deployment might fail."
+        Write-Output "Resourcegroup for this deployment: $ResourceGroup"
+        $DifferentResourcegroup | Select-object @{l='Resource';e={$_.keys}},@{l='ResourceGroup';e={$_.values}}
         Write-Output ""
     }
 }
