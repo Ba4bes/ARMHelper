@@ -83,25 +83,25 @@ Function Test-ARMExistingResource {
             $null = $NewResources.Add($Resource.Name)
         }
         else {
-            if ($Check.ResourceGroupName -eq $ResourceGroupName ){
-            if ($Result.Mode -eq "Complete") {
-                Write-Verbose "Resource $($Resource.name) already exists and mode is set to Complete"
-                Write-Verbose "RESOURCE WILL BE OVERWRITTEN!"
-                $null = $OverwrittenResources.Add($Resource.Name)
-            }
-            elseif ($Result.Mode -eq "Incremental") {
-                Write-Verbose "Resource $($Resource.name) already exists, mode is set to incremental"
-                Write-Verbose "New properties might be added"
-                $null = $ExistingResources.Add($Resource.Name)
+            if ($Check.ResourceGroupName -eq $ResourceGroupName ) {
+                if ($Result.Mode -eq "Complete") {
+                    Write-Verbose "Resource $($Resource.name) already exists and mode is set to Complete"
+                    Write-Verbose "RESOURCE WILL BE OVERWRITTEN!"
+                    $null = $OverwrittenResources.Add($Resource.Name)
+                }
+                elseif ($Result.Mode -eq "Incremental") {
+                    Write-Verbose "Resource $($Resource.name) already exists, mode is set to incremental"
+                    Write-Verbose "New properties might be added"
+                    $null = $ExistingResources.Add($Resource.Name)
+                }
+                else {
+                    Write-Error "Resource mode for $($Resource.name) is not clear, please check manually"
+                }
             }
             else {
-                Write-Error "Resource mode for $($Resource.name) is not clear, please check manually"
+                Write-Verbose "$($Resource.name) exists, but in another ResourceGroup. Deployment might fail."
+                $DifferentResourcegroup.Add($Resource.Name, $Check.ResourceGroupName)
             }
-        }
-        else{
-            Write-Verbose "$($Resource.name) exists, but in another ResourceGroup. Deployment might fail."
-            $DifferentResourcegroup.Add($Resource.Name, $Check.ResourceGroupName)
-        }
         }
     }
     if (-not [string]::IsNullOrEmpty($NewResources)) {
@@ -121,10 +121,10 @@ Function Test-ARMExistingResource {
         $OverwrittenResources
         Write-Output ""
     }
-    if (-not [string]::IsNullOrEmpty($DifferentResourcegroup)) {
+    if ($DifferentResourcegroup.Count -ne 0) {
         Write-Output "The following resources exists, but in a different ResourceGroup. This deployment might fail."
         Write-Output "Resourcegroup for this deployment: $ResourceGroup"
-        $DifferentResourcegroup | Select-object @{l='Resource';e={$_.keys}},@{l='ResourceGroup';e={$_.values}}
+        $DifferentResourcegroup | Select-Object @{l = 'Resource'; e = { $_.keys } }, @{l = 'ResourceGroup'; e = { $_.values } }
         Write-Output ""
     }
 }
