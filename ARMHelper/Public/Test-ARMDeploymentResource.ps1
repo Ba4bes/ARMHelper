@@ -19,7 +19,7 @@ The path to the deploymentfile
 The path to the parameterfile
 
 .EXAMPLE
-Get-ARMDeploymentResource -ResourceGroupName Armtest -TemplateFile .\azuredeploy.json -TemplateParameterFile .\azuredeploy.parameters.json
+Test-ARMDeploymentResource -ResourceGroupName Armtest -TemplateFile .\azuredeploy.json -TemplateParameterFile .\azuredeploy.parameters.json
 
 .NOTES
 Script can be used in a CICD pipeline
@@ -29,7 +29,7 @@ https://4bes.nl
 @Ba4bes
 Source for more output: #Source https://blog.mexia.com.au/testing-arm-templates-with-pester
 #>
-function Get-ARMDeploymentResource {
+function Test-ARMDeploymentResource {
     [CmdletBinding()]
     Param(
         [Parameter(Position = 1, Mandatory = $true)]
