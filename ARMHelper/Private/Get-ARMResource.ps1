@@ -31,19 +31,20 @@ Function Get-ARMResource {
 
     $Output = $null
     #set debugpreference to continue so the Test-AzureRmResourceGroupDeployment runs with more output
+    $oldDebugPreference = $DebugPreference
     $DebugPreference = "Continue"
 
     $Output = Test-AzureRmResourceGroupDeployment @parameters 5>&1 -ErrorAction Stop
 
-    #Set DebugPreference back to normal
-    $DebugPreference = "SilentlyContinue"
+    #Set DebugPreference back to original setting
+    $DebugPreference = $oldDebugPreference
     if ([string]::IsNullOrEmpty($Output)) {
         Throw "Something went wrong, Test-AzureRmResourceGroupDeployment didn't give output"
     }
     #Grap the specific part of the output that tells you about the deployed Resources
     $Response = $Output | Where-Object { $_.Message -like "*http response*" }
-    #get the jsonpart en convert it to work with it.
-    $Result = (($Response -split "Body:")[1] | ConvertFrom-Json).Properties
+#get the jsonpart en convert it to work with it.
+$Result = (($Response -split "Body:")[1] | ConvertFrom-Json).Properties
 
-    $Result
+$Result
 }
