@@ -1,3 +1,20 @@
+<#
+.SYNOPSIS
+    Short description
+.DESCRIPTION
+    Long description
+.EXAMPLE
+    PS C:\> <example usage>
+    Explanation of what the example does
+.PARAMETER ResourceGroupName
+.PARAMETER TemplateFile
+.PARAMETER TemplateParameterFile
+.PARAMETER Mode
+.NOTES
+    Module: ARMHelper
+    https://4bes.nl
+    @Ba4bes
+#>
 Function Get-ARMResource {
     [CmdletBinding()]
     Param(
