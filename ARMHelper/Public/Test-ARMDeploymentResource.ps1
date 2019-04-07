@@ -47,7 +47,7 @@ function Test-ARMDeploymentResource {
         TemplateParameterFile = $TemplateParameterFile
     }
     $Result = Get-ARMResource @Parameters
-    if ([string]::IsNullOrEmpty($Result.Mode)){
+    if ([string]::IsNullOrEmpty($Result.Mode)) {
         Throw "Something is wrong with the output, no resources found. Please check your deployment with Get-ARMdeploymentErrorMessage"
     }
     #tell the user if de mode is complete or incremental
@@ -60,7 +60,6 @@ function Test-ARMDeploymentResource {
     foreach ($Resource in $ValidatedResources) {
 
         $ResourceTypeShort = $($Resource.type.Split("/")[-1])
-        #Write-Output "Creating Resource: $($Resource.type.Split("/")[-1])"
 
         $ResourceReadable = [PSCustomObject] @{
             Name     = $Resource.name
@@ -72,9 +71,9 @@ function Test-ARMDeploymentResource {
 
         foreach ($Property in $PropertiesReadable.keys) {
             $ResourceReadable | Add-Member -MemberType NoteProperty -Name $Property -Value ($PropertiesReadable.$Property) -ErrorAction SilentlyContinue
-        }
-
-        Write-Output "`n Resource: $ResourceTypeShort "
-        $ResourceReadable
     }
+
+    Write-Output "`n Resource: $ResourceTypeShort "
+    $ResourceReadable
+}
 }
