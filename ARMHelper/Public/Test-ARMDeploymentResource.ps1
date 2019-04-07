@@ -50,6 +50,13 @@ function Test-ARMDeploymentResource {
     if ([string]::IsNullOrEmpty($Result.Mode)) {
         Throw "Something is wrong with the output, no resources found. Please check your deployment with Get-ARMdeploymentErrorMessage"
     }
+    
+    <#
+        Ik vroeg me bij alledrie de functies af: heeft het zin om de ouput in object-vorm te doen? Ik weet wel dat 
+        dat in CI weinig zin heeft, maar in alle andere gevallen zou dat wel mooier werken, mocht je er logica omheen willen bouwen.
+        Ik heb nu even geen voorbeeld van hoe dat er dan uit zou moeten zien, maar vind het iets om over na te denken.
+    #>
+    
     #tell the user if de mode is complete or incremental
     Write-Output "Mode for deployment is $($Result.Mode)"
 
