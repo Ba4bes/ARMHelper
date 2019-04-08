@@ -67,32 +67,35 @@ Function Test-ARMExistingResource {
     $Result = Get-ARMResource @Parameters
 
     #tell the user if de mode is complete or incremental
-    Write-Output "Mode for deployment is $($Result.Mode)"
+    Write-Output "Mode for deployment is $($Result.Mode) `n"
 
     $ValidatedResources = $Result.ValidatedResources
     $NewResources = [System.Collections.ArrayList]@()
     $ExistingResources = [System.Collections.ArrayList]@()
     $OverwrittenResources = [System.Collections.ArrayList]@()
-    $DifferentResourcegroup = @{}
+    $DifferentResourcegroup = [System.Collections.ArrayList]@()
 
     #go through each deployed Resource
     foreach ($Resource in $ValidatedResources) {
         $Check = Get-AzureRmResource -Name $Resource.name -ResourceType $Resource.type
         if ([string]::IsNullOrEmpty($Check)) {
             Write-Verbose "Resource $($Resource.name) does not exist, it will be created"
-            $null = $NewResources.Add($Resource.Name)
+            $Resource.PSObject.TypeNames.Insert(0, 'ArmHelper.ExistingResource')
+            $null = $NewResources.Add($Resource)
         }
         else {
             if ($Check.ResourceGroupName -eq $ResourceGroupName ) {
                 if ($Result.Mode -eq "Complete") {
                     Write-Verbose "Resource $($Resource.name) already exists and mode is set to Complete"
                     Write-Verbose "RESOURCE WILL BE OVERWRITTEN!"
-                    $null = $OverwrittenResources.Add($Resource.Name)
+                    $Resource.PSObject.TypeNames.Insert(0, 'ArmHelper.ExistingResource')
+                    $null = $OverwrittenResources.Add($Resource)
                 }
                 elseif ($Result.Mode -eq "Incremental") {
                     Write-Verbose "Resource $($Resource.name) already exists, mode is set to incremental"
                     Write-Verbose "New properties might be added"
-                    $null = $ExistingResources.Add($Resource.Name)
+                    $Resource.PSObject.TypeNames.Insert(0, 'ArmHelper.ExistingResource')
+                    $null = $ExistingResources.Add($Resource)
                 }
                 else {
                     Write-Error "Resource mode for $($Resource.name) is not clear, please check manually"
@@ -100,31 +103,34 @@ Function Test-ARMExistingResource {
             }
             else {
                 Write-Verbose "$($Resource.name) exists, but in another ResourceGroup. Deployment might fail."
-                $DifferentResourcegroup.Add($Resource.Name, $Check.ResourceGroupName)
+                $Resource.PSObject.TypeNames.Insert(0, 'ArmHelper.ExistingResource')
+                $Resource | Add-Member -MemberType NoteProperty -Name "ResourceGroupName" -Value ($Check.ResourceGroupName) -ErrorAction SilentlyContinue
+                $null = $DifferentResourcegroup.Add($Resource)
             }
         }
     }
-    if (-not [string]::IsNullOrEmpty($NewResources)) {
+    if ($NewResources.count -ne 0) {
         Write-Output "The following resources do not exist and will be created"
         $NewResources
         Write-Output ""
     }
 
-    if (-not [string]::IsNullOrEmpty($ExistingResources)) {
+    if ($ExistingResources.count -ne 0) {
         Write-Output "The following resources exist. Mode is set to incremental. New properties might be added"
         $ExistingResources
         Write-Output ""
     }
 
-    if (-not [string]::IsNullOrEmpty($OverwrittenResources)) {
+    if ($ExistingResources.Count -ne 0) {
         Write-Output "THE FOLLOWING RESOURCES WILL BE OVERWRITTEN! `n Resources exist and mode is complete."
         $OverwrittenResources
         Write-Output ""
     }
     if ($DifferentResourcegroup.Count -ne 0) {
         Write-Output "The following resources exists, but in a different ResourceGroup. This deployment might fail."
-        Write-Output "Resourcegroup for this deployment: $ResourceGroup"
-        $DifferentResourcegroup | Select-Object @{l = 'Resource'; e = { $_.keys } }, @{l = 'ResourceGroup'; e = { $_.values } }
+       # Write-Output "Resourcegroup for this deployment: $ResourceGroupName"
+        $DifferentResourcegroup
         Write-Output ""
     }
+    
 }
