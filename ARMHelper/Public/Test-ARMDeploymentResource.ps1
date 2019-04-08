@@ -39,30 +39,31 @@ function Test-ARMDeploymentResource {
         [ValidateNotNullorEmpty()]
         [string] $TemplateFile,
         [Parameter(Position = 3, Mandatory = $true)]
-        [string] $TemplateParameterFile
+        [string] $TemplateParameterFile,
+        [parameter ()]
+        [ValidateSet("Incremental", "Complete")]
+        [string] $Mode = "Incremental"
     )
     $Parameters = @{
         ResourceGroupName     = $ResourceGroupName
         TemplateFile          = $TemplateFile
         TemplateParameterFile = $TemplateParameterFile
+        Mode                  = $Mode
     }
     $Result = Get-ARMResource @Parameters
-    if ([string]::IsNullOrEmpty($Result.Mode)){
+    if ([string]::IsNullOrEmpty($Result.Mode)) {
         Throw "Something is wrong with the output, no resources found. Please check your deployment with Get-ARMdeploymentErrorMessage"
     }
-    #tell the user if de mode is complete or incremental
-    Write-Output "Mode for deployment is $($Result.Mode)"
 
     $ValidatedResources = $Result.ValidatedResources
-    Write-Output "The following Resources will be deployed: `n"
 
     #go through each deployed Resource
     foreach ($Resource in $ValidatedResources) {
 
         $ResourceTypeShort = $($Resource.type.Split("/")[-1])
-        #Write-Output "Creating Resource: $($Resource.type.Split("/")[-1])"
 
         $ResourceReadable = [PSCustomObject] @{
+            Resource = $ResourceTypeShort
             Name     = $Resource.name
             Type     = $Resource.type
             ID       = $Resource.id
@@ -73,8 +74,14 @@ function Test-ARMDeploymentResource {
         foreach ($Property in $PropertiesReadable.keys) {
             $ResourceReadable | Add-Member -MemberType NoteProperty -Name $Property -Value ($PropertiesReadable.$Property) -ErrorAction SilentlyContinue
         }
+        #Add mode when it is not defined
+        if ([string]::IsNullOrEmpty($ResourceReadable.mode)) {
+            $ResourceReadable | Add-Member -MemberType NoteProperty -Name "mode" -Value ($Result.mode) -ErrorAction SilentlyContinue
+        }
+        $ResourceReadable.PSObject.TypeNames.Insert(0, 'ARMHelper.Default')
 
-        Write-Output "`n Resource: $ResourceTypeShort "
         $ResourceReadable
     }
 }
+
+
