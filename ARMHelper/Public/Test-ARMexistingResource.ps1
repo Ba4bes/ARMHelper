@@ -121,7 +121,7 @@ Function Test-ARMExistingResource {
         Write-Output ""
     }
 
-    if ($ExistingResources.Count -ne 0) {
+    if ($OverwrittenResources.Count -ne 0) {
         Write-Output "THE FOLLOWING RESOURCES WILL BE OVERWRITTEN! `n Resources exist and mode is complete."
         $OverwrittenResources
         Write-Output ""
@@ -132,5 +132,5 @@ Function Test-ARMExistingResource {
         $DifferentResourcegroup
         Write-Output ""
     }
-    
+
 }
