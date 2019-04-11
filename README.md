@@ -1,9 +1,10 @@
 # ARMHelper
 
 [![Build Status](https://dev.azure.com/Ba4bes/ARMHelper/_apis/build/status/Ba4bes.ARMHelper?branchName=master)](https://dev.azure.com/Ba4bes/ARMHelper/_build/latest?definitionId=8&branchName=master)
+[![Build Status](https://vsrm.dev.azure.com/Ba4bes/_apis/public/Release/badge/fe28574d-f965-479f-bc02-25d7534d9aeb/1/1)](https://vsrm.dev.azure.com/Ba4bes/_apis/public/Release/badge/fe28574d-f965-479f-bc02-25d7534d9aeb/1/1)
 
-[![Build Status](https://img.shields.io/azure-devops/release/Ba4bes/fe28574d-f965-479f-bc02-25d7534d9aeb/1/1.svg)](
-https://vsrm.dev.azure.com/Ba4bes/_apis/public/Release/badge/fe28574d-f965-479f-bc02-25d7534d9aeb/1/1)
+[![Gallery version](https://img.shields.io/powershellgallery/v/ARMHelper.svg)](https://img.shields.io/powershellgallery/v/ARMHelper.svg)
+[![Download Status](https://img.shields.io/powershellgallery/dt/ARMHelper.svg)](https://img.shields.io/powershellgallery/dt/ARMHelper.svg) 
 
 This module is created to make it easier to work with ARM deployments.
 
@@ -13,7 +14,7 @@ You are at this point able to:
 - Get an overview of all the resources that would get deployed
 - Check if resources that you want to deploy already exist and whether they would be overwritten.
 
-Please view  <http://4bes.nl/2019/04/09/armhelper-a-module-to-help-create-arm-templates> for an introduction
+For an introduction, please view  <http://4bes.nl/2019/04/09/armhelper-a-module-to-help-create-arm-templates> 
 
 ## Common setup
 
