@@ -82,7 +82,6 @@ function Get-ResourceProperty {
                         $Key = "$Path.$($PropObject.Name)"
                     }
                     $PropertiesReadable.add($Key, $Value)
-
                 }
             }
             #If $TypesToWrite containt the type, write results to hashtable
@@ -92,6 +91,11 @@ function Get-ResourceProperty {
                 $Key = $RootProperty.Name
                 $Value = $PropertyObject
 
+                # Add tags for readability
+                if ($PathName -like "*Tags*"){
+                    $Key = "Tags: $($RootProperty.Name)" 
+
+                }
                 if ($PropertiesReadable.$Key) {
                     $Path = $PathName.Replace(".properties", "")
                     $Key = "$Path.$($RootProperty.Name)"
@@ -100,6 +104,7 @@ function Get-ResourceProperty {
             }
             # If $TypesToWrite does not contain the type, recurse.
             Elseif (-not($TypesToWrite.Contains($Type) ) ) {
+                            # Create a boolean to recognize tags
 
                 #Create a new path to the property
                 $ChildPathName = "$PathName.$Propname"
