@@ -1,0 +1,47 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+
+
+pr:
+- master
+
+pool:
+  vmImage: vs2017-win2016
+
+steps:
+- powershell: |
+   Install-PackageProvider -Name NuGet -Force -Scope CurrentUser
+   Install-Module -Name Pester -Force -Scope CurrentUser -SkipPublisherCheck
+   Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser
+
+   Import-Module "$(Build.SourcesDirectory)\ARMHelper" -Force
+
+  displayName: 'Install Pester and import module'
+
+- powershell: |
+   $Results = Invoke-Pester -PassThru
+
+   if ($Results.FailedCount -ne "0"){
+        throw "a PesterTest has failed"
+   }
+   if ($Results.PassedCount -eq "0"){
+        throw "There was no passed PesterTest"
+   }
+  failOnStderr: true
+  displayName: 'Invoke-Pester'
+
+- task: PowerShell@2
+  displayName: 'PSScriptanalyzer-tests'
+  inputs:
+    targetType: filePath
+    filePath: Tests/PSScriptAnalyzer.ps1
+    arguments: '-ScriptPath "$(Build.SourcesDirectory)\ARMHelper\"'
+    failOnStderr: true
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: drop'
+  inputs:
+    PathtoPublish: ARMHelper
