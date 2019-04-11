@@ -151,7 +151,7 @@ Function Test-ARMExistingResource {
         Write-Output ""
     }
     if ($DifferentResourcegroup.Count -ne 0) {
-        Write-Output "The following resources exists, but in a different ResourceGroup. This deployment might fail.`n"
+        Write-Output "A resource of the same type and same name exists in other resourcegroup(s). This deployment might fail.`n"
         # Write-Output "Resourcegroup for this deployment: $ResourceGroupName"
         $DifferentResourcegroup
         Write-Output ""
