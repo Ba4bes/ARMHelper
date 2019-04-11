@@ -51,6 +51,7 @@
                     <Width>50</Width>
                     </TableColumnHeader>
                     <TableColumnHeader>
+                    <Label>Current ResourcegroupName</Label>
                     </TableColumnHeader>
                 </TableHeaders>
                 <TableRowEntries>
