@@ -72,15 +72,31 @@ Function Test-ARMExistingResource {
     $ValidatedResources = $Result.ValidatedResources
     $NewResources = [System.Collections.ArrayList]@()
     $ExistingResources = [System.Collections.ArrayList]@()
+    $DeletedResources = [System.Collections.ArrayList]@()
     $OverwrittenResources = [System.Collections.ArrayList]@()
     $DifferentResourcegroup = [System.Collections.ArrayList]@()
 
-    #go through each deployed Resource
+
+    $CheckRGResources = Get-AzureRmResource -ResourceGroupName $ResourceGroupName
+    foreach ($CheckRGResource in $CheckRGResources) {
+        if ($ValidatedResources.Name -notcontains $CheckRGResource.Name) {
+            Write-Verbose "Resource $($Resource.name) exists in the resourcegroup and mode is set to Complete"
+            Write-Verbose "RESOURCE WILL BE DELETED!"
+            $CheckRGResource.PSObject.TypeNames.Insert(0, 'ArmHelper.ExistingResource')
+            $null = $DeletedResources.Add($CheckRGResource)
+        }
+    }
+
+
+
     foreach ($Resource in $ValidatedResources) {
+
+
         $Check = Get-AzureRmResource -Name $Resource.name -ResourceType $Resource.type
         if ([string]::IsNullOrEmpty($Check)) {
             Write-Verbose "Resource $($Resource.name) does not exist, it will be created"
             $Resource.PSObject.TypeNames.Insert(0, 'ArmHelper.ExistingResource')
+            $Resource | Add-Member -MemberType NoteProperty -Name "ResourceGroupName" -Value ($ResourceGroupName) -ErrorAction SilentlyContinue
             $null = $NewResources.Add($Resource)
         }
         else {
@@ -89,12 +105,14 @@ Function Test-ARMExistingResource {
                     Write-Verbose "Resource $($Resource.name) already exists and mode is set to Complete"
                     Write-Verbose "RESOURCE WILL BE OVERWRITTEN!"
                     $Resource.PSObject.TypeNames.Insert(0, 'ArmHelper.ExistingResource')
+                    $Resource | Add-Member -MemberType NoteProperty -Name "ResourceGroupName" -Value ($ResourceGroupName) -ErrorAction SilentlyContinue
                     $null = $OverwrittenResources.Add($Resource)
                 }
                 elseif ($Result.Mode -eq "Incremental") {
                     Write-Verbose "Resource $($Resource.name) already exists, mode is set to incremental"
                     Write-Verbose "New properties might be added"
                     $Resource.PSObject.TypeNames.Insert(0, 'ArmHelper.ExistingResource')
+                    $Resource | Add-Member -MemberType NoteProperty -Name "ResourceGroupName" -Value ($ResourceGroupName) -ErrorAction SilentlyContinue
                     $null = $ExistingResources.Add($Resource)
                 }
                 else {
@@ -110,25 +128,31 @@ Function Test-ARMExistingResource {
         }
     }
     if ($NewResources.count -ne 0) {
-        Write-Output "The following resources do not exist and will be created"
+        Write-Output "The following resources do not exist and will be created:"
         $NewResources
         Write-Output ""
     }
 
     if ($ExistingResources.count -ne 0) {
-        Write-Output "The following resources exist. Mode is set to incremental. New properties might be added"
+        Write-Output "The following resources exist. Mode is set to incremental. New properties might be added:"
         $ExistingResources
         Write-Output ""
     }
 
     if ($OverwrittenResources.Count -ne 0) {
-        Write-Output "THE FOLLOWING RESOURCES WILL BE OVERWRITTEN! `n Resources exist and mode is complete."
+        Write-Output "THE FOLLOWING RESOURCES WILL BE OVERWRITTEN! `n Resources exist and mode is complete:"
         $OverwrittenResources
         Write-Output ""
     }
+
+    if ($DeletedResources.Count -ne 0) {
+        Write-Output "THE FOLLOWING RESOURCES WILL BE DELETED! `n Resources exist in the resourcegroup but not in the template, mode is complete:"
+        $DeletedResources
+        Write-Output ""
+    }
     if ($DifferentResourcegroup.Count -ne 0) {
-        Write-Output "The following resources exists, but in a different ResourceGroup. This deployment might fail."
-       # Write-Output "Resourcegroup for this deployment: $ResourceGroupName"
+        Write-Output "The following resources exists, but in a different ResourceGroup. This deployment might fail.`n"
+        # Write-Output "Resourcegroup for this deployment: $ResourceGroupName"
         $DifferentResourcegroup
         Write-Output ""
     }
