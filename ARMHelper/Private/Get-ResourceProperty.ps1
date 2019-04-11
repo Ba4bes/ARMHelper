@@ -1,5 +1,5 @@
 
-    <#
+<#
 .SYNOPSIS
 Returns a HashTable with all properties of an object, including nested properties
 
@@ -74,7 +74,7 @@ function Get-ResourceProperty {
 
                     $Key = $PropObject.Name
                     $Value = $PropObject.Value
-                    if ([string]::IsNullOrEmpty($key)){
+                    if ([string]::IsNullOrEmpty($key)) {
                         continue
                     }
                     if ($PropertiesReadable.$Key) {
@@ -92,7 +92,7 @@ function Get-ResourceProperty {
                 $Value = $PropertyObject
 
                 # Add tags for readability
-                if ($PathName -like "*Tags*"){
+                if ($PathName -like "*Tags*") {
                     $Key = "Tags: $($RootProperty.Name)" 
 
                 }
@@ -104,8 +104,6 @@ function Get-ResourceProperty {
             }
             # If $TypesToWrite does not contain the type, recurse.
             Elseif (-not($TypesToWrite.Contains($Type) ) ) {
-                            # Create a boolean to recognize tags
-
                 #Create a new path to the property
                 $ChildPathName = "$PathName.$Propname"
 
