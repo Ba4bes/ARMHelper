@@ -4,9 +4,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.1] - 2019-04-18
+
+### added
+
+- Pipelinesupport for Test-ARMExistingResource
+- Changed Get-ArmdeploymentErrormessage switch for pipeline to general throw
+
+### Fixed
+
+- Test-ARMExistingResource showed overwrite-output when mode was nog complete
+
 ## [0.1.1] - 2019-04-11
 
-### Fixed #9 Test-ARMExistingResource should output all resource group changes with complete switch
+### Fixed
+
+- #9 Test-ARMExistingResource should output all resource group changes with complete switch
 
 ## [0.1.0] - 2019-04-11
 

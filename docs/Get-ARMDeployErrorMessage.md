@@ -14,7 +14,7 @@ Tests an azure deployment for errors, Use the azure Logs if a generic message is
 
 ```
 Get-ARMDeploymentErrorMessage [-ResourceGroupName] <String> [-TemplateFile] <String>
- [-TemplateParameterFile] <String> [-Pipeline] [<CommonParameters>]
+ [-TemplateParameterFile] <String> [-Pipeline] [-ThrowOnError] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -93,6 +93,21 @@ Accept wildcard characters: False
 ### -Pipeline
 Use this parameter if this script is used in a CICDpipeline.
 It will make the step fail.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: False
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ThrowOnError
+This Switch will make the cmdlet throw when the deployment is incorrect. This can be useful in a pipeline, it will make the task fail.
 
 ```yaml
 Type: SwitchParameter
