@@ -15,6 +15,7 @@ You are at this point able to:
 - Check if resources that you want to deploy already exist and whether they would be overwritten.
 
 For an introduction, please view  <http://4bes.nl/2019/04/09/armhelper-a-module-to-help-create-arm-templates> 
+For usage in an Azure DevOps pipeline: <http://4bes.nl/2019/04/18/build-pipeline-in-azure-devops-for-arm-templates-part-ii-using-armhelper-and-yaml>
 
 ## Common setup
 
