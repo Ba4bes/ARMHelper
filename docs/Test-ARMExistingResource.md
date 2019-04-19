@@ -14,7 +14,7 @@ Show if resource that are set to be deployed already exist
 
 ```
 Test-ARMExistingResource [-ResourceGroupName] <String> [-TemplateFile] <String>
- [-TemplateParameterFile] <String> [-Mode <String>] [<CommonParameters>]
+ [-TemplateParameterFile] <String> [-Mode <String>] [-ThrowWhenRemoving] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -103,6 +103,21 @@ Aliases:
 Required: False
 Position: Named
 Default value: Incremental
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ThrowWhenRemoving
+This switch makes the function throw when a resources would be overwritten or deleted. This can be useful for use in a pipeline.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: False
 ```

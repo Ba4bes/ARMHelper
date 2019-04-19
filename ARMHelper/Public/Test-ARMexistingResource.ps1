@@ -20,6 +20,9 @@ The path to the parameterfile
 The mode in which the deployment will run. Choose between Incremental or Complete.
 Defaults to incremental.
 
+.PARAMETER ThrowWhenRemoving
+This switch makes the function throw when a resources would be overwritten or deleted. This can be useful for use in a pipeline.
+
 .EXAMPLE
 Get-ARMDeploymentErrorMessage -ResourceGroupName ArmTest -TemplateFile .\azuredeploy.json -TemplateParameterFile .\azuredeploy.parameters.json
 
@@ -53,7 +56,9 @@ Function Test-ARMExistingResource {
         [string] $TemplateParameterFile,
         [parameter ()]
         [ValidateSet("Incremental", "Complete")]
-        [string] $Mode = "Incremental"
+        [string] $Mode = "Incremental",
+        [parameter()]
+        [switch] $ThrowWhenRemoving
     )
 
     #set variables
@@ -66,6 +71,9 @@ Function Test-ARMExistingResource {
 
     $Result = Get-ARMResource @Parameters
 
+    if ([string]::IsNullOrEmpty($Result.Mode)) {
+        Throw "Something is wrong with the output, no resources found. Please check your deployment with Get-ARMdeploymentErrorMessage"
+    }
     #tell the user if de mode is complete or incremental
     Write-Output "Mode for deployment is $($Result.Mode) `n"
 
@@ -76,10 +84,9 @@ Function Test-ARMExistingResource {
     $OverwrittenResources = [System.Collections.ArrayList]@()
     $DifferentResourcegroup = [System.Collections.ArrayList]@()
 
-
     $CheckRGResources = Get-AzureRmResource -ResourceGroupName $ResourceGroupName
     foreach ($CheckRGResource in $CheckRGResources) {
-        if ($ValidatedResources.Name -notcontains $CheckRGResource.Name) {
+        if ($ValidatedResources.Name -notcontains $CheckRGResource.Name -and $Mode -eq "Complete") {
             Write-Verbose "Resource $($Resource.name) exists in the resourcegroup and mode is set to Complete"
             Write-Verbose "RESOURCE WILL BE DELETED!"
             $CheckRGResource.PSObject.TypeNames.Insert(0, 'ArmHelper.ExistingResource')
@@ -87,11 +94,7 @@ Function Test-ARMExistingResource {
         }
     }
 
-
-
     foreach ($Resource in $ValidatedResources) {
-
-
         $Check = Get-AzureRmResource -Name $Resource.name -ResourceType $Resource.type
         if ([string]::IsNullOrEmpty($Check)) {
             Write-Verbose "Resource $($Resource.name) does not exist, it will be created"
@@ -143,12 +146,18 @@ Function Test-ARMExistingResource {
         Write-Output "THE FOLLOWING RESOURCES WILL BE OVERWRITTEN! `n Resources exist and mode is complete:"
         $OverwrittenResources
         Write-Output ""
+        if ($ThrowWhenRemoving) {
+            Throw "Resources will be deleted or overwritten."
+        }
     }
 
     if ($DeletedResources.Count -ne 0) {
         Write-Output "THE FOLLOWING RESOURCES WILL BE DELETED! `n Resources exist in the resourcegroup but not in the template, mode is complete:"
         $DeletedResources
         Write-Output ""
+        if ($ThrowWhenRemoving) {
+            Throw "Resources will be deleted or overwritten."
+        }
     }
     if ($DifferentResourcegroup.Count -ne 0) {
         Write-Output "A resource of the same type and same name exists in other resourcegroup(s). This deployment might fail.`n"
@@ -156,5 +165,4 @@ Function Test-ARMExistingResource {
         $DifferentResourcegroup
         Write-Output ""
     }
-
 }

@@ -17,6 +17,10 @@ The path to the parameterfile
 
 .PARAMETER Pipeline
 Use this parameter if this script is used in a CICDpipeline. It will make the step fail.
+This parameter is replaced by ThrowOnError and will be removed in a later release!
+
+.PARAMETER ThrowOnError
+This Switch will make the cmdlet throw when the deployment is incorrect. This can be useful in a pipeline, it will make the task fail.
 
 .EXAMPLE
 Get-ARMDeploymentErrorMessage -ResourceGroupName ArmTest -TemplateFile .\azuredeploy.json -TemplateParameterFile .\azuredeploy.parameters.json
@@ -50,8 +54,13 @@ function Get-ARMDeploymentErrorMessage {
         [Parameter(Position = 3, Mandatory = $true)]
         [string] $TemplateParameterFile,
         [Parameter()]
-        [switch] $Pipeline
+        [switch] $Pipeline,
+        [Parameter()]
+        [switch] $ThrowOnError
     )
+    if ($Pipeline) {
+        Write-Warning "This parameter will be removed in the next release. Please use -ThrowOnError as an replacement"
+    }
 
     Try {
         $null = Get-AzureRmContext
@@ -86,6 +95,9 @@ function Get-ARMDeploymentErrorMessage {
 
         #Get Relevant logentry
         $LogContent = (Get-AzureRmLog -CorrelationId $trackingID -WarningAction ignore).Properties.Content
+        if ([string]::IsNullOrEmpty($LogContent)) {
+            Throw "Can't get Azure Log Entry. Please check the log manually in the portal."
+        }
         $DetailedError = $LogContent[0].statusMessage
         $ErrorCode = ($DetailedError | ConvertFrom-Json ).error.details.details.code
         $ErrorMessage = ($DetailedError | ConvertFrom-Json ).error.details.details.message
@@ -107,6 +119,9 @@ function Get-ARMDeploymentErrorMessage {
         #exit code 1 is for Azure DevOps to stop the build in failed state. locally it just stops the script
         if ($Pipeline) {
             [Environment]::Exit(1)
+        }
+        if ($ThrowOnError) {
+            Throw "Deployment is incorrect"
         }
     }
     else {
