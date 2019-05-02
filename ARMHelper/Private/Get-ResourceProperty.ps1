@@ -63,7 +63,9 @@ function Get-ResourceProperty {
 
             #Object to process
             $PropertyObject = $($Object.$Propname)
-
+            if ($Null -eq $PropertyObject) {
+                Continue
+            }
             # Get the type, and only recurse into it if it is not one of our excluded types
             $Type = ($PropertyObject.GetType()).tostring()
             $Array = ($PropertyObject.GetType()).BaseType.tostring()
@@ -93,7 +95,7 @@ function Get-ResourceProperty {
 
                 # Add tags for readability
                 if ($PathName -like "*Tags*") {
-                    $Key = "Tags: $($RootProperty.Name)" 
+                    $Key = "Tags: $($RootProperty.Name)"
 
                 }
                 if ($PropertiesReadable.$Key) {
