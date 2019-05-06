@@ -99,8 +99,15 @@ function Get-ARMDeploymentErrorMessage {
             Throw "Can't get Azure Log Entry. Please check the log manually in the portal."
         }
         $DetailedError = $LogContent[0].statusMessage
-        $ErrorCode = ($DetailedError | ConvertFrom-Json ).error.details.details.code
-        $ErrorMessage = ($DetailedError | ConvertFrom-Json ).error.details.details.message
+        $TestError = ($DetailedError | ConvertFrom-Json ).error.details.details
+        if ([string]::IsNullOrEmpty($testError)) {
+            $ErrorCode = ($DetailedError | ConvertFrom-Json ).error.details.code
+            $ErrorMessage = ($DetailedError | ConvertFrom-Json ).error.details.message
+        }
+        else {
+            $ErrorCode = ($DetailedError | ConvertFrom-Json ).error.details.details.code
+            $ErrorMessage = ($DetailedError | ConvertFrom-Json ).error.details.details.message
+        }
     }
 
     if (-not [string]::IsNullOrEmpty($Output) ) {
