@@ -23,20 +23,23 @@ Function Get-ARMResource {
         Mode                  = $Mode
     }
 
-    try {
-        $null = Get-AzureRmContext
-    }
-    Catch {
-        Throw "No connection with AzureRM has been found. Please Connect."
-    }
-
     $Output = $null
-    #set debugpreference to continue so the Test-AzureRmResourceGroupDeployment runs with more output
+    #set debugpreference to continue so the cmdlet runs with more output
+    $Module = Test-ARMAzureModule
     $oldDebugPreference = $DebugPreference
     $DebugPreference = "Continue"
 
-    $Output = Test-AzureRmResourceGroupDeployment @parameters 5>&1 -ErrorAction Stop
-
+   
+    if ($Module -eq "Az"){
+        $Output = Test-AzResourceGroupDeployment @parameters 5>&1 -ErrorAction Stop
+    }
+    elseif ($Module -eq "AzureRM"){
+        $Output = Test-AzureRmResourceGroupDeployment @parameters 5>&1 -ErrorAction Stop
+    
+    }
+    else {
+        Throw "Something went wrong, No AzureRM of AZ module found"
+    }
     #Set DebugPreference back to original setting
     $DebugPreference = $oldDebugPreference
     if ([string]::IsNullOrEmpty($Output)) {

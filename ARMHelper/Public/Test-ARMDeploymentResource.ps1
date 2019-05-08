@@ -4,7 +4,7 @@ Gives output that shows all resources that would be deployed by an ARMtemplate
 
 .DESCRIPTION
 When you enter a ARM template and a parameter file, this function will show what would be deployed
-To do this, it used the debug output of Test-AzureRmResourceGroupDeployment.
+To do this, it used the debug output of Test-AzureRmResourceGroupDeployment or Test-AzResourceGroupDeployment.
 A list of all the resources is provided with the most important properties.
 Some resources have seperated functions to structure the output.
 If no function is available, a generic output will be given.

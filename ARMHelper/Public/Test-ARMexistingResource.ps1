@@ -3,7 +3,7 @@
 Show if resource that are set to be deployed already exist
 
 .DESCRIPTION
-This function uses Test-AzureRmResourceGroupDeployment with debug output to find out what resources are deployed.
+This function uses Test-AzureRmResourceGroupDeployment or Test-AzResourceGroupDeployment with debug output to find out what resources are deployed.
 After that, it checks if those resources exist in Azure.
 It will output the results when using complete mode or incremental mode (depending on the ARM template)
 
@@ -69,6 +69,9 @@ Function Test-ARMExistingResource {
         Mode                  = $Mode
     }
 
+    #Get the AzureModule that's being used
+    $Module = Test-ARMAzureModule
+
     $Result = Get-ARMResource @Parameters
 
     if ([string]::IsNullOrEmpty($Result.Mode)) {
@@ -83,8 +86,16 @@ Function Test-ARMExistingResource {
     $DeletedResources = [System.Collections.ArrayList]@()
     $OverwrittenResources = [System.Collections.ArrayList]@()
     $DifferentResourcegroup = [System.Collections.ArrayList]@()
-
-    $CheckRGResources = Get-AzureRmResource -ResourceGroupName $ResourceGroupName
+ 
+    if ($Module -eq "Az") {
+        $CheckRGResources = Get-AzResource -ResourceGroupName $ResourceGroupName
+    }
+    elseif ($Module -eq "AzureRM") {
+        $CheckRGResources = Get-AzureRmResource -ResourceGroupName $ResourceGroupName
+    }
+    else {
+        Throw "Something went wrong, No AzureRM of AZ module found"
+    } 
     foreach ($CheckRGResource in $CheckRGResources) {
         if ($ValidatedResources.Name -notcontains $CheckRGResource.Name -and $Mode -eq "Complete") {
             Write-Verbose "Resource $($Resource.name) exists in the resourcegroup and mode is set to Complete"
@@ -95,7 +106,16 @@ Function Test-ARMExistingResource {
     }
 
     foreach ($Resource in $ValidatedResources) {
-        $Check = Get-AzureRmResource -Name $Resource.name -ResourceType $Resource.type
+        if ($Module -eq "Az") {
+            $Check = Get-AzResource -Name $Resource.name -ResourceType $Resource.type
+        }
+        elseif ($Module -eq "AzureRM") {
+            $Check = Get-AzureRmResource -Name $Resource.name -ResourceType $Resource.type
+        }
+        else {
+            Throw "Something went wrong, No AzureRM of AZ module found"
+        } 
+
         if ([string]::IsNullOrEmpty($Check)) {
             Write-Verbose "Resource $($Resource.name) does not exist, it will be created"
             $Resource.PSObject.TypeNames.Insert(0, 'ArmHelper.ExistingResource')

@@ -73,17 +73,21 @@ function Get-ResourceProperty {
             # If it's an array, go through each object
             if ($Array -eq "System.Array") {
                 foreach ($PropObject in $PropertyObject) {
-
                     $Key = $PropObject.Name
                     $Value = $PropObject.Value
                     if ([string]::IsNullOrEmpty($key)) {
                         continue
+                    }
+                    if ([string]::IsNullOrEmpty($Value)) {
+                        $Members = ($PropObject | get-member -Type NoteProperty | Where-Object { $_.Name -ne "Name" }).Name
+                        $Value = $PropObject.$Members
                     }
                     if ($PropertiesReadable.$Key) {
                         $Path = $PathName.Replace(".properties", "")
                         $Key = "$Path.$($PropObject.Name)"
                     }
                     $PropertiesReadable.add($Key, $Value)
+                    Continue
                 }
             }
             #If $TypesToWrite containt the type, write results to hashtable
