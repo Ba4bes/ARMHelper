@@ -108,7 +108,6 @@ function Get-ARMDeploymentErrorMessage {
         else {
             Throw "Something went wrong, No AzureRM of AZ module found"
         }   
-
         if ([string]::IsNullOrEmpty($LogContent)) {
             Throw "Can't get Azure Log Entry. Please check the log manually in the portal."
         }

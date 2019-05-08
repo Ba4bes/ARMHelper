@@ -86,7 +86,6 @@ Function Test-ARMExistingResource {
     $DeletedResources = [System.Collections.ArrayList]@()
     $OverwrittenResources = [System.Collections.ArrayList]@()
     $DifferentResourcegroup = [System.Collections.ArrayList]@()
- 
     if ($Module -eq "Az") {
         $CheckRGResources = Get-AzResource -ResourceGroupName $ResourceGroupName
     }
@@ -115,7 +114,6 @@ Function Test-ARMExistingResource {
         else {
             Throw "Something went wrong, No AzureRM of AZ module found"
         } 
-
         if ([string]::IsNullOrEmpty($Check)) {
             Write-Verbose "Resource $($Resource.name) does not exist, it will be created"
             $Resource.PSObject.TypeNames.Insert(0, 'ArmHelper.ExistingResource')
