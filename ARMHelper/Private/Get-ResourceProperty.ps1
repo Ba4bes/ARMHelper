@@ -63,7 +63,9 @@ function Get-ResourceProperty {
 
             #Object to process
             $PropertyObject = $($Object.$Propname)
-
+            if ($Null -eq $PropertyObject) {
+                Continue
+            }
             # Get the type, and only recurse into it if it is not one of our excluded types
             $Type = ($PropertyObject.GetType()).tostring()
             $Array = ($PropertyObject.GetType()).BaseType.tostring()
@@ -71,17 +73,21 @@ function Get-ResourceProperty {
             # If it's an array, go through each object
             if ($Array -eq "System.Array") {
                 foreach ($PropObject in $PropertyObject) {
-
                     $Key = $PropObject.Name
                     $Value = $PropObject.Value
                     if ([string]::IsNullOrEmpty($key)) {
                         continue
+                    }
+                    if ([string]::IsNullOrEmpty($Value)) {
+                        $Members = ($PropObject | get-member -Type NoteProperty | Where-Object { $_.Name -ne "Name" }).Name
+                        $Value = $PropObject.$Members
                     }
                     if ($PropertiesReadable.$Key) {
                         $Path = $PathName.Replace(".properties", "")
                         $Key = "$Path.$($PropObject.Name)"
                     }
                     $PropertiesReadable.add($Key, $Value)
+                    Continue
                 }
             }
             #If $TypesToWrite containt the type, write results to hashtable
@@ -93,7 +99,7 @@ function Get-ResourceProperty {
 
                 # Add tags for readability
                 if ($PathName -like "*Tags*") {
-                    $Key = "Tags: $($RootProperty.Name)" 
+                    $Key = "Tags: $($RootProperty.Name)"
 
                 }
                 if ($PropertiesReadable.$Key) {

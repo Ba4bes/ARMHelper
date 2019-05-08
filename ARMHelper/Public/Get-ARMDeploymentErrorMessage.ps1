@@ -3,7 +3,7 @@
 Tests an azure deployment for errors, Use the azure Logs if a generic message is given.
 
 .DESCRIPTION
-This function uses Test-AzureRmResourceGroupDeployment. There is a specific errormessage that's very generic.
+This function uses Test-AzureRmResourceGroupDeployment or Test-AZResourcegroupDeployment. There is a specific errormessage that's very generic.
 If this is the output, the correct errormessage is retrieved from the Azurelog
 
 .PARAMETER ResourceGroupName
@@ -62,13 +62,6 @@ function Get-ARMDeploymentErrorMessage {
         Write-Warning "This parameter will be removed in the next release. Please use -ThrowOnError as an replacement"
     }
 
-    Try {
-        $null = Get-AzureRmContext
-    }
-    Catch {
-        Throw "AzureRM module is not loaded or no connection is made with Azure. Please connect to Azure"
-    }
-
     #set variables
     $Output = $null
     $DetailedError = $null
@@ -77,12 +70,24 @@ function Get-ARMDeploymentErrorMessage {
         TemplateFile          = $TemplateFile
         TemplateParameterFile = $TemplateParameterFile
     }
+
+    #Get the AzureModule that's being used
+    $Module = Test-ARMAzureModule
     try {
-        $Output = Test-AzureRmResourceGroupDeployment @parameters
+        if ($Module -eq "Az"){
+            $Output = Test-AzResourceGroupDeployment @parameters 
+        }
+        elseif ($Module -eq "AzureRM"){
+            $Output = Test-AzureRmResourceGroupDeployment @parameters 
+        }
+        else {
+            Throw "Something went wrong, No AzureRM of AZ module found"
+        }        
     }
     catch {
         throw "Could not test deployment because of following error $_"
     }
+
     #Check for a specific output. This output is a very generic error-message.
     #So this script looks for the more clear errormessage in the AzureLogs.
     if ($Output.Message -like "*s not valid according to the validation procedure*") {
@@ -94,13 +99,28 @@ function Get-ARMDeploymentErrorMessage {
         $trackingID = $IDs.Matches.Value | Select-Object -Last 1
 
         #Get Relevant logentry
-        $LogContent = (Get-AzureRmLog -CorrelationId $trackingID -WarningAction ignore).Properties.Content
+        if ($Module -eq "Az"){
+            $LogContent = (Get-AzLog -CorrelationId $trackingID -WarningAction ignore).Properties.Content
+        }
+        elseif ($Module -eq "AzureRM"){
+            $LogContent = (Get-AzureRmLog -CorrelationId $trackingID -WarningAction ignore).Properties.Content
+        }
+        else {
+            Throw "Something went wrong, No AzureRM of AZ module found"
+        }   
         if ([string]::IsNullOrEmpty($LogContent)) {
             Throw "Can't get Azure Log Entry. Please check the log manually in the portal."
         }
         $DetailedError = $LogContent[0].statusMessage
-        $ErrorCode = ($DetailedError | ConvertFrom-Json ).error.details.details.code
-        $ErrorMessage = ($DetailedError | ConvertFrom-Json ).error.details.details.message
+        $TestError = ($DetailedError | ConvertFrom-Json ).error.details.details
+        if ([string]::IsNullOrEmpty($testError)) {
+            $ErrorCode = ($DetailedError | ConvertFrom-Json ).error.details.code
+            $ErrorMessage = ($DetailedError | ConvertFrom-Json ).error.details.message
+        }
+        else {
+            $ErrorCode = ($DetailedError | ConvertFrom-Json ).error.details.details.code
+            $ErrorMessage = ($DetailedError | ConvertFrom-Json ).error.details.details.message
+        }
     }
 
     if (-not [string]::IsNullOrEmpty($Output) ) {

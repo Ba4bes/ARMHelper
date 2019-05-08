@@ -17,13 +17,15 @@ You are at this point able to:
 For an introduction, please view  <http://4bes.nl/2019/04/09/armhelper-a-module-to-help-create-arm-templates>
 For usage in an Azure DevOps pipeline: <https://4bes.nl/2019/04/19/build-pipeline-in-azure-devops-for-arm-templates-part-ii-using-armhelper-and-yaml/>
 
+For usage in an Azure DevOps pipeline: <http://4bes.nl/2019/04/18/build-pipeline-in-azure-devops-for-arm-templates-part-ii-using-armhelper-and-yaml>
+
 ## Common setup
 
 ### prerequisites
 
 - Access to an Azure subscription
-- Have the AzureRM module installed and a connection ready
-- Windows Powershell. At this point, Core is not yes supported.
+- Have the AzureRM or AZ module installed and a connection ready
+- Windows PowerShell or PowerShell Core. No tests have been done on MacOS or Linux yet.
 
 ### Installation
 
