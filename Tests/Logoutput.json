@@ -1,0 +1,9 @@
+{
+    "Properties": {
+        "Content": {
+            "statusCode": "BadRequest",
+            "serviceRequestId": null,
+            "statusMessage": "{\"error\":{\"code\":\"InvalidTemplateDeployment\",\"message\":\"The template deployment 'f0f1ac32-fdc6-44ba-90c7-2aed1a84388e' is not valid according to the validation procedure. The tracking id is 'a9ec07b0-86be-429b-b8a5-c5b2dd32d003'. See inner errors for details. Please see https://aka.ms/arm-deploy for usage details.\",\"details\":[{\"code\":\"PreflightValidationCheckFailed\",\"message\":\"Preflight validation failed. Please refer to the details for the specific errors.\",\"details\":[{\"code\":\"AccountNameInvalid\",\"target\":\"s aqkc32cvb2qmmw\",\"message\":\"s aqkc32cvb2qmmw is not a valid storage account name. Storage account name must be between 3 and 24 characters in length and use numbers and lower-case letters only.\"}]}]}}"
+        }
+    }
+}
