@@ -1,8 +1,6 @@
 $projectRoot = Resolve-Path "$PSScriptRoot\.."
 $moduleRoot = Split-Path (Resolve-Path "$projectRoot\*\*.psm1")
 $moduleName = Split-Path $moduleRoot -Leaf
-$here = (Split-Path -Parent $MyInvocation.MyCommand.Path) -replace "\\Tests"
-$sut = (Split-Path -Leaf $MyInvocation.MyCommand.Path) -replace '\.Tests\.', '.'
 
 Import-Module (Join-Path $moduleRoot "$moduleName.psd1") -force
 
@@ -16,9 +14,9 @@ Describe 'Check Get-ARMDEploymentErrorMessage' {
             templateparameterfile = ".\azuredeploy.parameters.json"
         }
         Context 'Basic functionality AzureRM' {
-            function Test-AzureRMResourceGroupDeployment([String]$Name,[Object]$Value,[Switch]$Clobber) {}
+            function Test-AzureRMResourceGroupDeployment([String]$Name, [Object]$Value, [Switch]$Clobber) { }
 
-            function Get-AzureRMLog([String]$Name,[Object]$Value,[Switch]$Clobber) {}
+            function Get-AzureRMLog([String]$Name, [Object]$Value, [Switch]$Clobber) { }
             Mock Test-ARMAzureModule { "AzureRM" }
             It "When a deployment is correct, output is deployment is correct" {
                 Mock Test-AzureRmResourceGroupDeployment -parameterfilter { $Parameters } { $null }
@@ -52,12 +50,12 @@ Describe 'Check Get-ARMDEploymentErrorMessage' {
                 Mock Start-Sleep { $null }
                 $Result = Get-ARMDeploymentErrorMessage @Parameters
                 $Result[0] | Should -Be "the output is a generic error message. The log is searched for a more clear errormessage"
-                $Result[2] | Should -Be "General Error. Find info below:"
-                $Result[3] | Should -Be "ErrorCode: AccountNameInvalid"
-                $Result[4] | Should -Be "Errormessage: s aqkc32cvb2qmmw is not a valid storage account name. Storage account name must be between 3 and 24 characters in length and use numbers and lower-case letters only."
+                $Result[-3] | Should -Be "General Error. Find info below:"
+                $Result[-2] | Should -Be "ErrorCode: AccountNameInvalid"
+                $Result[-1] | Should -Be "Errormessage: s aqkc32cvb2qmmw is not a valid storage account name. Storage account name must be between 3 and 24 characters in length and use numbers and lower-case letters only."
             }
             It "When no errormessage is found in azurelog, script throws" {
-                Mock Test-AzureRmResourceGroupDeployment -parameterfilter { $Parameters } {
+                Mock Test-AzResourceGroupDeployment -parameterfilter { $Parameters } {
                     [pscustomobject]@{
                         Code    = 'InvalidTemplateDeployment'
                         Message = "The template deployment '12345678-1234-1234-1234-12345678abcd' is not valid according to the validation procedure. The
@@ -68,6 +66,7 @@ Describe 'Check Get-ARMDEploymentErrorMessage' {
                 Mock Get-AzureRMLog {
                     $null
                 }
+                Mock Start-Sleep { $null }
                 { Get-ARMDeploymentErrorMessage @Parameters } | Should -Throw "Can't get Azure Log Entry. Please check the log manually in the portal."
             }
             It "Throws when TrowonError is used" {
@@ -93,8 +92,8 @@ Describe 'Check Get-ARMDEploymentErrorMessage' {
             }
         }
         Context 'Basic functionality Az' {
-            function Test-AzResourceGroupDeployment([String]$Name,[Object]$Value,[Switch]$Clobber) {}
-            function Get-AzLog([String]$Name,[Object]$Value,[Switch]$Clobber) {}
+            function Test-AzResourceGroupDeployment([String]$Name, [Object]$Value, [Switch]$Clobber) { }
+            function Get-AzLog([String]$Name, [Object]$Value, [Switch]$Clobber) { }
 
             Mock Test-ARMAzureModule { "Az" }
             It "When a deployment is correct, output is deployment is correct" {
@@ -129,9 +128,9 @@ Describe 'Check Get-ARMDEploymentErrorMessage' {
                 Mock Start-Sleep { $null }
                 $Result = Get-ARMDeploymentErrorMessage @Parameters
                 $Result[0] | Should -Be "the output is a generic error message. The log is searched for a more clear errormessage"
-                $Result[2] | Should -Be "General Error. Find info below:"
-                $Result[3] | Should -Be "ErrorCode: AccountNameInvalid"
-                $Result[4] | Should -Be "Errormessage: s aqkc32cvb2qmmw is not a valid storage account name. Storage account name must be between 3 and 24 characters in length and use numbers and lower-case letters only."
+                $Result[-3] | Should -Be "General Error. Find info below:"
+                $Result[-2] | Should -Be "ErrorCode: AccountNameInvalid"
+                $Result[-1] | Should -Be "Errormessage: s aqkc32cvb2qmmw is not a valid storage account name. Storage account name must be between 3 and 24 characters in length and use numbers and lower-case letters only."
             }
             It "When no errormessage is found in azurelog, script throws" {
                 Mock Test-AzResourceGroupDeployment -parameterfilter { $Parameters } {
@@ -145,6 +144,7 @@ Describe 'Check Get-ARMDEploymentErrorMessage' {
                 Mock Get-AzLog {
                     $null
                 }
+                Mock Start-Sleep { $null }
                 { Get-ARMDeploymentErrorMessage @Parameters } | Should -Throw "Can't get Azure Log Entry. Please check the log manually in the portal."
             }
             It "Throws when TrowonError is used" {
