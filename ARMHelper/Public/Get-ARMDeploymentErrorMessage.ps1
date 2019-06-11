@@ -151,5 +151,4 @@ function Get-ARMDeploymentErrorMessage {
     else {
         Write-Output "deployment is correct"
     }
-
 }

@@ -15,7 +15,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Bugfix for Get-ARMDeploymentErrorMessage ending in a timeout #14
 
-
 ## [0.3.3] - 2019-05-08
 
 ### added
