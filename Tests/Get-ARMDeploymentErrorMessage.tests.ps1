@@ -55,7 +55,7 @@ Describe 'Check Get-ARMDEploymentErrorMessage' {
                 $Result[-1] | Should -Be "Errormessage: s aqkc32cvb2qmmw is not a valid storage account name. Storage account name must be between 3 and 24 characters in length and use numbers and lower-case letters only."
             }
             It "When no errormessage is found in azurelog, script throws" {
-                Mock Test-AzResourceGroupDeployment -parameterfilter { $Parameters } {
+                Mock Test-AzureRmResourceGroupDeployment -parameterfilter { $Parameters } {
                     [pscustomobject]@{
                         Code    = 'InvalidTemplateDeployment'
                         Message = "The template deployment '12345678-1234-1234-1234-12345678abcd' is not valid according to the validation procedure. The
