@@ -74,15 +74,15 @@ function Get-ARMDeploymentErrorMessage {
     #Get the AzureModule that's being used
     $Module = Test-ARMAzureModule
     try {
-        if ($Module -eq "Az"){
-            $Output = Test-AzResourceGroupDeployment @parameters 
+        if ($Module -eq "Az") {
+            $Output = Test-AzResourceGroupDeployment @parameters
         }
-        elseif ($Module -eq "AzureRM"){
-            $Output = Test-AzureRmResourceGroupDeployment @parameters 
+        elseif ($Module -eq "AzureRM") {
+            $Output = Test-AzureRmResourceGroupDeployment @parameters
         }
         else {
             Throw "Something went wrong, No AzureRM of AZ module found"
-        }        
+        }
     }
     catch {
         throw "Could not test deployment because of following error $_"
@@ -92,23 +92,28 @@ function Get-ARMDeploymentErrorMessage {
     #So this script looks for the more clear errormessage in the AzureLogs.
     if ($Output.Message -like "*s not valid according to the validation procedure*") {
         Write-Output "the output is a generic error message. The log is searched for a more clear errormessage"
-        Start-Sleep 30
         #use regex to find the ID of the log
         $Regex = '[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}'
         $IDs = $Output.Message | Select-String $Regex -AllMatches
         $trackingID = $IDs.Matches.Value | Select-Object -Last 1
+        $MaxTries = 0
+        do {
+            Start-Sleep 30
+            Write-Output "The log is searched."
 
-        #Get Relevant logentry
-        if ($Module -eq "Az"){
-            $LogContent = (Get-AzLog -CorrelationId $trackingID -WarningAction ignore).Properties.Content
-        }
-        elseif ($Module -eq "AzureRM"){
-            $LogContent = (Get-AzureRmLog -CorrelationId $trackingID -WarningAction ignore).Properties.Content
-        }
-        else {
-            Throw "Something went wrong, No AzureRM of AZ module found"
-        }   
-        if ([string]::IsNullOrEmpty($LogContent)) {
+            if ($Module -eq "Az") {
+                $LogContent = (Get-AzLog -CorrelationId $trackingID -WarningAction ignore).Properties.Content
+            }
+            elseif ($Module -eq "AzureRM") {
+                $LogContent = (Get-AzureRmLog -CorrelationId $trackingID -WarningAction ignore).Properties.Content
+            }
+            else {
+                Throw "Something went wrong, No AzureRM of AZ module found"
+            }
+            $MaxTries ++
+        } while ($null -eq $LogContent -and $maxtries -le 5)
+
+        if ($maxtries -gt 5 ) {
             Throw "Can't get Azure Log Entry. Please check the log manually in the portal."
         }
         $DetailedError = $LogContent[0].statusMessage
@@ -124,7 +129,6 @@ function Get-ARMDeploymentErrorMessage {
     }
 
     if (-not [string]::IsNullOrEmpty($Output) ) {
-
         #check if DetailedError has been used. if it is, return the value
         if (-not[string]::IsNullOrEmpty($DetailedError)) {
             Write-Output "General Error. Find info below:"
@@ -147,5 +151,4 @@ function Get-ARMDeploymentErrorMessage {
     else {
         Write-Output "deployment is correct"
     }
-
 }

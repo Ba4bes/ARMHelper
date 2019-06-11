@@ -29,13 +29,13 @@ Function Get-ARMResource {
     $oldDebugPreference = $DebugPreference
     $DebugPreference = "Continue"
 
-   
+
     if ($Module -eq "Az"){
         $Output = Test-AzResourceGroupDeployment @parameters 5>&1 -ErrorAction Stop
     }
     elseif ($Module -eq "AzureRM"){
         $Output = Test-AzureRmResourceGroupDeployment @parameters 5>&1 -ErrorAction Stop
-    
+
     }
     else {
         Throw "Something went wrong, No AzureRM of AZ module found"
