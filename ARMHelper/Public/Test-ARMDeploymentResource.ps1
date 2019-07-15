@@ -55,6 +55,17 @@ function Test-ARMDeploymentResource {
         Throw "Something is wrong with the output, no resources found. Please check your deployment with Get-ARMdeploymentErrorMessage"
     }
 
+    # A list of securestrings is created to mask the output at a later time
+    $Resultparameters = ($Result.parameters) | get-member -MemberType NoteProperty
+    $SecureParameters = [System.Collections.Generic.List[string]]::new()
+
+    Foreach ($parameter in $Resultparameters) {
+        $Type = $result.parameters.$($parameter.Name).Type
+        If ($Type -eq "SecureString") {
+            $SecureParameters.Add($Parameter.Name)
+        }
+    }
+
     $ValidatedResources = $Result.ValidatedResources
 
     #go through each deployed Resource
