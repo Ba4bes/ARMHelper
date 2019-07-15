@@ -1,0 +1,242 @@
+{
+    "templateHash":  "1220693435534564543",
+    "parameters":  {
+                       "adminUsername":  {
+                                             "type":  "String",
+                                             "value":  "Henk"
+                                         },
+                       "adminPassword":  {
+                                             "type":  "SecureString"
+                                         },
+                       "dnsLabelPrefix":  {
+                                              "type":  "String",
+                                              "value":  "eandomrlkajelnadada"
+                                          },
+                       "windowsOSVersion":  {
+                                                "type":  "String",
+                                                "value":  "2016-Datacenter"
+                                            },
+                       "location":  {
+                                        "type":  "String",
+                                        "value":  "westeurope"
+                                    }
+                   },
+    "mode":  "Incremental",
+    "provisioningState":  "Succeeded",
+    "timestamp":  "2019-07-05T20:45:58.2062472Z",
+    "duration":  "PT0S",
+    "correlationId":  "9363190b-4ba0-461b-a5da-dc736bb382b0",
+    "providers":  [
+                      {
+                          "namespace":  "Microsoft.Storage",
+                          "resourceTypes":  [
+                                                {
+                                                    "resourceType":  "storageAccounts",
+                                                    "locations":  [
+                                                                      "westeurope"
+                                                                  ]
+                                                }
+                                            ]
+                      },
+                      {
+                          "namespace":  "Microsoft.Network",
+                          "resourceTypes":  [
+                                                {
+                                                    "resourceType":  "publicIPAddresses",
+                                                    "locations":  [
+                                                                      "westeurope"
+                                                                  ]
+                                                },
+                                                {
+                                                    "resourceType":  "virtualNetworks",
+                                                    "locations":  [
+                                                                      "westeurope"
+                                                                  ]
+                                                },
+                                                {
+                                                    "resourceType":  "networkInterfaces",
+                                                    "locations":  [
+                                                                      "westeurope"
+                                                                  ]
+                                                }
+                                            ]
+                      },
+                      {
+                          "namespace":  "Microsoft.Compute",
+                          "resourceTypes":  [
+                                                {
+                                                    "resourceType":  "virtualMachines",
+                                                    "locations":  [
+                                                                      "westeurope"
+                                                                  ]
+                                                }
+                                            ]
+                      }
+                  ],
+    "dependencies":  [
+                         {
+                             "dependsOn":  [
+                                               {
+                                                   "id":  "/subscriptions/61115fe7-d5b1-4f92-a54a-69c4b7a2a1c8/resourceGroups/ARMtesting/providers/Microsoft.Network/publicIPAddresses/myPublicIP",
+                                                   "resourceType":  "Microsoft.Network/publicIPAddresses",
+                                                   "resourceName":  "myPublicIP"
+                                               },
+                                               {
+                                                   "id":  "/subscriptions/61115fe7-d5b1-4f92-a54a-69c4b7a2a1c8/resourceGroups/ARMtesting/providers/Microsoft.Network/virtualNetworks/MyVNET",
+                                                   "resourceType":  "Microsoft.Network/virtualNetworks",
+                                                   "resourceName":  "MyVNET"
+                                               }
+                                           ],
+                             "id":  "/subscriptions/61115fe7-d5b1-4f92-a54a-69c4b7a2a1c8/resourceGroups/armtesting/providers/Microsoft.Network/networkInterfaces/myVMNic",
+                             "resourceType":  "Microsoft.Network/networkInterfaces",
+                             "resourceName":  "myVMNic"
+                         },
+                         {
+                             "dependsOn":  [
+                                               {
+                                                   "id":  "/subscriptions/61115fe7-d5b1-4f92-a54a-69c4b7a2a1c8/resourceGroups/ARMtesting/providers/Microsoft.Storage/storageAccounts/qkc32cvb2qmmwsawinvm",
+                                                   "resourceType":  "Microsoft.Storage/storageAccounts",
+                                                   "resourceName":  "qkc32cvb2qmmwsawinvm"
+                                               },
+                                               {
+                                                   "id":  "/subscriptions/61115fe7-d5b1-4f92-a54a-69c4b7a2a1c8/resourceGroups/ARMtesting/providers/Microsoft.Network/networkInterfaces/myVMNic",
+                                                   "resourceType":  "Microsoft.Network/networkInterfaces",
+                                                   "resourceName":  "myVMNic"
+                                               }
+                                           ],
+                             "id":  "/subscriptions/61115fe7-d5b1-4f92-a54a-69c4b7a2a1c8/resourceGroups/armtesting/providers/Microsoft.Compute/virtualMachines/SimpleWinVM",
+                             "resourceType":  "Microsoft.Compute/virtualMachines",
+                             "resourceName":  "SimpleWinVM"
+                         }
+                     ],
+    "validatedResources":  [
+                               {
+                                   "apiVersion":  "2018-11-01",
+                                   "id":  "/subscriptions/61115fe7-d5b1-4f92-a54a-69c4b7a2a1c8/resourceGroups/armtesting/providers/Microsoft.Storage/storageAccounts/qkc32cvb2qmmwsawinvm",
+                                   "name":  "qkc32cvb2qmmwsawinvm",
+                                   "type":  "Microsoft.Storage/storageAccounts",
+                                   "sku":  {
+                                               "name":  "Standard_LRS"
+                                           },
+                                   "kind":  "Storage",
+                                   "location":  "westeurope",
+                                   "properties":  {
+
+                                                  }
+                               },
+                               {
+                                   "apiVersion":  "2018-11-01",
+                                   "id":  "/subscriptions/61115fe7-d5b1-4f92-a54a-69c4b7a2a1c8/resourceGroups/armtesting/providers/Microsoft.Network/publicIPAddresses/myPublicIP",
+                                   "name":  "myPublicIP",
+                                   "type":  "Microsoft.Network/publicIPAddresses",
+                                   "location":  "westeurope",
+                                   "properties":  {
+                                                      "publicIPAllocationMethod":  "Dynamic",
+                                                      "dnsSettings":  {
+                                                                          "domainNameLabel":  "eandomrlkajelnadada"
+                                                                      }
+                                                  }
+                               },
+                               {
+                                   "apiVersion":  "2018-11-01",
+                                   "id":  "/subscriptions/61115fe7-d5b1-4f92-a54a-69c4b7a2a1c8/resourceGroups/armtesting/providers/Microsoft.Network/virtualNetworks/MyVNET",
+                                   "name":  "MyVNET",
+                                   "type":  "Microsoft.Network/virtualNetworks",
+                                   "location":  "westeurope",
+                                   "properties":  {
+                                                      "addressSpace":  {
+                                                                           "addressPrefixes":  [
+                                                                                                   "10.0.0.0/16"
+                                                                                               ]
+                                                                       },
+                                                      "subnets":  [
+                                                                      {
+                                                                          "name":  "Subnet",
+                                                                          "properties":  {
+                                                                                             "addressPrefix":  "10.0.0.0/24"
+                                                                                         }
+                                                                      }
+                                                                  ]
+                                                  }
+                               },
+                               {
+                                   "dependsOn":  [
+                                                     "/subscriptions/61115fe7-d5b1-4f92-a54a-69c4b7a2a1c8/resourceGroups/ARMtesting/providers/Microsoft.Network/publicIPAddresses/myPublicIP",
+                                                     "/subscriptions/61115fe7-d5b1-4f92-a54a-69c4b7a2a1c8/resourceGroups/ARMtesting/providers/Microsoft.Network/virtualNetworks/MyVNET"
+                                                 ],
+                                   "apiVersion":  "2018-11-01",
+                                   "id":  "/subscriptions/61115fe7-d5b1-4f92-a54a-69c4b7a2a1c8/resourceGroups/armtesting/providers/Microsoft.Network/networkInterfaces/myVMNic",
+                                   "name":  "myVMNic",
+                                   "type":  "Microsoft.Network/networkInterfaces",
+                                   "location":  "westeurope",
+                                   "properties":  {
+                                                      "ipConfigurations":  [
+                                                                               {
+                                                                                   "name":  "ipconfig1",
+                                                                                   "properties":  {
+                                                                                                      "privateIPAllocationMethod":  "Dynamic",
+                                                                                                      "publicIPAddress":  {
+                                                                                                                              "id":  "/subscriptions/61115fe7-d5b1-4f92-a54a-69c4b7a2a1c8/resourceGroups/ARMtesting/providers/Microsoft.Network/publicIPAddresses/myPublicIP"
+                                                                                                                          },
+                                                                                                      "subnet":  {
+                                                                                                                     "id":  "/subscriptions/61115fe7-d5b1-4f92-a54a-69c4b7a2a1c8/resourceGroups/ARMtesting/providers/Microsoft.Network/virtualNetworks/MyVNET/subnets/Subnet"
+                                                                                                                 }
+                                                                                                  }
+                                                                               }
+                                                                           ]
+                                                  }
+                               },
+                               {
+                                   "dependsOn":  [
+                                                     "/subscriptions/61115fe7-d5b1-4f92-a54a-69c4b7a2a1c8/resourceGroups/ARMtesting/providers/Microsoft.Storage/storageAccounts/qkc32cvb2qmmwsawinvm",
+                                                     "/subscriptions/61115fe7-d5b1-4f92-a54a-69c4b7a2a1c8/resourceGroups/ARMtesting/providers/Microsoft.Network/networkInterfaces/myVMNic"
+                                                 ],
+                                   "apiVersion":  "2018-10-01",
+                                   "id":  "/subscriptions/61115fe7-d5b1-4f92-a54a-69c4b7a2a1c8/resourceGroups/armtesting/providers/Microsoft.Compute/virtualMachines/SimpleWinVM",
+                                   "name":  "SimpleWinVM",
+                                   "type":  "Microsoft.Compute/virtualMachines",
+                                   "location":  "westeurope",
+                                   "properties":  {
+                                                      "hardwareProfile":  {
+                                                                              "vmSize":  "Standard_A2"
+                                                                          },
+                                                      "osProfile":  {
+                                                                        "computerName":  "SimpleWinVM",
+                                                                        "adminUsername":  "Henk",
+                                                                        "adminPassword":  "Welkom123"
+                                                                    },
+                                                      "storageProfile":  {
+                                                                             "imageReference":  {
+                                                                                                    "publisher":  "MicrosoftWindowsServer",
+                                                                                                    "offer":  "WindowsServer",
+                                                                                                    "sku":  "2016-Datacenter",
+                                                                                                    "version":  "latest"
+                                                                                                },
+                                                                             "osDisk":  {
+                                                                                            "createOption":  "FromImage"
+                                                                                        },
+                                                                             "dataDisks":  [
+                                                                                               {
+                                                                                                   "diskSizeGB":  1023,
+                                                                                                   "lun":  0,
+                                                                                                   "createOption":  "Empty"
+                                                                                               }
+                                                                                           ]
+                                                                         },
+                                                      "networkProfile":  {
+                                                                             "networkInterfaces":  [
+                                                                                                       {
+                                                                                                           "id":  "/subscriptions/61115fe7-d5b1-4f92-a54a-69c4b7a2a1c8/resourceGroups/ARMtesting/providers/Microsoft.Network/networkInterfaces/myVMNic"
+                                                                                                       }
+                                                                                                   ]
+                                                                         },
+                                                      "diagnosticsProfile":  {
+                                                                                 "bootDiagnostics":  {
+                                                                                                         "enabled":  true,
+                                                                                                         "storageUri":  "[reference(resourceId(\u0027Microsoft.Storage/storageAccounts/\u0027, variables(\u0027storageAccountName\u0027))).primaryEndpoints.blob]"
+                                                                                                     }
+                                                                             }
+                                                  }
+                               }
+                           ]
+}
