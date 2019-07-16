@@ -1,10 +1,10 @@
 $projectRoot = Resolve-Path "$PSScriptRoot\.."
 $moduleRoot = Split-Path (Resolve-Path "$projectRoot\*\*.psm1")
 $moduleName = Split-Path $moduleRoot -Leaf
-# if (Get-Module ARMHelper) {
-#     Remove-Module ArmHelper
-# }
-# Import-Module (Join-Path $moduleRoot "$moduleName.psd1") -force
+if (Get-Module ARMHelper) {
+    Remove-Module ArmHelper
+}
+Import-Module (Join-Path $moduleRoot "$moduleName.psd1") -force
 
 
 Describe 'Check Get-ARMDEploymentErrorMessage without Azure' -Tag @("Mock") {
@@ -29,7 +29,7 @@ Describe 'Check Get-ARMDEploymentErrorMessage without Azure' -Tag @("Mock") {
                 $Result[0].Type | Should -be "Microsoft.Storage/storageAccounts"
                 $Result[0].Location | Should -be "westeurope"
                 $Result[0].mode | Should -be "Incremental"
-                $Result[0].ID | Should -be "/subscriptions/61115fe7-d5b1-4f92-a54a-69c4b7a2a1c8/resourceGroups/armtesting/providers/Microsoft.Storage/storageAccounts/qkc32cvb2qmmwsawinvm"
+                $Result[0].ID | Should -be "/subscriptions/12345678-abcd-1234-1234-12345678/resourceGroups/armtesting/providers/Microsoft.Storage/storageAccounts/qkc32cvb2qmmwsawinvm"
                 $Result[0].kind | Should -be "Storage"
                 $Result[0].sku.name | Should -BeNullOrEmpty
             }

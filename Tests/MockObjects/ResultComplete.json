@@ -21,7 +21,7 @@
                                         "value":  "westeurope"
                                     }
                    },
-    "mode":  "Incremental",
+    "mode":  "Complete",
     "provisioningState":  "Succeeded",
     "timestamp":  "2019-07-05T20:45:58.2062472Z",
     "duration":  "PT0S",
