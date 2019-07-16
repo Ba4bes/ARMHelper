@@ -24,7 +24,7 @@ Defaults to incremental.
 This switch makes the function throw when a resources would be overwritten or deleted. This can be useful for use in a pipeline.
 
 .EXAMPLE
-Get-ARMDeploymentErrorMessage -ResourceGroupName ArmTest -TemplateFile .\azuredeploy.json -TemplateParameterFile .\azuredeploy.parameters.json
+Test-ARMDeploymentErrorMessage -ResourceGroupName ArmTest -TemplateFile .\azuredeploy.json -TemplateParameterFile .\azuredeploy.parameters.json
 
 --------
 the output is a generic error message. The log is searched for a more clear errormessageGeneral Error. Find info below:
@@ -32,7 +32,7 @@ ErrorCode: InvalidDomainNameLabel
 Errormessage: The domain name label LABexample is invalid. It must conform to the following regular expression: ^[a-z][a-z0-9-]{1,61}[a-z0-9]$.
 
 .EXAMPLE
-Get-ARMexistingResource Armtesting .\VM01\azuredeploy.json .\VM01\azuredeploy.parameters.json
+Test-ARMexistingResource Armtesting .\VM01\azuredeploy.json .\VM01\azuredeploy.parameters.json
 
 --------
 deployment is correct
@@ -94,7 +94,7 @@ Function Test-ARMExistingResource {
     }
     else {
         Throw "Something went wrong, No AzureRM of AZ module found"
-    } 
+    }
     foreach ($CheckRGResource in $CheckRGResources) {
         if ($ValidatedResources.Name -notcontains $CheckRGResource.Name -and $Mode -eq "Complete") {
             Write-Verbose "Resource $($Resource.name) exists in the resourcegroup and mode is set to Complete"
@@ -113,7 +113,7 @@ Function Test-ARMExistingResource {
         }
         else {
             Throw "Something went wrong, No AzureRM of AZ module found"
-        } 
+        }
         if ([string]::IsNullOrEmpty($Check)) {
             Write-Verbose "Resource $($Resource.name) does not exist, it will be created"
             $Resource.PSObject.TypeNames.Insert(0, 'ArmHelper.ExistingResource')
@@ -179,7 +179,6 @@ Function Test-ARMExistingResource {
     }
     if ($DifferentResourcegroup.Count -ne 0) {
         Write-Output "A resource of the same type and same name exists in other resourcegroup(s). This deployment might fail.`n"
-        # Write-Output "Resourcegroup for this deployment: $ResourceGroupName"
         $DifferentResourcegroup
         Write-Output ""
     }
