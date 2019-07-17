@@ -24,18 +24,14 @@ Defaults to incremental.
 This switch makes the function throw when a resources would be overwritten or deleted. This can be useful for use in a pipeline.
 
 .EXAMPLE
-Test-ARMDeploymentErrorMessage -ResourceGroupName ArmTest -TemplateFile .\azuredeploy.json -TemplateParameterFile .\azuredeploy.parameters.json
+Test-ARMexistingResource -ResourceGroupName ArmTest -TemplateFile .\azuredeploy.json -TemplateParameterFile .\azuredeploy.parameters.json
 
 --------
-the output is a generic error message. The log is searched for a more clear errormessageGeneral Error. Find info below:
-ErrorCode: InvalidDomainNameLabel
-Errormessage: The domain name label LABexample is invalid. It must conform to the following regular expression: ^[a-z][a-z0-9-]{1,61}[a-z0-9]$.
+The following resources exist. Mode is set to incremental. New properties might be added:
 
-.EXAMPLE
-Test-ARMexistingResource Armtesting .\VM01\azuredeploy.json .\VM01\azuredeploy.parameters.json
-
---------
-deployment is correct
+type                                               name                                               Current ResourcegroupName
+----                                               ----                                               -------------------------
+Microsoft.Storage/storageAccounts                  armsta                                             armtest
 
 .NOTES
 Author: Barbara Forbes
