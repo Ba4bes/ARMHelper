@@ -7,10 +7,12 @@ if (Get-Module ARMHelper) {
 Import-Module (Join-Path $moduleRoot "$moduleName.psd1") -force
 
 
+
 Describe 'Check Test-ARMExistingResource without Azure' -Tag @("Mock") {
 
     InModuleScope ARMHelper {
-
+        function Get-AzResource([String]$Name, [Object]$Value, [Switch]$Clobber) { }
+        function Get-AzureRMResource([String]$Name, [Object]$Value, [Switch]$Clobber) { }
         Context 'Az: Incremental' {
             $Parameters = @{
                 resourcegroupname     = "Arm"
@@ -22,10 +24,9 @@ Describe 'Check Test-ARMExistingResource without Azure' -Tag @("Mock") {
             Mock Get-ARMResource {
                 [object]$Mockobject
             }
-            function Get-AzResource([String]$Name, [Object]$Value, [Switch]$Clobber) { }
-
             It "When all resources are new, output shows they will be created" {
                 Mock Get-AzResource {$null}
+                Mock Get-AzureRMResource {$null}
                 $Result = Test-ARMExistingResource @Parameters
                 $Result[0] | Should -Be "Mode for deployment is Incremental `n"
                 $Result[1] | Should -Be "The following resources do not exist and will be created:"
@@ -35,6 +36,9 @@ Describe 'Check Test-ARMExistingResource without Azure' -Tag @("Mock") {
             It "When resources already exist and mode is incremental, they will be shown as so" {
                 $MockAZResource = (Get-Content "$PSScriptRoot\MockObjects\ExistingResources.json") | ConvertFrom-Json
                 Mock Get-AzResource {
+                    [object]$MockAZResource
+                }
+                Mock Get-AzureRMResource {
                     [object]$MockAZResource
                 }
                 $Result = Test-ARMExistingResource @Parameters
@@ -62,6 +66,9 @@ Describe 'Check Test-ARMExistingResource without Azure' -Tag @("Mock") {
                 Mock Get-AzResource {
                     [object]$MockAZResource
                 }
+                Mock Get-AzureRMResource {
+                    [object]$MockAZResource
+                }
                 $Result = Test-ARMExistingResource @Parameters
                 $Result[0] | Should -Be "Mode for deployment is Complete `n"
                 $Result[1] | Should -Be "THE FOLLOWING RESOURCES WILL BE OVERWRITTEN! `n Resources exist and mode is complete:"
@@ -71,6 +78,9 @@ Describe 'Check Test-ARMExistingResource without Azure' -Tag @("Mock") {
             it "When resources would be deleted, they are shown as deleted" {
                 $MockAZResource = (Get-Content "$PSScriptRoot\MockObjects\ExistingResourcesDeleted.json") | ConvertFrom-Json
                 Mock Get-AzResource {
+                    [object]$MockAZResource
+                }
+                Mock Get-AzureRMResource {
                     [object]$MockAZResource
                 }
                 $Result = Test-ARMExistingResource @Parameters
@@ -84,26 +94,29 @@ Describe 'Check Test-ARMExistingResource without Azure' -Tag @("Mock") {
                 Mock Get-AzResource {
                     [object]$MockAZResource
                 }
+                Mock Get-AzureRMResource {
+                    [object]$MockAZResource
+                }
                 { Test-ARMExistingResource @Parameters -ThrowWhenRemoving }  | Should throw
              }
-            it "When ThrowWehnRemoving is used, but  nothing would be overwritten, it will not throw"{
+            it "When ThrowWhenRemoving is used, but  nothing would be overwritten, it will not throw"{
                 $MockAZResource = (Get-Content "$PSScriptRoot\MockObjects\ExistingResources.json") | ConvertFrom-Json
                 Mock Get-AzResource {
                     [object]$MockAZResource
                 }
+                Mock Get-AzureRMResource {
+                    [object]$MockAZResource
+                }
                 { Test-ARMExistingResource @Parameters -ThrowWhenRemoving }  | Should throw
             }
-            # it "When resources are found in another resourcegroup, a warning is given"{
-
-            # }
-            # it "Should throw when no result is found" {
-            #     Mock Get-ARMResource { $null }
-            #     { Test-ARMDeploymentResource @Parameters } | Should throw "Something is wrong with the output, no resources found. Please check your deployment with Get-ARMdeploymentErrorMessage"
-            # }
+            it "Should throw when no result is found" {
+                Mock Get-ARMResource { $null }
+                { Test-ARMExistingResource @Parameters } | Should throw "Something is wrong with the output, no resources found. Please check your deployment with Get-ARMdeploymentErrorMessage"
+            }
             It "All Mocks are called" {
                 Assert-MockCalled -CommandName Get-ARMResource
                 Assert-MockCalled -CommandName Get-AzResource
-             #   Assert-MockCalled -CommandName Get-AzureRMResource
+                Assert-MockCalled -CommandName Get-AzureRMResource
             }
         }
     }
