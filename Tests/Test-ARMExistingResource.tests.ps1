@@ -13,14 +13,14 @@ Describe 'Check Test-ARMExistingResource without Azure' -Tag @("Mock") {
     InModuleScope ARMHelper {
         function Get-AzResource([String]$Name, [Object]$Value, [Switch]$Clobber) { }
         function Get-AzureRMResource([String]$Name, [Object]$Value, [Switch]$Clobber) { }
-        Context 'Az: Incremental' {
+        Context 'Incremental' {
             $Parameters = @{
                 resourcegroupname     = "Arm"
                 templatefile          = ".\azuredeploy.json"
                 templateparameterfile = ".\azuredeploy.parameters.json"
                 Mode                  = "Incremental"
             }
-            $Mockobject = (Get-Content "$PSScriptRoot\Result.json") | ConvertFrom-Json
+            $Mockobject = (Get-Content "$PSScriptRoot\MockObjects\Result.json") | ConvertFrom-Json
             Mock Get-ARMResource {
                 [object]$Mockobject
             }
@@ -49,7 +49,7 @@ Describe 'Check Test-ARMExistingResource without Azure' -Tag @("Mock") {
 
             }
         }
-        Context 'Az Complete '{
+        Context 'Complete '{
             function Get-AzResource([String]$Name, [Object]$Value, [Switch]$Clobber) { }
             $Parameters = @{
                 resourcegroupname     = "Arm"
@@ -113,10 +113,8 @@ Describe 'Check Test-ARMExistingResource without Azure' -Tag @("Mock") {
                 Mock Get-ARMResource { $null }
                 { Test-ARMExistingResource @Parameters } | Should throw "Something is wrong with the output, no resources found. Please check your deployment with Get-ARMdeploymentErrorMessage"
             }
-            It "All Mocks are called" {
+            It "Mocks are called" {
                 Assert-MockCalled -CommandName Get-ARMResource
-                Assert-MockCalled -CommandName Get-AzResource
-                Assert-MockCalled -CommandName Get-AzureRMResource
             }
         }
     }

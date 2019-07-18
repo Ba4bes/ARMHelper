@@ -15,7 +15,7 @@ Describe 'Check Get-ARMDEploymentErrorMessage without Azure' -Tag @("Mock") {
             templateparameterfile = ".\azuredeploy.parameters.json"
         }
         Context 'Basic functionallity' {
-            $Mockobject = (Get-Content "$PSScriptRoot\Result.json") | ConvertFrom-Json
+            $Mockobject = (Get-Content "$PSScriptRoot\MockObjects\Result.json") | ConvertFrom-Json
             Mock Get-ARMResource {
                 [object]$Mockobject
             }

@@ -6,7 +6,7 @@ Import-Module (Join-Path $moduleRoot "$moduleName.psd1") -force
 
 
 
-Describe 'Check Get-ARMDEploymentErrorMessage' {
+Describe 'Check Get-ARMDEploymentErrorMessage' -Tag @("Mock") {
     InModuleScope ARMHelper {
         $Parameters = @{
             resourcegroupname     = "Arm"
@@ -43,7 +43,7 @@ Describe 'Check Get-ARMDEploymentErrorMessage' {
                 for usage details."
                     }
                 }
-                $Mockobject = (Get-Content $PSScriptRoot\Logoutput.json) | ConvertFrom-Json
+                $Mockobject = (Get-Content $PSScriptRoot\MockObjects\Logoutput.json) | ConvertFrom-Json
                 Mock Get-AzureRMLog {
                     [object]$Mockobject
                 }
@@ -78,7 +78,7 @@ Describe 'Check Get-ARMDEploymentErrorMessage' {
                     for usage details."
                     }
                 }
-                $Mockobject = (Get-Content $PSScriptRoot\Logoutput.json) | ConvertFrom-Json
+                $Mockobject = (Get-Content $PSScriptRoot\MockObjects\Logoutput.json) | ConvertFrom-Json
                 Mock Get-AzureRMLog {
                     [object]$Mockobject
                 }
@@ -121,7 +121,7 @@ Describe 'Check Get-ARMDEploymentErrorMessage' {
                 for usage details."
                     }
                 }
-                $Mockobject = (Get-Content $PSScriptRoot\Logoutput.json) | ConvertFrom-Json
+                $Mockobject = (Get-Content $PSScriptRoot\MockObjects\Logoutput.json) | ConvertFrom-Json
                 Mock Get-AzLog {
                     [object]$Mockobject
                 }
@@ -156,7 +156,7 @@ Describe 'Check Get-ARMDEploymentErrorMessage' {
                     for usage details."
                     }
                 }
-                $Mockobject = (Get-Content $PSScriptRoot\Logoutput.json) | ConvertFrom-Json
+                $Mockobject = (Get-Content $PSScriptRoot\MockObjects\Logoutput.json) | ConvertFrom-Json
                 Mock Get-AzLog {
                     [object]$Mockobject
                 }
