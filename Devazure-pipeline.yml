@@ -56,7 +56,7 @@ stages:
          Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser
 
          Import-Module "$(Build.SourcesDirectory)\ARMHelper" -Force
-         $outputFile = ".\TEST-RESULTS.xml"
+         $outputFile = "$(Build.SourcesDirectory)\TEST-RESULTS.xml"
          Invoke-Pester -Script @{
           Path =  '$(Build.SourcesDirectory)\Tests\AzureTesting\pipelinetest.ps1'
           Parameters = @{
