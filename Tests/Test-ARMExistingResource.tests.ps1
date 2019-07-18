@@ -139,7 +139,8 @@ Describe 'Check Test-ARMExistingResource without Azure' -Tag @("Mock") {
             }
         }
         Context 'Complete '{
-            function Get-AzResource([String]$Name, [Object]$Value, [Switch]$Clobber) { }
+            
+            function Get-AzureRMResource([String]$Name, [Object]$Value, [Switch]$Clobber) { }
             $Parameters = @{
                 resourcegroupname     = "Arm"
                 templatefile          = ".\azuredeploy.json"
