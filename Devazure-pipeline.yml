@@ -1,0 +1,76 @@
+name: Development
+
+trigger:
+  branches:
+    include:
+    - '*'  # must quote since "*" is a YAML reserved character; we want a string
+
+stages:
+
+- stage: BuildWin
+  jobs:
+  - job: OfflineTests
+    pool:
+      vmImage: windows-2019
+    steps:
+    - powershell: |
+       Install-PackageProvider -Name NuGet -Force -Scope CurrentUser
+       Install-Module -Name Pester -Force -Scope CurrentUser -SkipPublisherCheck
+       Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser
+       Import-Module "$(Build.SourcesDirectory)\ARMHelper" -Force
+      displayName: 'Install Pester and import module'
+    - powershell: |
+        $outputFile = ".\WinUnitTEST-RESULTS.xml"
+        Invoke-Pester -Tag Mock, Module -OutputFile $outputFile -OutputFormat NUnitXml -enableExit
+      failOnStderr: false
+      displayName: 'Invoke-Pester UnitTests'
+    - task: PublishTestResults@2
+      displayName: Publish Test Results
+      inputs:
+        testRunTitle: 'Pester Rusults Windows'
+        buildPlatform: 'Windows'
+        testRunner: 'NUnit'
+        testResultsFiles: './TEST-RESULTS.xml'
+        failTaskOnFailedTests: true # required to fail build when tests fail
+   
+    - task: PowerShell@2
+      displayName: 'PSScriptanalyzer-tests'
+      inputs:
+        targetType: filePath
+        filePath: Tests/PSScriptAnalyzer.ps1
+        arguments: '-ScriptPath "$(Build.SourcesDirectory)\ARMHelper\"'
+        failOnStderr: true
+  - job: OnlineTests
+    pool:
+      vmImage: windows-2019
+    steps:
+    - task: AzurePowerShell@3
+      displayName: 'Pester testing with Azure'
+      inputs:
+        azureSubscription: AzureConnection
+        ScriptType: InlineScript
+        Inline: |
+
+         Install-PackageProvider -Name NuGet -Force -Scope CurrentUser
+         Install-Module -Name Pester -Force -Scope CurrentUser -SkipPublisherCheck
+         Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser
+
+         Import-Module "$(Build.SourcesDirectory)\ARMHelper" -Force
+         $outputFile = ".\WinGlobalTEST-RESULTS.xml"
+         Invoke-Pester -Script @{
+          Path =  '$(Build.SourcesDirectory)\Tests\AzureTesting\pipelinetest.ps1'
+          Parameters = @{
+          TemplatePath = '$(Build.SourcesDirectory)\Tests\AzureTesting'
+          }
+         } -OutputFile $outputFile -OutputFormat NUnitXml -enableExit
+
+        FailOnStandardError: false
+        azurePowerShellVersion: LatestVersion
+    - task: PublishTestResults@2
+      displayName: Publish Test Results
+      inputs:
+        testRunTitle: 'WINGlobal Test Results for Pester'
+        buildPlatform: 'Windows'
+        testRunner: 'NUnit'
+        testResultsFiles: '$(Build.SourcesDirectory)/WinGlobalTEST-RESULTS.xml'
+        failTaskOnFailedTests: true # required to fail build when tests fail
