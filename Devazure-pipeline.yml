@@ -7,7 +7,7 @@ trigger:
 
 stages:
 
-- stage: BuildWin
+- stage: Build
   jobs:
   - job: OfflineTests
     pool:
@@ -20,14 +20,14 @@ stages:
        Import-Module "$(Build.SourcesDirectory)\ARMHelper" -Force
       displayName: 'Install Pester and import module'
     - powershell: |
-        $outputFile = ".\WinUnitTEST-RESULTS.xml"
+        $outputFile = ".\TEST-RESULTS.xml"
         Invoke-Pester -Tag Mock, Module -OutputFile $outputFile -OutputFormat NUnitXml -enableExit
       failOnStderr: false
       displayName: 'Invoke-Pester UnitTests'
     - task: PublishTestResults@2
       displayName: Publish Test Results
       inputs:
-        testRunTitle: 'Pester Rusults Windows'
+        testRunTitle: 'Offline Pester Results Windows'
         buildPlatform: 'Windows'
         testRunner: 'NUnit'
         testResultsFiles: './TEST-RESULTS.xml'
@@ -56,7 +56,7 @@ stages:
          Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser
 
          Import-Module "$(Build.SourcesDirectory)\ARMHelper" -Force
-         $outputFile = ".\WinGlobalTEST-RESULTS.xml"
+         $outputFile = ".\TEST-RESULTS.xml"
          Invoke-Pester -Script @{
           Path =  '$(Build.SourcesDirectory)\Tests\AzureTesting\pipelinetest.ps1'
           Parameters = @{
@@ -69,8 +69,9 @@ stages:
     - task: PublishTestResults@2
       displayName: Publish Test Results
       inputs:
-        testRunTitle: 'WINGlobal Test Results for Pester'
+        testRunTitle: 'Online Pester Results Windows'
         buildPlatform: 'Windows'
         testRunner: 'NUnit'
-        testResultsFiles: '$(Build.SourcesDirectory)/WinGlobalTEST-RESULTS.xml'
+        testResultsFiles: '$(Build.SourcesDirectory)/TEST-RESULTS.xml'
         failTaskOnFailedTests: true # required to fail build when tests fail
+
