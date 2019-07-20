@@ -38,7 +38,7 @@ stages:
         buildPlatform: 'Windows'
         testRunner: 'NUnit'
         testResultsFiles: './TEST-RESULTS.xml'
-      failTaskOnFailedTests: true
+        failTaskOnFailedTests: true
   - job: BuildMacOS
     pool:
       vmImage: macOS-10.14
