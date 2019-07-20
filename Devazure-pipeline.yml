@@ -30,7 +30,7 @@ stages:
           }
           } -OutputFile $outputFile -OutputFormat NUnitXml -enableExit
         FailOnStandardError: false
-      azurePowerShellVersion: LatestVersion
+        azurePowerShellVersion: LatestVersion
     - task: PublishTestResults@2
       displayName: 'Publish Offline Test Results'
       inputs:
