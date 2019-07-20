@@ -18,7 +18,7 @@ steps:
     testRunner: 'NUnit'
     testResultsFiles: './TEST-RESULTS.xml'
     failTaskOnFailedTests: true
-- task: AzurePowerShell@3
+- task: AzurePowerShell@4
   displayName: 'Pester testing with Azure'
   inputs:
     azureSubscription: AzureConnection
