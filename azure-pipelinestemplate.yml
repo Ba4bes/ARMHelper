@@ -18,26 +18,4 @@ steps:
     testRunner: 'NUnit'
     testResultsFiles: './TEST-RESULTS.xml'
     failTaskOnFailedTests: true
-- task: AzurePowerShell@4
-  displayName: 'Pester testing with Azure'
-  inputs:
-    azureSubscription: AzureConnection
-    ScriptType: InlineScript
-    Inline: |
-      $outputFile = "$(Build.SourcesDirectory)\TEST-RESULTS.xml"
-      Invoke-Pester -Script @{
-      Path =  '$(Build.SourcesDirectory)\Tests\AzureTesting\pipelinetest.ps1'
-      Parameters = @{
-      TemplatePath = '$(Build.SourcesDirectory)\Tests\AzureTesting'
-      }
-      } -OutputFile $outputFile -OutputFormat NUnitXml -enableExit
-    FailOnStandardError: false
-    azurePowerShellVersion: LatestVersion
-- task: PublishTestResults@2
-  displayName: 'Publish Offline Test Results'
-  inputs:
-    testRunTitle: 'online Pester Results $(platform)'
-    buildPlatform: 'Windows'
-    testRunner: 'NUnit'
-    testResultsFiles: './TEST-RESULTS.xml'
-    failTaskOnFailedTests: true
+
