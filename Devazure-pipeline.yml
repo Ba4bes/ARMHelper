@@ -14,19 +14,19 @@ stages:
       vmImage: windows-2019
     steps:
     - template: azure-pipelinestemplate.yml
-    parameters:
-      platform: 'Windows'
+      parameters:
+        platform: 'Windows'
   - job: BuildMacOS
     pool:
       vmImage: macOS-10.14
     steps:
     - template: azure-pipelinestemplate.yml
-    parameters:
-      platform: 'MacOS'
+      parameters:
+        platform: 'MacOS'
   - job: BuildLinux
     pool:
       vmImage: ubuntu-16.04
     steps:
     - template: azure-pipelinestemplate.yml
-    parameters:
-      platform: 'Linux'
+      parameters:
+        platform: 'Linux'
