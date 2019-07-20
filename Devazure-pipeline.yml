@@ -9,100 +9,24 @@ stages:
 
 - stage: Build
   jobs:
-  - job: OfflineTests
+  - job: BuildWindows
     pool:
       vmImage: windows-2019
     steps:
-    - powershell: |
-       Install-PackageProvider -Name NuGet -Force -Scope CurrentUser
-       Install-Module -Name Pester -Force -Scope CurrentUser -SkipPublisherCheck
-       Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser
-       Import-Module "$(Build.SourcesDirectory)\ARMHelper" -Force
-      displayName: 'Install Pester and import module'
-    - powershell: |
-        $outputFile = ".\TEST-RESULTS.xml"
-        Invoke-Pester -Tag Mock, Module -OutputFile $outputFile -OutputFormat NUnitXml -enableExit
-      failOnStderr: false
-      displayName: 'Invoke-Pester UnitTests'
-    - task: PublishTestResults@2
-      displayName: Publish Test Results
-      inputs:
-        testRunTitle: 'Offline Pester Results Windows'
-        buildPlatform: 'Windows'
-        testRunner: 'NUnit'
-        testResultsFiles: './TEST-RESULTS.xml'
-        failTaskOnFailedTests: true # required to fail build when tests fail
-
-    - task: PowerShell@2
-      displayName: 'PSScriptanalyzer-tests'
-      inputs:
-        targetType: filePath
-        filePath: Tests/PSScriptAnalyzer.ps1
-        arguments: '-ScriptPath "$(Build.SourcesDirectory)\ARMHelper\"'
-        failOnStderr: true
-  - job: macOS
+    - template: azure-pipelinestemplate.yml
+    parameters:
+      platform: 'Windows'
+  - job: BuildMacOS
     pool:
-      vmImage: 'macOS-10.13'
+      vmImage: macOS-10.14
     steps:
-    - powershell: |
-       Install-Module -Name Pester -Force -Scope CurrentUser -SkipPublisherCheck
-       Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser
-       Import-Module "$(Build.SourcesDirectory)\ARMHelper" -Force
-      displayName: 'Install Pester and import module'
-    - powershell: |
-        $outputFile = ".\TEST-RESULTS.xml"
-        Invoke-Pester -Tag Mock, Module -OutputFile $outputFile -OutputFormat NUnitXml -enableExit
-      failOnStderr: false
-      displayName: 'Invoke-Pester UnitTests'
-    - task: PublishTestResults@2
-      displayName: Publish Test Results
-      inputs:
-        testRunTitle: 'Offline Pester Results Windows'
-        buildPlatform: 'Windows'
-        testRunner: 'NUnit'
-        testResultsFiles: './TEST-RESULTS.xml'
-        failTaskOnFailedTests: true # required to fail build when tests fail
-
-    - task: PowerShell@2
-      displayName: 'PSScriptanalyzer-tests'
-      inputs:
-        targetType: filePath
-        filePath: Tests/PSScriptAnalyzer.ps1
-        arguments: '-ScriptPath "$(Build.SourcesDirectory)\ARMHelper\"'
-        failOnStderr: true
-
-  - job: OnlineTests
+    - template: azure-pipelinestemplate.yml
+    parameters:
+      platform: 'MacOS'
+  - job: BuildLinux
     pool:
-      vmImage: windows-2019
+      vmImage: ubuntu-16.04
     steps:
-    - task: AzurePowerShell@3
-      displayName: 'Pester testing with Azure'
-      inputs:
-        azureSubscription: AzureConnection
-        ScriptType: InlineScript
-        Inline: |
-
-         Install-PackageProvider -Name NuGet -Force -Scope CurrentUser
-         Install-Module -Name Pester -Force -Scope CurrentUser -SkipPublisherCheck
-         Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser
-
-         Import-Module "$(Build.SourcesDirectory)\ARMHelper" -Force
-         $outputFile = "$(Build.SourcesDirectory)\TEST-RESULTS.xml"
-         Invoke-Pester -Script @{
-          Path =  '$(Build.SourcesDirectory)\Tests\AzureTesting\pipelinetest.ps1'
-          Parameters = @{
-          TemplatePath = '$(Build.SourcesDirectory)\Tests\AzureTesting'
-          }
-         } -OutputFile $outputFile -OutputFormat NUnitXml -enableExit
-
-        FailOnStandardError: false
-        azurePowerShellVersion: LatestVersion
-    - task: PublishTestResults@2
-      displayName: Publish Test Results
-      inputs:
-        testRunTitle: 'Online Pester Results Windows'
-        buildPlatform: 'Windows'
-        testRunner: 'NUnit'
-        testResultsFiles: '$(Build.SourcesDirectory)/TEST-RESULTS.xml'
-        failTaskOnFailedTests: true # required to fail build when tests fail
-
+    - template: azure-pipelinestemplate.yml
+    parameters:
+      platform: 'Linux'
