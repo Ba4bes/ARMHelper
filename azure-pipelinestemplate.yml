@@ -1,3 +1,6 @@
+parameters:
+  platform: ''
+
 steps:
 - powershell: |
     Get-ChildItem $(Build.SourcesDirectory)/ARMHelper
@@ -14,8 +17,8 @@ steps:
 - task: PublishTestResults@2
   displayName: 'Publish Online Test Results'
   inputs:
-    testRunTitle: "Offline Pester Results $(platform)"
-    buildPlatform: $(platform)
+    testRunTitle: "Offline Pester Results ${{ parameters.platform }}"
+    buildPlatform: ${{ parameters.platform }}
     testRunner: 'NUnit'
     testResultsFiles: './TEST-RESULTS.xml'
     failTaskOnFailedTests: true
