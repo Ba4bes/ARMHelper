@@ -29,7 +29,7 @@ stages:
           TemplatePath = '$(Build.SourcesDirectory)\Tests\AzureTesting'
           }
           } -OutputFile $outputFile -OutputFormat NUnitXml -enableExit
-      FailOnStandardError: false
+        FailOnStandardError: false
       azurePowerShellVersion: LatestVersion
     - task: PublishTestResults@2
       displayName: 'Publish Offline Test Results'
