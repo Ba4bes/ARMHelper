@@ -1,47 +1,46 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
+name: Production
+trigger:
+  branches:
+    include:
+    - 'master'
 
 
 pr:
 - master
 
-pool:
-  vmImage: vs2017-win2016
+stages:
+- stage: Build
+  jobs:
+  - job: BuildWindows
+    pool:
+      vmImage: windows-2019
+    steps:
+    - template: azure-pipelinestemplate.yml
+      parameters:
+        platform: 'Windows'
+    - template: azure-pipelinesazuretemplate.yml
+  - job: BuildMacOS
+    pool:
+      vmImage: macOS-10.14
+    steps:
+    - template: azure-pipelinestemplate.yml
+      parameters:
+        platform: 'MacOS'
+  - job: BuildLinux
+    pool:
+      vmImage: ubuntu-16.04
+    steps:
+    - template: azure-pipelinestemplate.yml
+      parameters:
+        platform: 'Linux'
 
-steps:
-- powershell: |
-   Install-PackageProvider -Name NuGet -Force -Scope CurrentUser
-   Install-Module -Name Pester -Force -Scope CurrentUser -SkipPublisherCheck
-   Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser
-
-   Import-Module "$(Build.SourcesDirectory)\ARMHelper" -Force
-
-  displayName: 'Install Pester and import module'
-
-- powershell: |
-   $Results = Invoke-Pester -PassThru
-
-   if ($Results.FailedCount -ne "0"){
-        throw "a PesterTest has failed"
-   }
-   if ($Results.PassedCount -eq "0"){
-        throw "There was no passed PesterTest"
-   }
-  failOnStderr: true
-  displayName: 'Invoke-Pester'
-
-- task: PowerShell@2
-  displayName: 'PSScriptanalyzer-tests'
-  inputs:
-    targetType: filePath
-    filePath: Tests/PSScriptAnalyzer.ps1
-    arguments: '-ScriptPath "$(Build.SourcesDirectory)\ARMHelper\"'
-    failOnStderr: true
-
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish Artifact: drop'
-  inputs:
-    PathtoPublish: ARMHelper
+- stage: Deploy
+  condition:
+    and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  jobs:
+  - job: DeploytoGallery
+    pool:
+      vmImage: windows-2019
+      steps:
+      - powershell: 'Publish-Module -Path "$(Build.SourcesDirectory)/ARMHelper" -NuGetApiKey "$(GalleryApiKey)"'
+        displayName: 'Deploy to Gallery'
