@@ -1,16 +1,17 @@
 steps:
-- task: PowerShell@2
+- powershell: |
   displayName: 'Install Pester and import module'
   inputs: |
     Install-Module -Name Pester -Force -Scope CurrentUser -SkipPublisherCheck
     Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser
     Import-Module "$(Build.SourcesDirectory)\ARMHelper" -Force
-- task: PowerShell@2
+- powershell: |
   displayName: 'Invoke-Pester without Azure'
   inputs: |
     $outputFile = ".\TEST-RESULTS.xml"
     Invoke-Pester -Tag Mock, Module -OutputFile $outputFile -OutputFormat NUnitXml -enableExit
   failOnStderr: false
+  continueOnError: true
 - task: PublishTestResults@2
   displayName: 'Publish Online Test Results'
   inputs:
