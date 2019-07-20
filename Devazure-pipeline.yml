@@ -32,7 +32,7 @@ stages:
         FailOnStandardError: false
         azurePowerShellVersion: LatestVersion
     - task: PublishTestResults@2
-      displayName: 'Publish Offline Test Results'
+      displayName: 'Publish Online Test Results'
       inputs:
         testRunTitle: 'online Pester Results $(platform)'
         buildPlatform: 'Windows'

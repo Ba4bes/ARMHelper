@@ -1,8 +1,9 @@
 steps:
 - powershell: |
+    Get-ChildItem $(Build.SourcesDirectory)/ARMHelper
     Install-Module -Name Pester -Force -Scope CurrentUser -SkipPublisherCheck
     Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser
-    Import-Module "$(Build.SourcesDirectory)\ARMHelper" -Force
+    Import-Module "$(Build.SourcesDirectory)/ARMHelper" -Force
   displayName: 'Install Pester and import module'
 - powershell: |
     $outputFile = ".\TEST-RESULTS.xml"
@@ -13,8 +14,8 @@ steps:
 - task: PublishTestResults@2
   displayName: 'Publish Online Test Results'
   inputs:
-    testRunTitle: 'Offline Pester Results $(platform)'
-    buildPlatform: 'Windows'
+    testRunTitle: "Offline Pester Results $(platform)"
+    buildPlatform: $(platform)
     testRunner: 'NUnit'
     testResultsFiles: './TEST-RESULTS.xml'
     failTaskOnFailedTests: true
