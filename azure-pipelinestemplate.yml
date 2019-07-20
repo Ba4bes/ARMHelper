@@ -1,6 +1,3 @@
-parameters:
-  platform: ''
-
 steps:
 - task: PowerShell@2
   displayName: 'Install Pester and import module'
