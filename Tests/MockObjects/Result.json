@@ -77,34 +77,34 @@
                          {
                              "dependsOn":  [
                                                {
-                                                   "id":  "/subscriptions/61115fe7-d5b1-4f92-a54a-69c4b7a2a1c8/resourceGroups/ARMtesting/providers/Microsoft.Network/publicIPAddresses/myPublicIP",
+                                                   "id":  "/subscriptions/12345678-abcd-1234-1234-12345678/resourceGroups/ARMtesting/providers/Microsoft.Network/publicIPAddresses/myPublicIP",
                                                    "resourceType":  "Microsoft.Network/publicIPAddresses",
                                                    "resourceName":  "myPublicIP"
                                                },
                                                {
-                                                   "id":  "/subscriptions/61115fe7-d5b1-4f92-a54a-69c4b7a2a1c8/resourceGroups/ARMtesting/providers/Microsoft.Network/virtualNetworks/MyVNET",
+                                                   "id":  "/subscriptions/12345678-abcd-1234-1234-12345678/resourceGroups/ARMtesting/providers/Microsoft.Network/virtualNetworks/MyVNET",
                                                    "resourceType":  "Microsoft.Network/virtualNetworks",
                                                    "resourceName":  "MyVNET"
                                                }
                                            ],
-                             "id":  "/subscriptions/61115fe7-d5b1-4f92-a54a-69c4b7a2a1c8/resourceGroups/armtesting/providers/Microsoft.Network/networkInterfaces/myVMNic",
+                             "id":  "/subscriptions/12345678-abcd-1234-1234-12345678/resourceGroups/armtesting/providers/Microsoft.Network/networkInterfaces/myVMNic",
                              "resourceType":  "Microsoft.Network/networkInterfaces",
                              "resourceName":  "myVMNic"
                          },
                          {
                              "dependsOn":  [
                                                {
-                                                   "id":  "/subscriptions/61115fe7-d5b1-4f92-a54a-69c4b7a2a1c8/resourceGroups/ARMtesting/providers/Microsoft.Storage/storageAccounts/qkc32cvb2qmmwsawinvm",
+                                                   "id":  "/subscriptions/12345678-abcd-1234-1234-12345678/resourceGroups/ARMtesting/providers/Microsoft.Storage/storageAccounts/qkc32cvb2qmmwsawinvm",
                                                    "resourceType":  "Microsoft.Storage/storageAccounts",
                                                    "resourceName":  "qkc32cvb2qmmwsawinvm"
                                                },
                                                {
-                                                   "id":  "/subscriptions/61115fe7-d5b1-4f92-a54a-69c4b7a2a1c8/resourceGroups/ARMtesting/providers/Microsoft.Network/networkInterfaces/myVMNic",
+                                                   "id":  "/subscriptions/12345678-abcd-1234-1234-12345678/resourceGroups/ARMtesting/providers/Microsoft.Network/networkInterfaces/myVMNic",
                                                    "resourceType":  "Microsoft.Network/networkInterfaces",
                                                    "resourceName":  "myVMNic"
                                                }
                                            ],
-                             "id":  "/subscriptions/61115fe7-d5b1-4f92-a54a-69c4b7a2a1c8/resourceGroups/armtesting/providers/Microsoft.Compute/virtualMachines/SimpleWinVM",
+                             "id":  "/subscriptions/12345678-abcd-1234-1234-12345678/resourceGroups/armtesting/providers/Microsoft.Compute/virtualMachines/SimpleWinVM",
                              "resourceType":  "Microsoft.Compute/virtualMachines",
                              "resourceName":  "SimpleWinVM"
                          }
@@ -112,7 +112,7 @@
     "validatedResources":  [
                                {
                                    "apiVersion":  "2018-11-01",
-                                   "id":  "/subscriptions/61115fe7-d5b1-4f92-a54a-69c4b7a2a1c8/resourceGroups/armtesting/providers/Microsoft.Storage/storageAccounts/qkc32cvb2qmmwsawinvm",
+                                   "id":  "/subscriptions/12345678-abcd-1234-1234-12345678/resourceGroups/armtesting/providers/Microsoft.Storage/storageAccounts/qkc32cvb2qmmwsawinvm",
                                    "name":  "qkc32cvb2qmmwsawinvm",
                                    "type":  "Microsoft.Storage/storageAccounts",
                                    "sku":  {
@@ -126,7 +126,7 @@
                                },
                                {
                                    "apiVersion":  "2018-11-01",
-                                   "id":  "/subscriptions/61115fe7-d5b1-4f92-a54a-69c4b7a2a1c8/resourceGroups/armtesting/providers/Microsoft.Network/publicIPAddresses/myPublicIP",
+                                   "id":  "/subscriptions/12345678-abcd-1234-1234-12345678/resourceGroups/armtesting/providers/Microsoft.Network/publicIPAddresses/myPublicIP",
                                    "name":  "myPublicIP",
                                    "type":  "Microsoft.Network/publicIPAddresses",
                                    "location":  "westeurope",
@@ -139,7 +139,7 @@
                                },
                                {
                                    "apiVersion":  "2018-11-01",
-                                   "id":  "/subscriptions/61115fe7-d5b1-4f92-a54a-69c4b7a2a1c8/resourceGroups/armtesting/providers/Microsoft.Network/virtualNetworks/MyVNET",
+                                   "id":  "/subscriptions/12345678-abcd-1234-1234-12345678/resourceGroups/armtesting/providers/Microsoft.Network/virtualNetworks/MyVNET",
                                    "name":  "MyVNET",
                                    "type":  "Microsoft.Network/virtualNetworks",
                                    "location":  "westeurope",
@@ -161,11 +161,11 @@
                                },
                                {
                                    "dependsOn":  [
-                                                     "/subscriptions/61115fe7-d5b1-4f92-a54a-69c4b7a2a1c8/resourceGroups/ARMtesting/providers/Microsoft.Network/publicIPAddresses/myPublicIP",
-                                                     "/subscriptions/61115fe7-d5b1-4f92-a54a-69c4b7a2a1c8/resourceGroups/ARMtesting/providers/Microsoft.Network/virtualNetworks/MyVNET"
+                                                     "/subscriptions/12345678-abcd-1234-1234-12345678/resourceGroups/ARMtesting/providers/Microsoft.Network/publicIPAddresses/myPublicIP",
+                                                     "/subscriptions/12345678-abcd-1234-1234-12345678/resourceGroups/ARMtesting/providers/Microsoft.Network/virtualNetworks/MyVNET"
                                                  ],
                                    "apiVersion":  "2018-11-01",
-                                   "id":  "/subscriptions/61115fe7-d5b1-4f92-a54a-69c4b7a2a1c8/resourceGroups/armtesting/providers/Microsoft.Network/networkInterfaces/myVMNic",
+                                   "id":  "/subscriptions/12345678-abcd-1234-1234-12345678/resourceGroups/armtesting/providers/Microsoft.Network/networkInterfaces/myVMNic",
                                    "name":  "myVMNic",
                                    "type":  "Microsoft.Network/networkInterfaces",
                                    "location":  "westeurope",
@@ -176,10 +176,10 @@
                                                                                    "properties":  {
                                                                                                       "privateIPAllocationMethod":  "Dynamic",
                                                                                                       "publicIPAddress":  {
-                                                                                                                              "id":  "/subscriptions/61115fe7-d5b1-4f92-a54a-69c4b7a2a1c8/resourceGroups/ARMtesting/providers/Microsoft.Network/publicIPAddresses/myPublicIP"
+                                                                                                                              "id":  "/subscriptions/12345678-abcd-1234-1234-12345678/resourceGroups/ARMtesting/providers/Microsoft.Network/publicIPAddresses/myPublicIP"
                                                                                                                           },
                                                                                                       "subnet":  {
-                                                                                                                     "id":  "/subscriptions/61115fe7-d5b1-4f92-a54a-69c4b7a2a1c8/resourceGroups/ARMtesting/providers/Microsoft.Network/virtualNetworks/MyVNET/subnets/Subnet"
+                                                                                                                     "id":  "/subscriptions/12345678-abcd-1234-1234-12345678/resourceGroups/ARMtesting/providers/Microsoft.Network/virtualNetworks/MyVNET/subnets/Subnet"
                                                                                                                  }
                                                                                                   }
                                                                                }
@@ -188,11 +188,11 @@
                                },
                                {
                                    "dependsOn":  [
-                                                     "/subscriptions/61115fe7-d5b1-4f92-a54a-69c4b7a2a1c8/resourceGroups/ARMtesting/providers/Microsoft.Storage/storageAccounts/qkc32cvb2qmmwsawinvm",
-                                                     "/subscriptions/61115fe7-d5b1-4f92-a54a-69c4b7a2a1c8/resourceGroups/ARMtesting/providers/Microsoft.Network/networkInterfaces/myVMNic"
+                                                     "/subscriptions/12345678-abcd-1234-1234-12345678/resourceGroups/ARMtesting/providers/Microsoft.Storage/storageAccounts/qkc32cvb2qmmwsawinvm",
+                                                     "/subscriptions/12345678-abcd-1234-1234-12345678/resourceGroups/ARMtesting/providers/Microsoft.Network/networkInterfaces/myVMNic"
                                                  ],
                                    "apiVersion":  "2018-10-01",
-                                   "id":  "/subscriptions/61115fe7-d5b1-4f92-a54a-69c4b7a2a1c8/resourceGroups/armtesting/providers/Microsoft.Compute/virtualMachines/SimpleWinVM",
+                                   "id":  "/subscriptions/12345678-abcd-1234-1234-12345678/resourceGroups/armtesting/providers/Microsoft.Compute/virtualMachines/SimpleWinVM",
                                    "name":  "SimpleWinVM",
                                    "type":  "Microsoft.Compute/virtualMachines",
                                    "location":  "westeurope",
@@ -226,7 +226,7 @@
                                                       "networkProfile":  {
                                                                              "networkInterfaces":  [
                                                                                                        {
-                                                                                                           "id":  "/subscriptions/61115fe7-d5b1-4f92-a54a-69c4b7a2a1c8/resourceGroups/ARMtesting/providers/Microsoft.Network/networkInterfaces/myVMNic"
+                                                                                                           "id":  "/subscriptions/12345678-abcd-1234-1234-12345678/resourceGroups/ARMtesting/providers/Microsoft.Network/networkInterfaces/myVMNic"
                                                                                                        }
                                                                                                    ]
                                                                          },

@@ -7,7 +7,7 @@
 #
 @{
     # Script module or binary module file associated with this manifest.
-    RootModule        = 'ArmHelper.psm1'
+    RootModule        = 'ARMHelper.psm1'
 
     # Version number of this module.
 

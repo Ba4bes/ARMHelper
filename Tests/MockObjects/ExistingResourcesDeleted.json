@@ -1,0 +1,33 @@
+[
+  {
+    "ResourceId": "/subscriptions/12345678-abcd-1234-1234-12345678/resourceGroups/ARMtesting/providers/Microsoft.Storage/storageAccounts/testaegewteawgfaef",
+    "Id": "/subscriptions/12345678-abcd-1234-1234-12345678/resourceGroups/ARMtesting/providers/Microsoft.Storage/storageAccounts/testaegewteawgfaef",
+    "Identity": null,
+    "Kind": "StorageV2",
+    "Location": "westeurope",
+    "ManagedBy": null,
+    "ResourceName": "testaegewteawgfaef",
+    "Name": "testaegewteawgfaef",
+    "ExtensionResourceName": null,
+    "ParentResource": null,
+    "Plan": null,
+    "Properties": null,
+    "ResourceGroupName": "ARM",
+    "Type": "Microsoft.Storage/storageAccounts",
+    "ResourceType": "Microsoft.Storage/storageAccounts",
+    "ExtensionResourceType": null,
+    "Sku": {
+      "Name": "Standard_LRS",
+      "Tier": "Standard",
+      "Size": null,
+      "Family": null,
+      "Model": null,
+      "Capacity": null
+    },
+    "Tags": {},
+    "SubscriptionId": null,
+    "CreatedTime": null,
+    "ChangedTime": null,
+    "ETag": null
+  }
+]
