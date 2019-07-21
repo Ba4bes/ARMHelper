@@ -7,7 +7,7 @@ if (Get-Module ARMHelper) {
 Import-Module (Join-Path $moduleRoot "$moduleName.psd1") -force
 
 
-Describe 'Check Get-ARMDEploymentErrorMessage without Azure' -Tag @("Mock") {
+Describe 'Check Test-ARMDeploymentResource without Azure' -Tag @("Mock") {
     InModuleScope ARMHelper {
         $Parameters = @{
             resourcegroupname     = "Arm"
@@ -19,6 +19,24 @@ Describe 'Check Get-ARMDEploymentErrorMessage without Azure' -Tag @("Mock") {
             Mock Get-ARMResource {
                 [object]$Mockobject
             }
+
+            It "Works with a parameterFile"{
+                { Test-ARMDeploymentResource @Parameters } | Should -Not -Throw
+            }
+            It "works with a parameter object"{
+                $Parameterobject = @{
+                    storageAccountPrefix = "armsta"
+                    storageAccountType = "LRS"
+                }
+                $Parameters = @{
+                    resourcegroupname     = "Arm"
+                    templatefile          = ".\azuredeploy.json"
+                    templateparameterobject = $Parameterobject
+                }
+                { Test-ARMDeploymentResource @Parameters } | Should -Not -Throw
+
+            }
+
             It "When a deployment is correct, script doesn't throw" {
                 { Test-ARMDeploymentResource @Parameters } | Should -Not -Throw
             }

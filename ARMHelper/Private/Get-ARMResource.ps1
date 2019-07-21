@@ -8,8 +8,10 @@ Function Get-ARMResource {
         [Parameter(Position = 2, Mandatory = $true)]
         [ValidateNotNullorEmpty()]
         [string] $TemplateFile,
-        [Parameter(Position = 3, Mandatory = $true)]
+        [Parameter(ParameterSetName='TemplateParameterFile')]
         [string] $TemplateParameterFile,
+        [Parameter(ParameterSetName='TemplateParameterObject')]
+        [hashtable] $TemplateParameterObject,
         [parameter ()]
         [ValidateSet("Incremental", "Complete")]
         [string] $Mode = "Incremental"
@@ -19,10 +21,14 @@ Function Get-ARMResource {
     $Parameters = @{
         ResourceGroupName     = $ResourceGroupName
         TemplateFile          = $TemplateFile
-        TemplateParameterFile = $TemplateParameterFile
         Mode                  = $Mode
     }
-
+    if (-not[string]::IsNullOrEmpty($TemplateParameterFile) ){
+        $Parameters.Add("TemplateParameterFile",$TemplateParameterFile)
+    }
+    if (-not[string]::IsNullOrEmpty($TemplateParameterObject) ){
+        $Parameters.Add("TemplateParameterObject",$TemplateParameterObject)
+    }
     $Output = $null
     #set debugpreference to continue so the cmdlet runs with more output
     $Module = Test-ARMAzureModule

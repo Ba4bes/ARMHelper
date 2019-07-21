@@ -19,6 +19,30 @@ Describe 'Check Get-ARMDEploymentErrorMessage with Azure' -Tag @("Az") {
                 $Result = Get-ARMDeploymentErrorMessage @Parameters
                 $Result | Should -Be "deployment is correct"
             }
+
+            It "Works with a parameterFile"{
+                $Parameters = @{
+                    resourcegroupname     = "ArmHelper"
+                    templatefile          = "$PSScriptRoot\StorageAccountFixed\azuredeploy.json"
+                    templateparameterfile = "$PSScriptRoot\StorageAccountFixed\azuredeploy.parameters.json"
+                }
+                $Result = Get-ARMDeploymentErrorMessage @Parameters
+                $Result | Should -Be "deployment is correct"
+            }
+            It "works with a parameter object"{
+                $Parameterobject = @{
+                    storageAccountPrefix = "armsta"
+                    storageAccountType = "Standard_LRS"
+                }
+                $Parameters = @{
+                    resourcegroupname     = "ArmHelper"
+                    templatefile          = "$PSScriptRoot\StorageAccountFixed\azuredeploy.json"
+                    templateparameterobject = $Parameterobject
+                }
+                $Result = Get-ARMDeploymentErrorMessage @Parameters
+                $Result | Should -Be "deployment is correct"
+            }
+
             It "When deployment has a regular error, it is given" {
                 $Parameters = @{
                     resourcegroupname     = "ArmHelper"

@@ -51,13 +51,16 @@ function Get-ARMDeploymentErrorMessage {
         [Parameter(Position = 2, Mandatory = $true)]
         [ValidateNotNullorEmpty()]
         [string] $TemplateFile,
-        [Parameter(Position = 3, Mandatory = $true)]
+        [Parameter(ParameterSetName='TemplateParameterFile')]
         [string] $TemplateParameterFile,
+        [Parameter(ParameterSetName='TemplateParameterObject')]
+        [hashtable] $TemplateParameterObject,
         [Parameter()]
         [switch] $Pipeline,
         [Parameter()]
         [switch] $ThrowOnError
     )
+
     if ($Pipeline) {
         Write-Warning "This parameter will be removed in the next release. Please use -ThrowOnError as an replacement"
     }
@@ -68,7 +71,12 @@ function Get-ARMDeploymentErrorMessage {
     $Parameters = @{
         ResourceGroupName     = $ResourceGroupName
         TemplateFile          = $TemplateFile
-        TemplateParameterFile = $TemplateParameterFile
+    }
+    if (-not[string]::IsNullOrEmpty($TemplateParameterFile) ){
+        $Parameters.Add("TemplateParameterFile",$TemplateParameterFile)
+    }
+    if (-not[string]::IsNullOrEmpty($TemplateParameterObject) ){
+        $Parameters.Add("TemplateParameterObject",$TemplateParameterObject)
     }
 
     #Get the AzureModule that's being used
