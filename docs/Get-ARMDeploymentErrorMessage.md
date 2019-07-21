@@ -1,5 +1,5 @@
 ---
-external help file: ArmHelper-help.xml
+external help file: ARMHelper-help.xml
 Module Name: ARMHelper
 online version:
 schema: 2.0.0
@@ -18,7 +18,7 @@ Get-ARMDeploymentErrorMessage [-ResourceGroupName] <String> [-TemplateFile] <Str
 ```
 
 ## DESCRIPTION
-This function uses Test-AzureRmResourceGroupDeployment.
+This function uses Test-AzureRmResourceGroupDeployment or Test-AZResourcegroupDeployment.
 There is a specific errormessage that's very generic.
 If this is the output, the correct errormessage is retrieved from the Azurelog
 
@@ -93,6 +93,7 @@ Accept wildcard characters: False
 ### -Pipeline
 Use this parameter if this script is used in a CICDpipeline.
 It will make the step fail.
+This parameter is replaced by ThrowOnError and will be removed in a later release!
 
 ```yaml
 Type: SwitchParameter
@@ -107,7 +108,8 @@ Accept wildcard characters: False
 ```
 
 ### -ThrowOnError
-This Switch will make the cmdlet throw when the deployment is incorrect. This can be useful in a pipeline, it will make the task fail.
+This Switch will make the cmdlet throw when the deployment is incorrect.
+This can be useful in a pipeline, it will make the task fail.
 
 ```yaml
 Type: SwitchParameter

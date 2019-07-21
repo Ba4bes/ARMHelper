@@ -117,7 +117,7 @@ Describe 'Check Test-ARMExistingResource without Azure' -Tag @("Mock") {
                 [object]$Mockobject
             }
             It "When all resources are new, output shows they will be created" {
-                
+
                 Mock Get-AzureRMResource {$null}
                 $Result = Test-ARMExistingResource @Parameters
                 $Result[0] | Should -Be "Mode for deployment is Incremental `n"
@@ -139,7 +139,7 @@ Describe 'Check Test-ARMExistingResource without Azure' -Tag @("Mock") {
             }
         }
         Context 'Complete '{
-            
+
             function Get-AzureRMResource([String]$Name, [Object]$Value, [Switch]$Clobber) { }
             $Parameters = @{
                 resourcegroupname     = "Arm"

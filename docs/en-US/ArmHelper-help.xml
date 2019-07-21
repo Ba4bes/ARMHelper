@@ -10,7 +10,7 @@
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>This function uses Test-AzureRmResourceGroupDeployment. There is a specific errormessage that's very generic. If this is the output, the correct errormessage is retrieved from the Azurelog</maml:para>
+      <maml:para>This function uses Test-AzureRmResourceGroupDeployment or Test-AZResourcegroupDeployment. There is a specific errormessage that's very generic. If this is the output, the correct errormessage is retrieved from the Azurelog</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem>
@@ -54,7 +54,7 @@
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>Pipeline</maml:name>
           <maml:Description>
-            <maml:para>Use this parameter if this script is used in a CICDpipeline. It will make the step fail.</maml:para>
+            <maml:para>Use this parameter if this script is used in a CICDpipeline. It will make the step fail. This parameter is replaced by ThrowOnError and will be removed in a later release!</maml:para>
           </maml:Description>
           <dev:type>
             <maml:name>SwitchParameter</maml:name>
@@ -115,7 +115,7 @@
       <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
         <maml:name>Pipeline</maml:name>
         <maml:Description>
-          <maml:para>Use this parameter if this script is used in a CICDpipeline. It will make the step fail.</maml:para>
+          <maml:para>Use this parameter if this script is used in a CICDpipeline. It will make the step fail. This parameter is replaced by ThrowOnError and will be removed in a later release!</maml:para>
         </maml:Description>
         <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
         <dev:type>
@@ -172,7 +172,7 @@
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>When you enter a ARM template and a parameter file, this function will show what would be deployed To do this, it used the debug output of Test-AzureRmResourceGroupDeployment. A list of all the resources is provided with the most important properties. Some resources have seperated functions to structure the output. If no function is available, a generic output will be given.</maml:para>
+      <maml:para>When you enter a ARM template and a parameter file, this function will show what would be deployed To do this, it used the debug output of Test-AzureRmResourceGroupDeployment or Test-AzResourceGroupDeployment. A list of all the resources is provided with the most important properties. Some resources have seperated functions to structure the output. If no function is available, a generic output will be given.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem>
@@ -305,7 +305,7 @@
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>This function uses Test-AzureRmResourceGroupDeployment with debug output to find out what resources are deployed. After that, it checks if those resources exist in Azure. It will output the results when using complete mode or incremental mode (depending on the ARM template)</maml:para>
+      <maml:para>This function uses Test-AzureRmResourceGroupDeployment or Test-AzResourceGroupDeployment with debug output to find out what resources are deployed. After that, it checks if those resources exist in Azure. It will output the results when using complete mode or incremental mode (depending on the ARM template)</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem>
@@ -443,16 +443,10 @@
     <command:examples>
       <command:example>
         <maml:title>-------------------------- EXAMPLE 1 --------------------------</maml:title>
-        <dev:code>Get-ARMDeploymentErrorMessage -ResourceGroupName ArmTest -TemplateFile .\azuredeploy.json -TemplateParameterFile .\azuredeploy.parameters.json</dev:code>
+        <dev:code>Test-ARMexistingResource -ResourceGroupName ArmTest -TemplateFile .\azuredeploy.json -TemplateParameterFile .\azuredeploy.parameters.json</dev:code>
         <dev:remarks>
-          <maml:para>-------- the output is a generic error message. The log is searched for a more clear errormessageGeneral Error. Find info below: ErrorCode: InvalidDomainNameLabel Errormessage: The domain name label LABexample is invalid. It must conform to the following regular expression: ^[a-z][a-z0-9-]{1,61}[a-z0-9]$.</maml:para>
-        </dev:remarks>
-      </command:example>
-      <command:example>
-        <maml:title>-------------------------- EXAMPLE 2 --------------------------</maml:title>
-        <dev:code>Get-ARMexistingResource Armtesting .\VM01\azuredeploy.json .\VM01\azuredeploy.parameters.json</dev:code>
-        <dev:remarks>
-          <maml:para>-------- deployment is correct</maml:para>
+          <maml:para>-------- The following resources exist. Mode is set to incremental. New properties might be added:</maml:para>
+          <maml:para>type                                               name                                               Current ResourcegroupName ----                                               ----                                               ------------------------- Microsoft.Storage/storageAccounts                  armsta                                             armtest</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
