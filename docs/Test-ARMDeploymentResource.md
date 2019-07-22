@@ -1,5 +1,5 @@
 ---
-external help file: ArmHelper-help.xml
+external help file: ARMHelper-help.xml
 Module Name: ARMHelper
 online version:
 schema: 2.0.0
@@ -12,14 +12,27 @@ Gives output that shows all resources that would be deployed by an ARMtemplate
 
 ## SYNTAX
 
+### __AllParameterSets (Default)
+```
+Test-ARMDeploymentResource [-ResourceGroupName] <String> [-TemplateFile] <String> [-Mode <String>]
+ [<CommonParameters>]
+```
+
+### TemplateParameterFile
 ```
 Test-ARMDeploymentResource [-ResourceGroupName] <String> [-TemplateFile] <String>
- [-TemplateParameterFile] <String> [-Mode <String>] [<CommonParameters>]
+ -TemplateParameterFile <String> [-Mode <String>] [<CommonParameters>]
+```
+
+### TemplateParameterObject
+```
+Test-ARMDeploymentResource [-ResourceGroupName] <String> [-TemplateFile] <String>
+ -TemplateParameterObject <Hashtable> [-Mode <String>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
 When you enter a ARM template and a parameter file, this function will show what would be deployed
-To do this, it used the debug output of Test-AzureRmResourceGroupDeployment.
+To do this, it used the debug output of Test-AzureRmResourceGroupDeployment or Test-AzResourceGroupDeployment.
 A list of all the resources is provided with the most important properties.
 Some resources have seperated functions to structure the output.
 If no function is available, a generic output will be given.
@@ -68,11 +81,26 @@ Accept wildcard characters: False
 
 ```yaml
 Type: String
-Parameter Sets: (All)
+Parameter Sets: TemplateParameterFile
 Aliases:
 
 Required: True
-Position: 4
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -TemplateParameterObject
+A Hasbtable with parameters, optional
+
+```yaml
+Type: Hashtable
+Parameter Sets: TemplateParameterObject
+Aliases:
+
+Required: True
+Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

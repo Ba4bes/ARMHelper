@@ -6,7 +6,7 @@ Import-Module (Join-Path $moduleRoot "$moduleName.psd1") -force
 
 
 
-Describe 'Check Get-ARMDEploymentErrorMessage' {
+Describe 'Check Get-ARMDEploymentErrorMessage' -Tag @("Mock") {
     InModuleScope ARMHelper {
         $Parameters = @{
             resourcegroupname     = "Arm"
@@ -18,6 +18,25 @@ Describe 'Check Get-ARMDEploymentErrorMessage' {
 
             function Get-AzureRMLog([String]$Name, [Object]$Value, [Switch]$Clobber) { }
             Mock Test-ARMAzureModule { "AzureRM" }
+            It "Works with a parameterFile"{
+                Mock Test-AzureRmResourceGroupDeployment -parameterfilter { $Parameters } { $null }
+                $Result = Get-ARMDeploymentErrorMessage @Parameters
+                $Result | Should -Be "deployment is correct"
+            }
+            It "works with a parameter object"{
+                $Parameterobject = @{
+                    storageAccountPrefix = "armsta"
+                    storageAccountType = "LRS"
+                }
+                $Parameters = @{
+                    resourcegroupname     = "Arm"
+                    templatefile          = ".\azuredeploy.json"
+                    templateparameterobject = $Parameterobject
+                }
+                Mock Test-AzureRmResourceGroupDeployment -parameterfilter { $Parameters } { $null }
+                $Result = Get-ARMDeploymentErrorMessage @Parameters
+                $Result | Should -Be "deployment is correct"
+            }
             It "When a deployment is correct, output is deployment is correct" {
                 Mock Test-AzureRmResourceGroupDeployment -parameterfilter { $Parameters } { $null }
                 $Result = Get-ARMDeploymentErrorMessage @Parameters
@@ -43,7 +62,7 @@ Describe 'Check Get-ARMDEploymentErrorMessage' {
                 for usage details."
                     }
                 }
-                $Mockobject = (Get-Content $PSScriptRoot\Logoutput.json) | ConvertFrom-Json
+                $Mockobject = (Get-Content $PSScriptRoot\MockObjects\Logoutput.json) | ConvertFrom-Json
                 Mock Get-AzureRMLog {
                     [object]$Mockobject
                 }
@@ -78,7 +97,7 @@ Describe 'Check Get-ARMDEploymentErrorMessage' {
                     for usage details."
                     }
                 }
-                $Mockobject = (Get-Content $PSScriptRoot\Logoutput.json) | ConvertFrom-Json
+                $Mockobject = (Get-Content $PSScriptRoot\MockObjects\Logoutput.json) | ConvertFrom-Json
                 Mock Get-AzureRMLog {
                     [object]$Mockobject
                 }
@@ -96,6 +115,25 @@ Describe 'Check Get-ARMDEploymentErrorMessage' {
             function Get-AzLog([String]$Name, [Object]$Value, [Switch]$Clobber) { }
 
             Mock Test-ARMAzureModule { "Az" }
+            It "Works with a parameterFile"{
+                Mock Test-AzResourceGroupDeployment -parameterfilter { $Parameters } { $null }
+                $Result = Get-ARMDeploymentErrorMessage @Parameters
+                $Result | Should -Be "deployment is correct"
+            }
+            It "works with a parameter object"{
+                $Parameterobject = @{
+                    storageAccountPrefix = "armsta"
+                    storageAccountType = "LRS"
+                }
+                $Parameters = @{
+                    resourcegroupname     = "Arm"
+                    templatefile          = ".\azuredeploy.json"
+                    templateparameterobject = $Parameterobject
+                }
+                Mock Test-AzResourceGroupDeployment -parameterfilter { $Parameters } { $null }
+                $Result = Get-ARMDeploymentErrorMessage @Parameters
+                $Result | Should -Be "deployment is correct"
+            }
             It "When a deployment is correct, output is deployment is correct" {
                 Mock Test-AzResourceGroupDeployment -parameterfilter { $Parameters } { $null }
                 $Result = Get-ARMDeploymentErrorMessage @Parameters
@@ -121,7 +159,7 @@ Describe 'Check Get-ARMDEploymentErrorMessage' {
                 for usage details."
                     }
                 }
-                $Mockobject = (Get-Content $PSScriptRoot\Logoutput.json) | ConvertFrom-Json
+                $Mockobject = (Get-Content $PSScriptRoot\MockObjects\Logoutput.json) | ConvertFrom-Json
                 Mock Get-AzLog {
                     [object]$Mockobject
                 }
@@ -156,7 +194,7 @@ Describe 'Check Get-ARMDEploymentErrorMessage' {
                     for usage details."
                     }
                 }
-                $Mockobject = (Get-Content $PSScriptRoot\Logoutput.json) | ConvertFrom-Json
+                $Mockobject = (Get-Content $PSScriptRoot\MockObjects\Logoutput.json) | ConvertFrom-Json
                 Mock Get-AzLog {
                     [object]$Mockobject
                 }

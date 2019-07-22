@@ -86,6 +86,13 @@ function Get-ResourceProperty {
                         $Path = $PathName.Replace(".properties", "")
                         $Key = "$Path.$($PropObject.Name)"
                     }
+                    if ($SecureParameters -contains $Key) {
+                        # This is a bit of a workaround to avoid a plaintext securestring
+                        # The only thing that's better is that this doesn't trigger PSScriptAnalyzer :')
+                        $SecValue = New-Object SecureString
+                        [char[]]($Value) | ForEach-Object { $SecValue.AppendChar($_) }
+                        $Value = $SecValue
+                    }
                     $PropertiesReadable.add($Key, $Value)
                     Continue
                 }
@@ -106,6 +113,13 @@ function Get-ResourceProperty {
                     $Path = $PathName.Replace(".properties", "")
                     $Key = "$Path.$($RootProperty.Name)"
                 }
+                if ($SecureParameters -contains $Key) {
+                    # This is a bit of a workaround to avoid a plaintext securestring
+                    # The only thing that's better is that this doesn't trigger PSScriptAnalyzer :')
+                    $SecValue = New-Object SecureString
+                    [char[]]($Value) | ForEach-Object { $SecValue.AppendChar($_) }
+                    $Value = $SecValue
+                }
                 $PropertiesReadable.add($Key, $Value)
             }
             # If $TypesToWrite does not contain the type, recurse.
@@ -122,4 +136,3 @@ function Get-ResourceProperty {
     }
     $PropertiesReadable
 }
-

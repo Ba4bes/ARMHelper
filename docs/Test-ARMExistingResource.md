@@ -1,5 +1,5 @@
 ---
-external help file: ArmHelper-help.xml
+external help file: ARMHelper-help.xml
 Module Name: ARMHelper
 online version:
 schema: 2.0.0
@@ -12,13 +12,26 @@ Show if resource that are set to be deployed already exist
 
 ## SYNTAX
 
+### __AllParameterSets (Default)
+```
+Test-ARMExistingResource [-ResourceGroupName] <String> [-TemplateFile] <String> [-Mode <String>]
+ [-ThrowWhenRemoving] [<CommonParameters>]
+```
+
+### TemplateParameterFile
+```
+Test-ARMExistingResource [-ResourceGroupName] <String> [-TemplateFile] <String> -TemplateParameterFile <String>
+ [-Mode <String>] [-ThrowWhenRemoving] [<CommonParameters>]
+```
+
+### TemplateParameterObject
 ```
 Test-ARMExistingResource [-ResourceGroupName] <String> [-TemplateFile] <String>
- [-TemplateParameterFile] <String> [-Mode <String>] [-ThrowWhenRemoving] [<CommonParameters>]
+ -TemplateParameterObject <Hashtable> [-Mode <String>] [-ThrowWhenRemoving] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-This function uses Test-AzureRmResourceGroupDeployment with debug output to find out what resources are deployed.
+This function uses Test-AzureRmResourceGroupDeployment or Test-AzResourceGroupDeployment with debug output to find out what resources are deployed.
 After that, it checks if those resources exist in Azure.
 It will output the results when using complete mode or incremental mode (depending on the ARM template)
 
@@ -26,21 +39,15 @@ It will output the results when using complete mode or incremental mode (dependi
 
 ### EXAMPLE 1
 ```
-Get-ARMDeploymentErrorMessage -ResourceGroupName ArmTest -TemplateFile .\azuredeploy.json -TemplateParameterFile .\azuredeploy.parameters.json
+Test-ARMexistingResource -ResourceGroupName ArmTest -TemplateFile .\azuredeploy.json -TemplateParameterFile .\azuredeploy.parameters.json
 ```
 
 --------
-the output is a generic error message. The log is searched for a more clear errormessageGeneral Error. Find info below:
-ErrorCode: InvalidDomainNameLabel
-Errormessage: The domain name label LABexample is invalid. It must conform to the following regular expression: ^\[a-z\]\[a-z0-9-\]{1,61}\[a-z0-9\]$.
+The following resources exist. Mode is set to incremental. New properties might be added:
 
-### EXAMPLE 2
-```
-Get-ARMexistingResource Armtesting .\VM01\azuredeploy.json .\VM01\azuredeploy.parameters.json
-```
-
---------
-deployment is correct
+type                                               name                                               Current ResourcegroupName
+----                                               ----                                               -------------------------
+Microsoft.Storage/storageAccounts                  armsta                                             armtest
 
 ## PARAMETERS
 
@@ -80,11 +87,26 @@ The path to the parameterfile
 
 ```yaml
 Type: String
-Parameter Sets: (All)
+Parameter Sets: TemplateParameterFile
 Aliases:
 
 Required: True
-Position: 4
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -TemplateParameterObject
+{{ Fill TemplateParameterObject Description }}
+
+```yaml
+Type: Hashtable
+Parameter Sets: TemplateParameterObject
+Aliases:
+
+Required: True
+Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -108,7 +130,8 @@ Accept wildcard characters: False
 ```
 
 ### -ThrowWhenRemoving
-This switch makes the function throw when a resources would be overwritten or deleted. This can be useful for use in a pipeline.
+This switch makes the function throw when a resources would be overwritten or deleted.
+This can be useful for use in a pipeline.
 
 ```yaml
 Type: SwitchParameter

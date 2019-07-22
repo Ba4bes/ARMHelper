@@ -1,5 +1,5 @@
 Function Test-ARMAzureModule {
-    
+
     $Module = $null
     $AzureRM = get-installedModule AzureRM -ErrorAction SilentlyContinue
     $Az = Get-InstalledModule AZ -ErrorAction SilentlyContinue

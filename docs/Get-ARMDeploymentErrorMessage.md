@@ -1,5 +1,5 @@
 ---
-external help file: ArmHelper-help.xml
+external help file: ARMHelper-help.xml
 Module Name: ARMHelper
 online version:
 schema: 2.0.0
@@ -12,13 +12,26 @@ Tests an azure deployment for errors, Use the azure Logs if a generic message is
 
 ## SYNTAX
 
+### __AllParameterSets (Default)
+```
+Get-ARMDeploymentErrorMessage [-ResourceGroupName] <String> [-TemplateFile] <String> [-Pipeline]
+ [-ThrowOnError] [<CommonParameters>]
+```
+
+### TemplateParameterFile
 ```
 Get-ARMDeploymentErrorMessage [-ResourceGroupName] <String> [-TemplateFile] <String>
- [-TemplateParameterFile] <String> [-Pipeline] [-ThrowOnError] [<CommonParameters>]
+ -TemplateParameterFile <String> [-Pipeline] [-ThrowOnError] [<CommonParameters>]
+```
+
+### TemplateParameterObject
+```
+Get-ARMDeploymentErrorMessage [-ResourceGroupName] <String> [-TemplateFile] <String>
+ -TemplateParameterObject <Hashtable> [-Pipeline] [-ThrowOnError] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-This function uses Test-AzureRmResourceGroupDeployment.
+This function uses Test-AzureRmResourceGroupDeployment or Test-AZResourcegroupDeployment.
 There is a specific errormessage that's very generic.
 If this is the output, the correct errormessage is retrieved from the Azurelog
 
@@ -80,11 +93,26 @@ The path to the parameterfile
 
 ```yaml
 Type: String
-Parameter Sets: (All)
+Parameter Sets: TemplateParameterFile
 Aliases:
 
 Required: True
-Position: 4
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -TemplateParameterObject
+A Hasbtable with parameters, optional
+
+```yaml
+Type: Hashtable
+Parameter Sets: TemplateParameterObject
+Aliases:
+
+Required: True
+Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -93,6 +121,7 @@ Accept wildcard characters: False
 ### -Pipeline
 Use this parameter if this script is used in a CICDpipeline.
 It will make the step fail.
+This parameter is replaced by ThrowOnError and will be removed in a later release!
 
 ```yaml
 Type: SwitchParameter
@@ -107,7 +136,8 @@ Accept wildcard characters: False
 ```
 
 ### -ThrowOnError
-This Switch will make the cmdlet throw when the deployment is incorrect. This can be useful in a pipeline, it will make the task fail.
+This Switch will make the cmdlet throw when the deployment is incorrect.
+This can be useful in a pipeline, it will make the task fail.
 
 ```yaml
 Type: SwitchParameter
