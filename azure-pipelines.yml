@@ -42,5 +42,6 @@ stages:
     pool:
       vmImage: windows-2019
       steps:
-      - powershell: 'Publish-Module -Path "$(Build.SourcesDirectory)/ARMHelper" -NuGetApiKey "$(GalleryApiKey)"'
+      - powershell: |
+          Publish-Module -Path "$(Build.SourcesDirectory)/ARMHelper" -NuGetApiKey "$(GalleryApiKey)"
         displayName: 'Deploy to Gallery'
