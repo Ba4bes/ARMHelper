@@ -40,37 +40,61 @@ https://4bes.nl
 @Ba4bes
 #>
 Function Test-ARMExistingResource {
-    [CmdletBinding()]
+    [CmdletBinding(DefaultParameterSetName = "__AllParameterSets")]
     Param(
-        [Parameter(Position = 1, Mandatory = $true)]
+        [Parameter(
+            Position = 1,
+            Mandatory = $true,
+            ParameterSetName = "__AllParameterSets"
+        )]
         [ValidateNotNullorEmpty()]
         [string] $ResourceGroupName,
-        [Parameter(Position = 2, Mandatory = $true)]
+
+        [Parameter(
+            Position = 2,
+            Mandatory = $true,
+            ParameterSetName = "__AllParameterSets"
+        )]
         [ValidateNotNullorEmpty()]
         [string] $TemplateFile,
-        [Parameter(ParameterSetName='TemplateParameterFile')]
+
+        [Parameter(
+            ParameterSetName = 'TemplateParameterFile',
+            Mandatory = $true
+        )]
         [string] $TemplateParameterFile,
-        [Parameter(ParameterSetName='TemplateParameterObject')]
+
+        [Parameter(
+            ParameterSetName = 'TemplateParameterObject',
+            Mandatory = $true
+        )]
         [hashtable] $TemplateParameterObject,
-        [parameter ()]
+
+        [parameter (
+            ParameterSetName = "__AllParameterSets",
+            Mandatory = $false
+        )]
         [ValidateSet("Incremental", "Complete")]
         [string] $Mode = "Incremental",
-        [parameter()]
+
+        [parameter(
+            ParameterSetName = "__AllParameterSets"
+        )]
         [switch] $ThrowWhenRemoving
     )
 
     #set variables
     $Parameters = @{
-        ResourceGroupName     = $ResourceGroupName
-        TemplateFile          = $TemplateFile
-        Mode                  = $Mode
+        ResourceGroupName = $ResourceGroupName
+        TemplateFile      = $TemplateFile
+        Mode              = $Mode
     }
 
-    if (-not[string]::IsNullOrEmpty($TemplateParameterFile) ){
-        $Parameters.Add("TemplateParameterFile",$TemplateParameterFile)
+    if (-not[string]::IsNullOrEmpty($TemplateParameterFile) ) {
+        $Parameters.Add("TemplateParameterFile", $TemplateParameterFile)
     }
-    if (-not[string]::IsNullOrEmpty($TemplateParameterObject) ){
-        $Parameters.Add("TemplateParameterObject",$TemplateParameterObject)
+    if (-not[string]::IsNullOrEmpty($TemplateParameterObject) ) {
+        $Parameters.Add("TemplateParameterObject", $TemplateParameterObject)
     }
 
     #Get the AzureModule that's being used

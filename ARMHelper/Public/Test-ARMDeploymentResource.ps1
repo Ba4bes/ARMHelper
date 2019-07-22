@@ -12,14 +12,40 @@ If no function is available, a generic output will be given.
 .PARAMETER ResourceGroup
 The resourcegroup where the resources would be deployed to. If it doesn't exist, it will be created
 
-.PARAMETER TemplatePath
-The path to the deploymentfile
+.PARAMETER TemplateFile
+The path to the templatefile
 
-.PARAMETER ParametersPath
-The path to the parameterfile
+.PARAMETER TemplateParameterFile
+The path to the parameterfile, optional
+
+.PARAMETER TemplateParameterObject
+A Hasbtable with parameters, optional
 
 .EXAMPLE
 Test-ARMDeploymentResource -ResourceGroupName Armtest -TemplateFile .\azuredeploy.json -TemplateParameterFile .\azuredeploy.parameters.json
+
+--------
+Resource : storageAccounts
+Name     : armsta12356
+Type     : Microsoft.Storage/storageAccounts
+Location : westeurope
+mode     : Incremental
+ID       : /subscriptions/12345678-abcd-1234-1234-12345678/resourceGroups/arm/providers/Microsoft.Storage/storageAccounts/armsta12356
+
+.EXAMPLE
+Test-ARMDeploymentResource armtesting .\azuredeploy.json -TemplateParameterObject $parameters | select *
+
+--------
+Resource          : storageAccounts
+Name              : armsta12356
+Type              : Microsoft.Storage/storageAccounts
+ID                : /subscriptions/12345678-abcd-1234-1234-12345678/resourceGroups/armtesting/providers/Microsoft.Storage/storageAccounts/armsta12356
+Location          : westeurope
+Tags: ARMcreated  : True
+accountType       : Standard_LRS
+apiVersion        : 2015-06-15
+Tags: displayName : armsta12356
+mode              : Incremental
 
 .NOTES
 Script can be used in a CICD pipeline
@@ -30,32 +56,55 @@ https://4bes.nl
 Source for more output: #Source https://blog.mexia.com.au/testing-arm-templates-with-pester
 #>
 function Test-ARMDeploymentResource {
-    [CmdletBinding()]
+    [CmdletBinding(DefaultParameterSetName = "__AllParameterSets")]
     Param(
-        [Parameter(Position = 1, Mandatory = $true)]
+        [Parameter(
+            Position = 1,
+            Mandatory = $true,
+            ParameterSetName = "__AllParameterSets"
+        )]
         [ValidateNotNullorEmpty()]
         [string] $ResourceGroupName,
-        [Parameter(Position = 2, Mandatory = $true)]
+
+        [Parameter(
+            Position = 2,
+            Mandatory = $true,
+            ParameterSetName = "__AllParameterSets"
+        )]
         [ValidateNotNullorEmpty()]
         [string] $TemplateFile,
-        [Parameter(ParameterSetName='TemplateParameterFile')]
+
+        [Parameter(
+            ParameterSetName = 'TemplateParameterFile',
+            Mandatory = $true
+        )]
         [string] $TemplateParameterFile,
-        [Parameter(ParameterSetName='TemplateParameterObject')]
+
+        [Parameter(
+            ParameterSetName = 'TemplateParameterObject',
+            Mandatory = $true
+        )]
         [hashtable] $TemplateParameterObject,
-        [parameter ()]
+
+        [parameter (
+            ParameterSetName = "__AllParameterSets",
+            Mandatory = $false
+        )]
         [ValidateSet("Incremental", "Complete")]
         [string] $Mode = "Incremental"
     )
+
+
     $Parameters = @{
-        ResourceGroupName     = $ResourceGroupName
-        TemplateFile          = $TemplateFile
-        Mode                  = $Mode
+        ResourceGroupName = $ResourceGroupName
+        TemplateFile      = $TemplateFile
+        Mode              = $Mode
     }
-    if (-not[string]::IsNullOrEmpty($TemplateParameterFile) ){
-        $Parameters.Add("TemplateParameterFile",$TemplateParameterFile)
+    if (-not[string]::IsNullOrEmpty($TemplateParameterFile) ) {
+        $Parameters.Add("TemplateParameterFile", $TemplateParameterFile)
     }
-    if (-not[string]::IsNullOrEmpty($TemplateParameterObject) ){
-        $Parameters.Add("TemplateParameterObject",$TemplateParameterObject)
+    if (-not[string]::IsNullOrEmpty($TemplateParameterObject) ) {
+        $Parameters.Add("TemplateParameterObject", $TemplateParameterObject)
     }
 
     $Result = Get-ARMResource @Parameters

@@ -1,33 +1,53 @@
 
 Function Get-ARMResource {
-    [CmdletBinding()]
+    [CmdletBinding(DefaultParameterSetName = "__AllParameterSets")]
     Param(
-        [Parameter(Position = 1, Mandatory = $true)]
+        [Parameter(
+            Position = 1,
+            Mandatory = $true,
+            ParameterSetName = "__AllParameterSets"
+        )]
         [ValidateNotNullorEmpty()]
         [string] $ResourceGroupName,
-        [Parameter(Position = 2, Mandatory = $true)]
+
+        [Parameter(
+            Position = 2,
+            Mandatory = $true,
+            ParameterSetName = "__AllParameterSets"
+        )]
         [ValidateNotNullorEmpty()]
         [string] $TemplateFile,
-        [Parameter(ParameterSetName='TemplateParameterFile')]
+
+        [Parameter(
+            ParameterSetName = 'TemplateParameterFile',
+            Mandatory = $true
+        )]
         [string] $TemplateParameterFile,
-        [Parameter(ParameterSetName='TemplateParameterObject')]
+
+        [Parameter(
+            ParameterSetName = 'TemplateParameterObject',
+            Mandatory = $true
+        )]
         [hashtable] $TemplateParameterObject,
-        [parameter ()]
+
+        [parameter (
+            ParameterSetName = "__AllParameterSets",
+            Mandatory = $false
+        )]
         [ValidateSet("Incremental", "Complete")]
         [string] $Mode = "Incremental"
-
     )
     #set variables
     $Parameters = @{
-        ResourceGroupName     = $ResourceGroupName
-        TemplateFile          = $TemplateFile
-        Mode                  = $Mode
+        ResourceGroupName = $ResourceGroupName
+        TemplateFile      = $TemplateFile
+        Mode              = $Mode
     }
-    if (-not[string]::IsNullOrEmpty($TemplateParameterFile) ){
-        $Parameters.Add("TemplateParameterFile",$TemplateParameterFile)
+    if (-not[string]::IsNullOrEmpty($TemplateParameterFile) ) {
+        $Parameters.Add("TemplateParameterFile", $TemplateParameterFile)
     }
-    if (-not[string]::IsNullOrEmpty($TemplateParameterObject) ){
-        $Parameters.Add("TemplateParameterObject",$TemplateParameterObject)
+    if (-not[string]::IsNullOrEmpty($TemplateParameterObject) ) {
+        $Parameters.Add("TemplateParameterObject", $TemplateParameterObject)
     }
     $Output = $null
     #set debugpreference to continue so the cmdlet runs with more output
@@ -36,10 +56,10 @@ Function Get-ARMResource {
     $DebugPreference = "Continue"
 
 
-    if ($Module -eq "Az"){
+    if ($Module -eq "Az") {
         $Output = Test-AzResourceGroupDeployment @parameters 5>&1 -ErrorAction Stop
     }
-    elseif ($Module -eq "AzureRM"){
+    elseif ($Module -eq "AzureRM") {
         $Output = Test-AzureRmResourceGroupDeployment @parameters 5>&1 -ErrorAction Stop
 
     }
@@ -53,8 +73,8 @@ Function Get-ARMResource {
     }
     #Grap the specific part of the output that tells you about the deployed Resources
     $Response = $Output | Where-Object { $_.Message -like "*http response*" }
-#get the jsonpart en convert it to work with it.
-$Result = (($Response -split "Body:")[1] | ConvertFrom-Json).Properties
+    #get the jsonpart en convert it to work with it.
+    $Result = (($Response -split "Body:")[1] | ConvertFrom-Json).Properties
 
-$Result
+    $Result
 }
