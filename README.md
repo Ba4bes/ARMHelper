@@ -7,7 +7,8 @@
 
 ### Production status
 
-[![Build Status](https://vsrm.dev.azure.com/Ba4bes/_apis/public/Release/badge/fe28574d-f965-479f-bc02-25d7534d9aeb/1/1)](https://vsrm.dev.azure.com/Ba4bes/_apis/public/Release/badge/fe28574d-f965-479f-bc02-25d7534d9aeb/1/1)
+[![Build Status](https://dev.azure.com/Ba4bes/ARMHelper/_apis/build/status/Master?branchName=master)](https://dev.azure.com/Ba4bes/ARMHelper/_build/latest?definitionId=8&branchName=master)
+![Azure DevOps tests (branch)](https://img.shields.io/azure-devops/tests/ba4bes/armhelper/8/Master.svg)
 ![GitHub issues](https://img.shields.io/github/issues-raw/ba4bes/ARMHelper.svg)
 
 [![Gallery version](https://img.shields.io/powershellgallery/v/ARMHelper.svg)](https://img.shields.io/powershellgallery/v/ARMHelper.svg)
