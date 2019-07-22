@@ -1,15 +1,13 @@
 param(
 
-  [Parameter(Mandatory)]
-
-  [ValidateNotNullOrEmpty()]
-
-  [string]$TemplatePath
+    [Parameter(Mandatory)]
+    [ValidateNotNullOrEmpty()]
+    [string]$TemplatePath
 
 
-  )
+)
 
-$Global:TemplatePath =$TemplatePath
+$Global:TemplatePath = $TemplatePath
 $projectRoot = Resolve-Path "$PSScriptRoot\..\.."
 $moduleRoot = Split-Path (Resolve-Path "$projectRoot\*\*.psm1")
 $moduleName = Split-Path $moduleRoot -Leaf

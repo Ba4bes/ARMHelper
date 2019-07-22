@@ -10,10 +10,13 @@ If this is the output, the correct errormessage is retrieved from the Azurelog
 The resourcegroup where the resources would be deployed to. This resourcegroup needs to exist.
 
 .PARAMETER TemplateFile
-The path to the deploymentfile
+The path to the templatefile
 
 .PARAMETER TemplateParameterFile
-The path to the parameterfile
+The path to the parameterfile, optional
+
+.PARAMETER TemplateParameterObject
+A Hasbtable with parameters, optional
 
 .PARAMETER Pipeline
 Use this parameter if this script is used in a CICDpipeline. It will make the step fail.
@@ -31,7 +34,7 @@ ErrorCode: InvalidDomainNameLabel
 Errormessage: The domain name label LABexample is invalid. It must conform to the following regular expression: ^[a-z][a-z0-9-]{1,61}[a-z0-9]$.
 
 .EXAMPLE
-Get-ARMDeploymentErrorMessage Armtesting .\VM01\azuredeploy.json .\VM01\azuredeploy.parameters.json
+Get-ARMDeploymentErrorMessage Armtesting .\VM01\azuredeploy.json -TemplateParameterObject $Parameters
 
 --------
 deployment is correct
@@ -43,21 +46,48 @@ https://4bes.nl
 @Ba4bes
 #>
 function Get-ARMDeploymentErrorMessage {
-    [CmdletBinding()]
+    [CmdletBinding(DefaultParameterSetName = "__AllParameterSets")]
     Param(
-        [Parameter(Position = 1, Mandatory = $true)]
+        [Parameter(
+            Position = 1,
+            Mandatory = $true,
+            ParameterSetName = "__AllParameterSets"
+        )]
         [ValidateNotNullorEmpty()]
         [string] $ResourceGroupName,
-        [Parameter(Position = 2, Mandatory = $true)]
+
+        [Parameter(
+            Position = 2,
+            Mandatory = $true,
+            ParameterSetName = "__AllParameterSets"
+        )]
         [ValidateNotNullorEmpty()]
         [string] $TemplateFile,
-        [Parameter(Position = 3, Mandatory = $true)]
+
+        [Parameter(
+            ParameterSetName = 'TemplateParameterFile',
+            Mandatory = $true
+        )]
         [string] $TemplateParameterFile,
-        [Parameter()]
+
+        [Parameter(
+            ParameterSetName = 'TemplateParameterObject',
+            Mandatory = $true
+        )]
+        [hashtable] $TemplateParameterObject,
+
+
+        [Parameter(
+            ParameterSetName = "__AllParameterSets"
+        )]
         [switch] $Pipeline,
-        [Parameter()]
+
+        [Parameter(
+            ParameterSetName = "__AllParameterSets"
+        )]
         [switch] $ThrowOnError
     )
+
     if ($Pipeline) {
         Write-Warning "This parameter will be removed in the next release. Please use -ThrowOnError as an replacement"
     }
@@ -66,9 +96,14 @@ function Get-ARMDeploymentErrorMessage {
     $Output = $null
     $DetailedError = $null
     $Parameters = @{
-        ResourceGroupName     = $ResourceGroupName
-        TemplateFile          = $TemplateFile
-        TemplateParameterFile = $TemplateParameterFile
+        ResourceGroupName = $ResourceGroupName
+        TemplateFile      = $TemplateFile
+    }
+    if (-not[string]::IsNullOrEmpty($TemplateParameterFile) ) {
+        $Parameters.Add("TemplateParameterFile", $TemplateParameterFile)
+    }
+    if (-not[string]::IsNullOrEmpty($TemplateParameterObject) ) {
+        $Parameters.Add("TemplateParameterObject", $TemplateParameterObject)
     }
 
     #Get the AzureModule that's being used

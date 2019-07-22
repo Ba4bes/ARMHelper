@@ -1,10 +1,19 @@
 # ARMHelper
 
-[![Build Status](https://dev.azure.com/Ba4bes/ARMHelper/_apis/build/status/Ba4bes.ARMHelper?branchName=master)](https://dev.azure.com/Ba4bes/ARMHelper/_build/latest?definitionId=8&branchName=master)
+### Development Status
+
+[![Build Status](https://dev.azure.com/Ba4bes/ARMHelper/_apis/build/status/Development?branchName=Development)](https://dev.azure.com/Ba4bes/ARMHelper/_build/latest?definitionId=17&branchName=Development)
+![Azure DevOps tests (branch)](https://img.shields.io/azure-devops/tests/ba4bes/armhelper/17/Development.svg)
+
+### Production status
+
 [![Build Status](https://vsrm.dev.azure.com/Ba4bes/_apis/public/Release/badge/fe28574d-f965-479f-bc02-25d7534d9aeb/1/1)](https://vsrm.dev.azure.com/Ba4bes/_apis/public/Release/badge/fe28574d-f965-479f-bc02-25d7534d9aeb/1/1)
+![GitHub issues](https://img.shields.io/github/issues-raw/ba4bes/ARMHelper.svg)
 
 [![Gallery version](https://img.shields.io/powershellgallery/v/ARMHelper.svg)](https://img.shields.io/powershellgallery/v/ARMHelper.svg)
 [![Download Status](https://img.shields.io/powershellgallery/dt/ARMHelper.svg)](https://img.shields.io/powershellgallery/dt/ARMHelper.svg)
+
+## Introduction
 
 This module is created to make it easier to work with ARM deployments.
 
@@ -15,7 +24,7 @@ You are at this point able to:
 - Check if resources that you want to deploy already exist and whether they would be overwritten.
 
 For an introduction, please view  <http://4bes.nl/2019/04/09/armhelper-a-module-to-help-create-arm-templates>
-For usage in an Azure DevOps pipeline: <https://4bes.nl/2019/04/19/build-pipeline-in-azure-devops-for-arm-templates-part-ii-using-armhelper-and-yaml/>
+
 
 For usage in an Azure DevOps pipeline: <http://4bes.nl/2019/04/18/build-pipeline-in-azure-devops-for-arm-templates-part-ii-using-armhelper-and-yaml>
 
@@ -25,7 +34,7 @@ For usage in an Azure DevOps pipeline: <http://4bes.nl/2019/04/18/build-pipeline
 
 - Access to an Azure subscription
 - Have the AzureRM or AZ module installed and a connection ready
-- Windows PowerShell or PowerShell Core. No tests have been done on MacOS or Linux yet.
+- Windows PowerShell or PowerShell Core. MacOS and Linux are tested in the pipeline, but could have issues. Please let me know if you run in to one
 
 ### Installation
 

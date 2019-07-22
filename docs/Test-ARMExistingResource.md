@@ -12,9 +12,22 @@ Show if resource that are set to be deployed already exist
 
 ## SYNTAX
 
+### __AllParameterSets (Default)
+```
+Test-ARMExistingResource [-ResourceGroupName] <String> [-TemplateFile] <String> [-Mode <String>]
+ [-ThrowWhenRemoving] [<CommonParameters>]
+```
+
+### TemplateParameterFile
+```
+Test-ARMExistingResource [-ResourceGroupName] <String> [-TemplateFile] <String> -TemplateParameterFile <String>
+ [-Mode <String>] [-ThrowWhenRemoving] [<CommonParameters>]
+```
+
+### TemplateParameterObject
 ```
 Test-ARMExistingResource [-ResourceGroupName] <String> [-TemplateFile] <String>
- [-TemplateParameterFile] <String> [-Mode <String>] [-ThrowWhenRemoving] [<CommonParameters>]
+ -TemplateParameterObject <Hashtable> [-Mode <String>] [-ThrowWhenRemoving] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -74,11 +87,26 @@ The path to the parameterfile
 
 ```yaml
 Type: String
-Parameter Sets: (All)
+Parameter Sets: TemplateParameterFile
 Aliases:
 
 Required: True
-Position: 4
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -TemplateParameterObject
+{{ Fill TemplateParameterObject Description }}
+
+```yaml
+Type: Hashtable
+Parameter Sets: TemplateParameterObject
+Aliases:
+
+Required: True
+Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

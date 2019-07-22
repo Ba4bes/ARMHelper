@@ -12,9 +12,22 @@ Tests an azure deployment for errors, Use the azure Logs if a generic message is
 
 ## SYNTAX
 
+### __AllParameterSets (Default)
+```
+Get-ARMDeploymentErrorMessage [-ResourceGroupName] <String> [-TemplateFile] <String> [-Pipeline]
+ [-ThrowOnError] [<CommonParameters>]
+```
+
+### TemplateParameterFile
 ```
 Get-ARMDeploymentErrorMessage [-ResourceGroupName] <String> [-TemplateFile] <String>
- [-TemplateParameterFile] <String> [-Pipeline] [-ThrowOnError] [<CommonParameters>]
+ -TemplateParameterFile <String> [-Pipeline] [-ThrowOnError] [<CommonParameters>]
+```
+
+### TemplateParameterObject
+```
+Get-ARMDeploymentErrorMessage [-ResourceGroupName] <String> [-TemplateFile] <String>
+ -TemplateParameterObject <Hashtable> [-Pipeline] [-ThrowOnError] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -80,11 +93,26 @@ The path to the parameterfile
 
 ```yaml
 Type: String
-Parameter Sets: (All)
+Parameter Sets: TemplateParameterFile
 Aliases:
 
 Required: True
-Position: 4
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -TemplateParameterObject
+A Hasbtable with parameters, optional
+
+```yaml
+Type: Hashtable
+Parameter Sets: TemplateParameterObject
+Aliases:
+
+Required: True
+Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

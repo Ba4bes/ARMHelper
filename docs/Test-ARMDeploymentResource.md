@@ -12,9 +12,22 @@ Gives output that shows all resources that would be deployed by an ARMtemplate
 
 ## SYNTAX
 
+### __AllParameterSets (Default)
+```
+Test-ARMDeploymentResource [-ResourceGroupName] <String> [-TemplateFile] <String> [-Mode <String>]
+ [<CommonParameters>]
+```
+
+### TemplateParameterFile
 ```
 Test-ARMDeploymentResource [-ResourceGroupName] <String> [-TemplateFile] <String>
- [-TemplateParameterFile] <String> [-Mode <String>] [<CommonParameters>]
+ -TemplateParameterFile <String> [-Mode <String>] [<CommonParameters>]
+```
+
+### TemplateParameterObject
+```
+Test-ARMDeploymentResource [-ResourceGroupName] <String> [-TemplateFile] <String>
+ -TemplateParameterObject <Hashtable> [-Mode <String>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -68,11 +81,26 @@ Accept wildcard characters: False
 
 ```yaml
 Type: String
-Parameter Sets: (All)
+Parameter Sets: TemplateParameterFile
 Aliases:
 
 Required: True
-Position: 4
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -TemplateParameterObject
+A Hasbtable with parameters, optional
+
+```yaml
+Type: Hashtable
+Parameter Sets: TemplateParameterObject
+Aliases:
+
+Required: True
+Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
