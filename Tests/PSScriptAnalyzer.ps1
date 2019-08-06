@@ -14,7 +14,7 @@
     Script will run manually and provide all testresults. Rule PSAvoidUsingUserNameAndPassWordParams will be ignored
 .NOTES
     This script is written to use in a build pipeline, but can be ran manually without issues.
-    Written for OGD ict-diensten for internal use, by Barbara Forbes
+    Written by Barbara Forbes
 #>
 
 Param(
