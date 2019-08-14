@@ -1,9 +1,8 @@
 Function Test-ARMAzureModule {
 
     $Module = $null
-    $AzureRM = get-installedModule AzureRM -ErrorAction SilentlyContinue
-    $Az = Get-InstalledModule AZ -ErrorAction SilentlyContinue
-
+    $AzureRM = Get-InstalledModule -Name AzureRM -ErrorAction SilentlyContinue
+    $Az = Get-InstalledModule -Name Az -ErrorAction SilentlyContinue
     if (-not[string]::IsNullOrEmpty($Az)) {
         Write-Verbose "Az is found"
         try {
@@ -14,8 +13,7 @@ Function Test-ARMAzureModule {
         }
         $Module = "Az"
     }
-
-    if (-not[string]::IsNullOrEmpty($AzureRM)) {
+    elseif (-not[string]::IsNullOrEmpty($AzureRM)) {
         Write-Verbose "AzureRM is found"
         try {
             $null = Get-AzureRmContext
@@ -25,10 +23,9 @@ Function Test-ARMAzureModule {
         }
         $Module = "AzureRM"
     }
-    if ([string]::IsNullOrEmpty($Module)) {
-        Write-Error "neither AZ of AzureRM could be loaded"
+    else {
+        Throw "neither AZ of AzureRM could be loaded"
     }
+
     $Module
-
-
 }
