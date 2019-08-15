@@ -1,9 +1,7 @@
 $projectRoot = Resolve-Path "$PSScriptRoot\.."
 $moduleRoot = Split-Path (Resolve-Path "$projectRoot\*\*.psm1")
 $moduleName = Split-Path $moduleRoot -Leaf
-if (Get-Module ARMHelper) {
-    Remove-Module ArmHelper
-}
+
 Import-Module (Join-Path $moduleRoot "$moduleName.psd1") -force
 
 

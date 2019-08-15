@@ -49,7 +49,7 @@ Errormessage: The domain name label LABexample is invalid. It must conform to th
 
 ### EXAMPLE 2
 ```
-Get-ARMDeploymentErrorMessage Armtesting .\VM01\azuredeploy.json .\VM01\azuredeploy.parameters.json
+Get-ARMDeploymentErrorMessage Armtesting .\VM01\azuredeploy.json -TemplateParameterObject $Parameters
 ```
 
 --------
@@ -74,7 +74,7 @@ Accept wildcard characters: False
 ```
 
 ### -TemplateFile
-The path to the deploymentfile
+The path to the templatefile
 
 ```yaml
 Type: String
@@ -89,7 +89,7 @@ Accept wildcard characters: False
 ```
 
 ### -TemplateParameterFile
-The path to the parameterfile
+The path to the parameterfile, optional
 
 ```yaml
 Type: String
