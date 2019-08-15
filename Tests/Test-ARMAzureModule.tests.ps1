@@ -73,6 +73,10 @@ Describe 'Test-ARMAzureModule' -Tag @("Mock") {
                 $Result = Test-ARMAzureModule
                 $Result | Should -be "Az"
             }
+            it "Fails when no connectoin is found"{
+                Mock Get-AzContext { Throw "error"}
+                { Test-ARMAzureModule } | Should throw "no connection"
+            }
         }
         Context 'When module is loaded' {
             function Get-AzContext  ([String]$Name, [Object]$Value, [Switch]$Clobber) { }

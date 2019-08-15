@@ -44,6 +44,31 @@ If no function is available, a generic output will be given.
 Test-ARMDeploymentResource -ResourceGroupName Armtest -TemplateFile .\azuredeploy.json -TemplateParameterFile .\azuredeploy.parameters.json
 ```
 
+--------
+Resource : storageAccounts
+Name     : armsta12356
+Type     : Microsoft.Storage/storageAccounts
+Location : westeurope
+mode     : Incremental
+ID       : /subscriptions/12345678-abcd-1234-1234-12345678/resourceGroups/arm/providers/Microsoft.Storage/storageAccounts/armsta12356
+
+### EXAMPLE 2
+```
+Test-ARMDeploymentResource armtesting .\azuredeploy.json -TemplateParameterObject $parameters | select *
+```
+
+--------
+Resource          : storageAccounts
+Name              : armsta12356
+Type              : Microsoft.Storage/storageAccounts
+ID                : /subscriptions/12345678-abcd-1234-1234-12345678/resourceGroups/armtesting/providers/Microsoft.Storage/storageAccounts/armsta12356
+Location          : westeurope
+Tags: ARMcreated  : True
+accountType       : Standard_LRS
+apiVersion        : 2015-06-15
+Tags: displayName : armsta12356
+mode              : Incremental
+
 ## PARAMETERS
 
 ### -ResourceGroupName
@@ -62,7 +87,7 @@ Accept wildcard characters: False
 ```
 
 ### -TemplateFile
-{{ Fill TemplateFile Description }}
+The path to the templatefile
 
 ```yaml
 Type: String
@@ -77,7 +102,7 @@ Accept wildcard characters: False
 ```
 
 ### -TemplateParameterFile
-{{ Fill TemplateParameterFile Description }}
+The path to the parameterfile, optional
 
 ```yaml
 Type: String
