@@ -5,9 +5,6 @@ if (Get-Module ARMHelper) {
     Remove-Module -Name ArmHelper -Force
 }
 
-if (Test-Path "$(Build.SourcesDirectory)"){
-    $Pipeline = $true
-}
 
 Import-Module (Join-Path $moduleRoot "$moduleName.psd1") -Force
 
@@ -67,20 +64,20 @@ Describe 'Check Get-ARMDEploymentErrorMessage with Azure' -Tag @("Az") {
                 $Test[0] | Should -Be "Error, Find info below:"
                 $Test[1] | Should -Be "Deployment template validation failed: 'The template resource '[variables('storageAccountName')]' at line '32' and column '9' is not valid. The type property is invalid. Please see https://aka.ms/arm-template/#resources for usage details.'."
             }
-            If (-not $Pipeline) {
-                It "When deployment has a general error, the right results are given" {
-                    $Parameters = @{
-                        resourcegroupname     = "ArmHelper"
-                        templatefile          = "$PSScriptRoot\StorageAccountGE\azuredeploy.json"
-                        templateparameterfile = "$PSScriptRoot\StorageAccountGE\azuredeploy.parameters.json"
-                    }
-                    $Result = Get-ARMDeploymentErrorMessage @Parameters
-                    $Result[0] | Should -Be "the output is a generic error message. The log is searched for a more clear errormessage"
-                    $Result[-3] | Should -Be "General Error. Find info below:"
-                    $Result[-2] | Should -Be "ErrorCode: AccountNameInvalid"
-                    $Result[-1] | Should -BeLike "* is not a valid storage account name. Storage account name must be between 3 and 24 characters in length and use numbers and lower-case letters only."
+
+            It "When deployment has a general error, the right results are given" {
+                $Parameters = @{
+                    resourcegroupname     = "ArmHelper"
+                    templatefile          = "$PSScriptRoot\StorageAccountGE\azuredeploy.json"
+                    templateparameterfile = "$PSScriptRoot\StorageAccountGE\azuredeploy.parameters.json"
                 }
+                $Result = Get-ARMDeploymentErrorMessage @Parameters
+                $Result[0] | Should -Be "the output is a generic error message. The log is searched for a more clear errormessage"
+                $Result[-3] | Should -Be "General Error. Find info below:"
+                $Result[-2] | Should -Be "ErrorCode: AccountNameInvalid"
+                $Result[-1] | Should -BeLike "* is not a valid storage account name. Storage account name must be between 3 and 24 characters in length and use numbers and lower-case letters only."
             }
+            
             Start-Sleep 5
             It "Throws when TrowonError is used" {
                 $Parameters = @{
@@ -90,21 +87,20 @@ Describe 'Check Get-ARMDEploymentErrorMessage with Azure' -Tag @("Az") {
                 }
                 { Get-ARMDeploymentErrorMessage @Parameters -ThrowOnError } | Should -Throw  "Deployment is incorrect"
             }
-            If (-not $Pipeline) {
-                It "When no errormessage is found in azurelog, script throws" {
-                    Mock Start-Sleep { $null }
-                    function Get-AzureRMLog([String]$Name, [Object]$Value, [Switch]$Clobber) { }
-                    function Get-AzLog([String]$Name, [Object]$Value, [Switch]$Clobber) { }
-                    Mock Get-AzureRMLog { $null }
-                    Mock Get-AzLog { $null }
-                    $Parameters = @{
-                        resourcegroupname     = "ArmHelper"
-                        templatefile          = "$PSScriptRoot\StorageAccountGE\azuredeploy.json"
-                        templateparameterfile = "$PSScriptRoot\StorageAccountGE\azuredeploy.parameters.json"
-                    }
-                    { Get-ARMDeploymentErrorMessage @Parameters } | Should -Throw "Can't get Azure Log Entry. Please check the log manually in the portal."
+            It "When no errormessage is found in azurelog, script throws" {
+                Mock Start-Sleep { $null }
+                function Get-AzureRMLog([String]$Name, [Object]$Value, [Switch]$Clobber) { }
+                function Get-AzLog([String]$Name, [Object]$Value, [Switch]$Clobber) { }
+                Mock Get-AzureRMLog { $null }
+                Mock Get-AzLog { $null }
+                $Parameters = @{
+                    resourcegroupname     = "ArmHelper"
+                    templatefile          = "$PSScriptRoot\StorageAccountGE\azuredeploy.json"
+                    templateparameterfile = "$PSScriptRoot\StorageAccountGE\azuredeploy.parameters.json"
                 }
+                { Get-ARMDeploymentErrorMessage @Parameters } | Should -Throw "Can't get Azure Log Entry. Please check the log manually in the portal."
             }
+            
         }
     }
 }
