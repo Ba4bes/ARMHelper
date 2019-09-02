@@ -6,7 +6,7 @@ steps:
     ScriptType: InlineScript
     Inline: |
       $outputFile = "$(Build.SourcesDirectory)\TEST-RESULTS.xml"
-      Invoke-Pester -Tag 'Az' -OutputFile $outputFile -OutputFormat NUnitXml -enableExit
+      Invoke-Pester -Script "$(Build.SourcesDirectory)\Tests\AzureTesting" -OutputFile $outputFile -OutputFormat NUnitXml -enableExit
       # Invoke-Pester -Script @{
       # Path =  '$(Build.SourcesDirectory)\Tests\AzureTesting\pipelinetest.ps1'
       # Parameters = @{
@@ -22,7 +22,7 @@ steps:
     ScriptType: InlineScript
     Inline: |
       $outputFile = "$(Build.SourcesDirectory)\TEST-RESULTS.xml"
-      Invoke-Pester -Tag 'Az' -OutputFile $outputFile -OutputFormat NUnitXml -enableExit
+      Invoke-Pester -Script "$(Build.SourcesDirectory)\Tests\AzureTesting" -OutputFile $outputFile -OutputFormat NUnitXml -enableExit
       # Invoke-Pester -Script @{
       # Path =  '$(Build.SourcesDirectory)\Tests\AzureTesting\pipelinetest.ps1'
       # Parameters = @{
