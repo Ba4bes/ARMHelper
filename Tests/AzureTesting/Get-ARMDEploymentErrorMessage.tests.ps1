@@ -20,7 +20,7 @@ Describe 'Check Get-ARMDEploymentErrorMessage with Azure' -Tag @("Az") {
                 $Result | Should -Be "deployment is correct"
             }
 
-            It "Works with a parameterFile"{
+            It "Works with a parameterFile" {
                 $Parameters = @{
                     resourcegroupname     = "ArmHelper"
                     templatefile          = "$PSScriptRoot\StorageAccountFixed\azuredeploy.json"
@@ -29,15 +29,25 @@ Describe 'Check Get-ARMDEploymentErrorMessage with Azure' -Tag @("Az") {
                 $Result = Get-ARMDeploymentErrorMessage @Parameters
                 $Result | Should -Be "deployment is correct"
             }
-            It "works with a parameter object"{
+            It "works with a parameter object" {
                 $Parameterobject = @{
                     storageAccountPrefix = "armsta"
-                    storageAccountType = "Standard_LRS"
+                    storageAccountType   = "Standard_LRS"
                 }
                 $Parameters = @{
-                    resourcegroupname     = "ArmHelper"
-                    templatefile          = "$PSScriptRoot\StorageAccountFixed\azuredeploy.json"
+                    resourcegroupname       = "ArmHelper"
+                    templatefile            = "$PSScriptRoot\StorageAccountFixed\azuredeploy.json"
                     templateparameterobject = $Parameterobject
+                }
+                $Result = Get-ARMDeploymentErrorMessage @Parameters
+                $Result | Should -Be "deployment is correct"
+            }
+            It "works with added Parameters" {
+                $Parameters = @{
+                    resourcegroupname    = "ArmHelper"
+                    templatefile         = "$PSScriptRoot\StorageAccountFixed\azuredeploy.json"
+                    storageAccountPrefix = "armsta"
+                    storageAccountType   = "Standard_LRS"
                 }
                 $Result = Get-ARMDeploymentErrorMessage @Parameters
                 $Result | Should -Be "deployment is correct"

@@ -16,22 +16,32 @@ Describe 'Check Test-ARMDeploymentResource with Azure' -Tag @("Az") {
         }
         Context 'Basic functionallity' {
 
-            It "Works with a parameterFile"{
+            It "Works with a parameterFile" {
                 { Test-ARMDeploymentResource @Parameters } | Should -Not -Throw
             }
-            It "works with a parameter object"{
+            It "works with a parameter object" {
                 $Parameterobject = @{
-                    adminUsername = "Test"
-                    adminPassword = "Welkom123"
+                    adminUsername  = "Test"
+                    adminPassword  = "Welkom123"
                     dnsLabelPrefix = "eandomrlkajelnadada"
                 }
                 $Parameters = @{
-                    resourcegroupname     = "ArmHelper"
-                    templatefile          = "$PSScriptRoot\VirtualMachine\azuredeploy.json"
+                    resourcegroupname       = "ArmHelper"
+                    templatefile            = "$PSScriptRoot\VirtualMachine\azuredeploy.json"
                     templateparameterobject = $Parameterobject
                 }
                 { Test-ARMDeploymentResource @Parameters } | Should -Not -Throw
 
+            }
+            It "works with added Parameters" {
+                $Parameters = @{
+                    resourcegroupname = "ArmHelper"
+                    templatefile      = "$PSScriptRoot\VirtualMachine\azuredeploy.json"
+                    adminPassword     = ( "VeryNicePassword" | ConvertTo-SecureString -AsPlainText -force )
+                    adminUsername     = "Test"
+                    dnsLabelPrefix    = "eandomrlkajelnadada"
+                }
+                { Test-ARMDeploymentResource @Parameters } | Should -Not -Throw
             }
             It "When a deployment is correct, script doesn't throw" {
                 { Test-ARMDeploymentResource @Parameters } | Should -Not -Throw
