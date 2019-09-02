@@ -1,6 +1,6 @@
 steps:
 - task: AzurePowerShell@3
-  displayName: 'Pester testing with Azure'
+  displayName: 'Pester testing with Azure - v3'
   inputs:
     azureSubscription: AzureConnection
     ScriptType: InlineScript
@@ -15,7 +15,7 @@ steps:
     FailOnStandardError: false
     azurePowerShellVersion: LatestVersion
 - task: AzurePowerShell@4
-  displayName: 'Pester testing with Azure'
+  displayName: 'Pester testing with Azure -v4'
   inputs:
     azureSubscription: AzureConnection
     ScriptType: InlineScript
@@ -29,6 +29,20 @@ steps:
       } -OutputFile $outputFile -OutputFormat NUnitXml -enableExit
     FailOnStandardError: false
     azurePowerShellVersion: LatestVersion
+
+- powershell: |
+    Get-ChildItem $(Build.SourcesDirectory)/ARMHelper
+    Install-Module -Name Pester -Force -Scope CurrentUser -SkipPublisherCheck
+    Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser
+    Import-Module "$(Build.SourcesDirectory)/ARMHelper" -Force
+  displayName: 'Install Pester and import module'
+- powershell: |
+    $outputFile = ".\TEST-RESULTS.xml"
+    Invoke-Pester -Tag Az -OutputFile $outputFile -OutputFormat NUnitXml -enableExit
+  failOnStderr: false
+  continueOnError: true
+  displayName: 'Invoke-Pester without Azure'
+
 - task: PublishTestResults@2
   displayName: 'Publish Online Test Results'
   inputs:
