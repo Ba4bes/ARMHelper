@@ -17,6 +17,8 @@ stages:
       parameters:
         platform: 'Windows'
     - template: azure-pipelinesazuretemplate.yml
+      parameters:
+        platform: 'Windows'      
   - job: BuildMacOS
     pool:
       vmImage: macOS-10.14
@@ -31,4 +33,3 @@ stages:
     - template: azure-pipelinestemplate.yml
       parameters:
         platform: 'Linux'
-    - template: azure-pipelinesazuretemplate.yml
