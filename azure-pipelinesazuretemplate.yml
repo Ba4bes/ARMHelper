@@ -1,6 +1,6 @@
 steps:
-- task: AzurePowerShell@3
-  displayName: 'Pester testing with Azure - v3'
+- task: AzurePowerShell@4
+  displayName: 'Pester testing with Azure -v4'
   inputs:
     azureSubscription: AzureConnection
     ScriptType: InlineScript
@@ -15,8 +15,9 @@ steps:
       # } -OutputFile $outputFile -OutputFormat NUnitXml -enableExit
     FailOnStandardError: false
     azurePowerShellVersion: LatestVersion
-- task: AzurePowerShell@4
-  displayName: 'Pester testing with Azure -v4'
+
+- task: AzurePowerShell@3
+  displayName: 'Pester testing with Azure - v3'
   inputs:
     azureSubscription: AzureConnection
     ScriptType: InlineScript
