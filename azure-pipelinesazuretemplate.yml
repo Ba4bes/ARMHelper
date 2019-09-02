@@ -6,12 +6,13 @@ steps:
     ScriptType: InlineScript
     Inline: |
       $outputFile = "$(Build.SourcesDirectory)\TEST-RESULTS.xml"
-      Invoke-Pester -Script @{
-      Path =  '$(Build.SourcesDirectory)\Tests\AzureTesting\pipelinetest.ps1'
-      Parameters = @{
-      TemplatePath = '$(Build.SourcesDirectory)\Tests\AzureTesting'
-      }
-      } -OutputFile $outputFile -OutputFormat NUnitXml -enableExit
+      Invoke-Pester -Tag Az -OutputFile $outputFile -OutputFormat NUnitXml -enableExit
+      # Invoke-Pester -Script @{
+      # Path =  '$(Build.SourcesDirectory)\Tests\AzureTesting\pipelinetest.ps1'
+      # Parameters = @{
+      # TemplatePath = '$(Build.SourcesDirectory)\Tests\AzureTesting'
+      # }
+      # } -OutputFile $outputFile -OutputFormat NUnitXml -enableExit
     FailOnStandardError: false
     azurePowerShellVersion: LatestVersion
 - task: AzurePowerShell@4
@@ -21,12 +22,13 @@ steps:
     ScriptType: InlineScript
     Inline: |
       $outputFile = "$(Build.SourcesDirectory)\TEST-RESULTS.xml"
-      Invoke-Pester -Script @{
-      Path =  '$(Build.SourcesDirectory)\Tests\AzureTesting\pipelinetest.ps1'
-      Parameters = @{
-      TemplatePath = '$(Build.SourcesDirectory)\Tests\AzureTesting'
-      }
-      } -OutputFile $outputFile -OutputFormat NUnitXml -enableExit
+      Invoke-Pester -Tag Az -OutputFile $outputFile -OutputFormat NUnitXml -enableExit
+      # Invoke-Pester -Script @{
+      # Path =  '$(Build.SourcesDirectory)\Tests\AzureTesting\pipelinetest.ps1'
+      # Parameters = @{
+      # TemplatePath = '$(Build.SourcesDirectory)\Tests\AzureTesting'
+      # }
+      # } -OutputFile $outputFile -OutputFormat NUnitXml -enableExit
     FailOnStandardError: false
     azurePowerShellVersion: LatestVersion
 
