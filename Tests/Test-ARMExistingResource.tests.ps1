@@ -40,6 +40,15 @@ Describe 'Check Test-ARMExistingResource without Azure' -Tag @("Mock") {
                 $Result[2].Type | Should -Be "Microsoft.Storage/storageAccounts"
                 $Result[2].ResourceGroupName | Should -Be "Arm"
             }
+            it "When a Microsoft.Deploy is used, a warning is given."{
+                $Mockobject = (Get-Content "$PSScriptRoot\MockObjects\NestedResult.json") | ConvertFrom-Json
+                Mock Get-ARMResource {
+                    [object]$Mockobject
+                }
+                $Result = (Test-ARMExistingResource @Parameters 3>&1)
+                $Result.Message[0] | Should -Be "This command does not work for the resourcetype Microsoft.Resources/deployments. Please check linkedTemplate manually."
+
+            }
         }
         Context 'Az Complete ' {
             function Get-AzResource([String]$Name, [Object]$Value, [Switch]$Clobber) { }

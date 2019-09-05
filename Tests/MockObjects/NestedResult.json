@@ -1,0 +1,117 @@
+{
+  "templateHash": "12342355",
+  "parameters": {
+    "adminUsername": {
+      "type": "String",
+      "value": "henk"
+    },
+    "adminPassword": {
+      "type": "SecureString"
+    },
+    "dnsLabelPrefix": {
+      "type": "String",
+      "value": "b233523523la"
+    },
+    "uri": {
+      "type": "String",
+      "value": "https://example.blob.core.windows.net"
+    },
+    "sas": {
+      "type": "SecureString"
+    },
+    "windowsOSVersion": {
+      "type": "String",
+      "value": "2016-Datacenter"
+    },
+    "location": {
+      "type": "String",
+      "value": "westeurope"
+    }
+  },
+  "mode": "Complete",
+  "provisioningState": "Succeeded",
+  "timestamp": "2019-09-05T16:49:13.4122369Z",
+  "duration": "PT0S",
+  "correlationId": "7034ffb6-3b17-4ab6-b289-5899ad46e576",
+  "providers": [
+    {
+      "namespace": "Microsoft.Resources",
+      "resourceTypes": ""
+    },
+    {
+      "namespace": "Microsoft.Network",
+      "resourceTypes": "  "
+    },
+    {
+      "namespace": "Microsoft.Compute",
+      "resourceTypes": ""
+    }
+  ],
+  "dependencies": [
+    {
+      "dependsOn": " ",
+      "id": "/subscriptions/12345678-abcd-1234-1234-12345678/resourceGroups/Armtesting/providers/Microsoft.Network/networkInterfaces/myVMNic",
+      "resourceType": "Microsoft.Network/networkInterfaces",
+      "resourceName": "myVMNic"
+    },
+    {
+      "dependsOn": " ",
+      "id": "/subscriptions/12345678-abcd-1234-1234-12345678/resourceGroups/Armtesting/providers/Microsoft.Compute/virtualMachines/SimpleWinVM",
+      "resourceType": "Microsoft.Compute/virtualMachines",
+      "resourceName": "SimpleWinVM"
+    }
+  ],
+  "validatedResources": [
+    {
+      "apiVersion": "2018-05-01",
+      "id": "/subscriptions/12345678-abcd-1234-1234-12345678/resourceGroups/Armtesting/providers/Microsoft.Resources/Deployments/linkedTemplate",
+      "name": "linkedTemplate",
+      "type": "Microsoft.Resources/Deployments",
+      "properties": "@{mode=Incremental; templateLink=; parameters=}"
+    },
+    {
+      "apiVersion": "2018-11-01",
+      "id": "/subscriptions/12345678-abcd-1234-1234-12345678/resourceGroups/Armtesting/providers/Microsoft.Network/publicIPAddresses/myPublicIP",
+      "name": "myPublicIP",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "location": "westeurope",
+      "properties": "@{publicIPAllocationMethod=Dynamic; dnsSettings=}"
+    },
+    {
+      "apiVersion": "2018-11-01",
+      "id": "/subscriptions/12345678-abcd-1234-1234-12345678/resourceGroups/Armtesting/providers/Microsoft.Network/virtualNetworks/MyVNET",
+      "name": "MyVNET",
+      "type": "Microsoft.Network/virtualNetworks",
+      "location": "westeurope",
+      "properties": "@{addressSpace=; subnets=System.Object[]}"
+    },
+    {
+      "dependsOn": "/subscriptions/12345678-abcd-1234-1234-12345678/resourceGroups/ArmTesting/providers/Microsoft.Network/publicIPAddresses/myPublicIP /subscriptions/12345678-abcd-1234-1234-12345678/resourceGroups/ArmTesting/providers/Microsoft.Network/virtualNetworks/MyVNET",
+      "apiVersion": "2018-11-01",
+      "id": "/subscriptions/12345678-abcd-1234-1234-12345678/resourceGroups/Armtesting/providers/Microsoft.Network/networkInterfaces/myVMNic",
+      "name": "myVMNic",
+      "type": "Microsoft.Network/networkInterfaces",
+      "location": "westeurope",
+      "properties": "@{ipConfigurations=System.Object[]}"
+    },
+    {
+      "dependsOn": "/subscriptions/12345678-abcd-1234-1234-12345678/resourceGroups/Armtesting/providers/Microsoft.Resources/Deployments/linkedTemplate /subscriptions/12345678-abcd-1234-1234-12345678/resourceGroups/ArmTesting/providers/Microsoft.Network/networkInterfaces/myVMNic",
+      "apiVersion": "2018-10-01",
+      "id": "/subscriptions/12345678-abcd-1234-1234-12345678/resourceGroups/Armtesting/providers/Microsoft.Compute/virtualMachines/SimpleWinVM",
+      "name": "SimpleWinVM",
+      "type": "Microsoft.Compute/virtualMachines",
+      "location": "westeurope",
+      "properties": "@{hardwareProfile=; osProfile=; storageProfile=; networkProfile=; diagnosticsProfile=}"
+    },
+    {
+      "apiVersion": "2018-11-01",
+      "id": "/subscriptions/12345678-abcd-1234-1234-12345678/resourceGroups/ArmTesting/providers/Microsoft.Storage/storageAccounts/123",
+      "name": "ackjvgp3y3huksawinvm",
+      "type": "Microsoft.Storage/storageAccounts",
+      "sku": "@{name=Standard_LRS}",
+      "kind": "Storage",
+      "location": "westeurope",
+      "properties": ""
+    }
+  ]
+}
