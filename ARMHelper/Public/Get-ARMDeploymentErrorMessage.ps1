@@ -4,7 +4,7 @@ Tests an azure deployment for errors, Use the azure Logs if a generic message is
 
 .DESCRIPTION
 This function uses Test-AzureRmResourceGroupDeployment or Test-AZResourcegroupDeployment. There is a specific errormessage that's very generic.
-If this is the output, the correct errormessage is retrieved from the Azurelog
+If this is the output, the correct errormessage is retrieved from the Azurelog.
 
 .PARAMETER ResourceGroupName
 The resourcegroup where the resources would be deployed to. This resourcegroup needs to exist.
@@ -40,6 +40,7 @@ Get-ARMDeploymentErrorMessage Armtesting .\VM01\azuredeploy.json -TemplateParame
 deployment is correct
 
 .NOTES
+Dynamic Parameters like in the orginal Test-AzResourcegroupDeployment-cmdlet are supported
 Author: Barbara Forbes
 Module: ARMHelper
 https://4bes.nl

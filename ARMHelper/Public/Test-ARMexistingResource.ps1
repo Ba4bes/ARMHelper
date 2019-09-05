@@ -34,6 +34,7 @@ type                                               name                         
 Microsoft.Storage/storageAccounts                  armsta                                             armtest
 
 .NOTES
+Dynamic Parameters like in the orginal Test-AzResourcegroupDeployment-cmdlet are supported
 Author: Barbara Forbes
 Module: ARMHelper
 https://4bes.nl

@@ -33,7 +33,7 @@ Get-ARMDeploymentErrorMessage [-ResourceGroupName] <String> [-TemplateFile] <Str
 ## DESCRIPTION
 This function uses Test-AzureRmResourceGroupDeployment or Test-AZResourcegroupDeployment.
 There is a specific errormessage that's very generic.
-If this is the output, the correct errormessage is retrieved from the Azurelog
+If this is the output, the correct errormessage is retrieved from the Azurelog.
 
 ## EXAMPLES
 
@@ -159,6 +159,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## OUTPUTS
 
 ## NOTES
+Dynamic Parameters like in the orginal Test-AzResourcegroupDeployment-cmdlet are supported
 Author: Barbara Forbes
 Module: ARMHelper
 https://4bes.nl

@@ -10,7 +10,7 @@
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>This function uses Test-AzureRmResourceGroupDeployment or Test-AZResourcegroupDeployment. There is a specific errormessage that's very generic. If this is the output, the correct errormessage is retrieved from the Azurelog</maml:para>
+      <maml:para>This function uses Test-AzureRmResourceGroupDeployment or Test-AZResourcegroupDeployment. There is a specific errormessage that's very generic. If this is the output, the correct errormessage is retrieved from the Azurelog.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem>
@@ -214,7 +214,7 @@
     <command:returnValues />
     <maml:alertSet>
       <maml:alert>
-        <maml:para>Author: Barbara Forbes Module: ARMHelper https://4bes.nl @Ba4bes</maml:para>
+        <maml:para>Dynamic Parameters like in the orginal Test-AzResourcegroupDeployment-cmdlet are supported Author: Barbara Forbes Module: ARMHelper https://4bes.nl @Ba4bes</maml:para>
       </maml:alert>
     </maml:alertSet>
     <command:examples>
@@ -417,7 +417,7 @@
     <command:returnValues />
     <maml:alertSet>
       <maml:alert>
-        <maml:para>Script can be used in a CICD pipeline Author: Barbara Forbes Module: ARMHelper https://4bes.nl @Ba4bes Source for more output: #Source https://blog.mexia.com.au/testing-arm-templates-with-pester</maml:para>
+        <maml:para>Dynamic Parameters like in the orginal Test-AzResourcegroupDeployment-cmdlet are supported Script can be used in a CICD pipeline Author: Barbara Forbes Module: ARMHelper https://4bes.nl @Ba4bes Source for more output: #Source https://blog.mexia.com.au/testing-arm-templates-with-pester</maml:para>
       </maml:alert>
     </maml:alertSet>
     <command:examples>
@@ -654,7 +654,7 @@
     <command:returnValues />
     <maml:alertSet>
       <maml:alert>
-        <maml:para>Author: Barbara Forbes Module: ARMHelper https://4bes.nl @Ba4bes</maml:para>
+        <maml:para>Dynamic Parameters like in the orginal Test-AzResourcegroupDeployment-cmdlet are supported Author: Barbara Forbes Module: ARMHelper https://4bes.nl @Ba4bes</maml:para>
       </maml:alert>
     </maml:alertSet>
     <command:examples>

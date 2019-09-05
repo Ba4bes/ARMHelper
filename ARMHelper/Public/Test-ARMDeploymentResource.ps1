@@ -48,6 +48,7 @@ Tags: displayName : armsta12356
 mode              : Incremental
 
 .NOTES
+Dynamic Parameters like in the orginal Test-AzResourcegroupDeployment-cmdlet are supported
 Script can be used in a CICD pipeline
 Author: Barbara Forbes
 Module: ARMHelper
