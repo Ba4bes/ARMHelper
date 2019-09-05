@@ -169,6 +169,11 @@ Function Test-ARMExistingResource {
         }
 
         foreach ($Resource in $ValidatedResources) {
+            #Give a warning that Deployments can give unexpected results
+            If ($Resource.Type -eq "Microsoft.Resources/deployments") {
+                Write-Warning "This command does not work for the resourcetype Microsoft.Resources/deployments. Please check $($Resource.Name) manually."
+                Continue
+            }
             if ($Module -eq "Az") {
                 $Check = Get-AzResource -Name $Resource.name -ResourceType $Resource.type
             }
