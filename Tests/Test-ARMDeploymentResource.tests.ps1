@@ -9,7 +9,7 @@ Describe 'Check Test-ARMDeploymentResource without Azure' -Tag @("Mock") {
     InModuleScope ARMHelper {
         $Parameters = @{
             resourcegroupname     = "Arm"
-            templatefile          = ".\azuredeploy.json"
+            templatefile          = "$PSScriptRoot\MockObjects\azuredeploy.json"
             templateparameterfile = ".\azuredeploy.parameters.json"
         }
         Context 'Basic functionallity' {
@@ -18,21 +18,30 @@ Describe 'Check Test-ARMDeploymentResource without Azure' -Tag @("Mock") {
                 [object]$Mockobject
             }
 
-            It "Works with a parameterFile"{
+            It "Works with a parameterFile" {
                 { Test-ARMDeploymentResource @Parameters } | Should -Not -Throw
             }
-            It "works with a parameter object"{
+            It "works with a parameter object" {
                 $Parameterobject = @{
                     storageAccountPrefix = "armsta"
-                    storageAccountType = "LRS"
+                    storageAccountType   = "LRS"
                 }
                 $Parameters = @{
-                    resourcegroupname     = "Arm"
-                    templatefile          = ".\azuredeploy.json"
+                    resourcegroupname       = "Arm"
+                    templatefile            = "$PSScriptRoot\MockObjects\azuredeploy.json"
                     templateparameterobject = $Parameterobject
                 }
                 { Test-ARMDeploymentResource @Parameters } | Should -Not -Throw
 
+            }
+            It "works with added Parameters" {
+                $Parameters = @{
+                    resourcegroupname    = "Arm"
+                    templatefile         = "$PSScriptRoot\MockObjects\azuredeploy.json"
+                    storageAccountPrefix = "armsta"
+                    storageAccountType   = "LRS"
+                }
+                { Test-ARMDeploymentResource @Parameters } | Should -Not -Throw
             }
 
             It "When a deployment is correct, script doesn't throw" {

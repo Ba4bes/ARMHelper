@@ -1,0 +1,30 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "storageAccountPrefix": {
+            "type": "string",
+            "maxLength": 11,
+            "defaultValue": "armsta",
+            "metadata": {
+                "description": "Prefix the storageaccount"
+            }
+        },
+        "storageAccountType": {
+            "type": "string",
+            "defaultValue": "Standard_LRS",
+            "allowedValues": [
+                "Standard_LRS",
+                "Premium_LRS",
+                "Standard_RAGRS"
+            ],
+            "metadata": {
+                "description": "The type for the storage account"
+            }
+        }
+    },
+    "variables": {},
+    "resources": [],
+    "outputs": {}
+
+}
