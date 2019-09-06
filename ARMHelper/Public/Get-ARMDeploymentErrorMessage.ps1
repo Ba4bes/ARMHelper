@@ -182,20 +182,47 @@ function Get-ARMDeploymentErrorMessage {
                     Throw "Something went wrong, No AzureRM of AZ module found"
                 }
                 $MaxTries ++
-            } while ($null -eq $LogContent -and $maxtries -le 5)
+            } while ($null -eq $LogContent -and $maxtries -le 10)
 
-            if ($maxtries -gt 5 ) {
+            if ($maxtries -gt 10 ) {
                 Throw "Can't get Azure Log Entry. Please check the log manually in the portal."
             }
-            $DetailedError = $LogContent[0].statusMessage
-            $TestError = ($DetailedError | ConvertFrom-Json ).error.details.details
-            if ([string]::IsNullOrEmpty($testError)) {
-                $ErrorCode = ($DetailedError | ConvertFrom-Json ).error.details.code
-                $ErrorMessage = ($DetailedError | ConvertFrom-Json ).error.details.message
+            if ([string]::IsNullOrEmpty($LogContent)) {
+                Throw "Something went wrong when collecting the log. Please try again"
             }
-            else {
-                $ErrorCode = ($DetailedError | ConvertFrom-Json ).error.details.details.code
-                $ErrorMessage = ($DetailedError | ConvertFrom-Json ).error.details.details.message
+
+            $DetailedError = ($LogContent[0].statusMessage)
+            $TestError = $DetailedError | ConvertFrom-Json
+
+            # The structure for the Log content is inconsistent. This is why a few tricks are used to get the right property
+
+            # Get a list of all properties
+            $ErrorProperties = Get-ResourceProperty -Object $TestError
+
+            #List of properties that are not relevant
+            $NotRelevant = @(
+                '.*PreflightValidationCheck*',
+                '.*InvalidTemplateDeployment.*'
+                '.*Preflight validation failed.*'
+                '.*The template deployment.*'
+            )
+
+            foreach ($ErrorProperty in $ErrorProperties.GetEnumerator()) {
+                if ($ErrorProperty.Key -like "*code*") {
+
+                    if ( $ErrorProperty.Value -notmatch ($NotRelevant -join "|") ) {
+                        $ErrorCode = $ErrorProperty.Value
+                    }
+                }
+                if ($ErrorProperty.Key -like "*message*") {
+                    if ( $ErrorProperty.Value -notmatch ($NotRelevant -join "|")) {
+                        $ErrorMessage = $ErrorProperty.Value
+                    }
+                }
+            }
+
+            if (([string]::IsNullOrEmpty($ErrorCode)) -or ([string]::IsNullOrEmpty($ErrorMessage))) {
+                Throw "Script could not get the correct error message. Please try again"
             }
         }
 
