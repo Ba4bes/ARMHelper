@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-##[0.6.1]
+##[0.6.2]
 
 ### Added
 
@@ -14,13 +14,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - A warning is added to Test-ARMExistingResource as this module can't support Microsoft.Resources/deployments at this time (30)
+- Get-ARMDeploymentErrorMessage had issues lately because the output from the Azure Log is not always consistent. It now searches for the right properties in a different way (#32)
+
 
 ## [0.5.7] - 2019-08-15
 
 ### Fixed
 
 - The check for AzureRm/Az broke for the Azure DevOps pipeline. This is fixed
-  This also fixes #23 as Az is now the prefered module
+  This also fixes #23 as Az is now the preferred module
 
 ## [0.5.6] - 2019-07-20
 
