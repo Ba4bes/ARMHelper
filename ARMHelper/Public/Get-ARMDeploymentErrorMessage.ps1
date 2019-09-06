@@ -187,7 +187,36 @@ function Get-ARMDeploymentErrorMessage {
             if ($maxtries -gt 5 ) {
                 Throw "Can't get Azure Log Entry. Please check the log manually in the portal."
             }
+
+            # $LogContent | ConvertFrom-Json
+            # $TestError = $DetailedError | ConvertFrom-Json
+
             $DetailedError = $LogContent[0].statusMessage
+            $TestError = $DetailedError | ConvertFrom-Json
+    #         $ErrorMessage = Get-ResourceProperty -Object $TestError
+    #         $Notrelevant = @(
+    #             '.*PreflightValidationCheck*',
+    #             '.*InvalidTemplateDeployment.*'
+
+    #         )
+    #         $goodcode = @()
+    #         foreach ($prop in $ErrorMessage.GetEnumerator()){
+    #             if ($prop.Key -like "*code*") {
+
+    #                if ( $goodprop = $prop.Value -notmatch  ($Notrelevant -join "|")){
+    #                 $ErrorCode = $Prop.Value
+    #                 $Segments = (($Prop.Key).Split(".")).count
+
+    #                }
+    #             }
+
+    #          #   Write-output "key " $prop.Key
+    #          #   Write-output "value" $prop.Value
+    #         }
+    #    $props = $ErrorMessage.Values  -notmatch  ($Notrelevant -join "|")
+
+
+
             $TestError = ($DetailedError | ConvertFrom-Json ).error.details.details
             if ([string]::IsNullOrEmpty($testError)) {
                 $ErrorCode = ($DetailedError | ConvertFrom-Json ).error.details.code
