@@ -15,7 +15,7 @@ steps:
   continueOnError: true
   displayName: 'Invoke-Pester without Azure'
 - task: PublishTestResults@2
-  displayName: 'Publish Online Test Results'
+  displayName: 'Publish Offline Test Results'
   inputs:
     testRunTitle: "Offline Pester Results ${{ parameters.platform }}"
     buildPlatform: ${{ parameters.platform }}

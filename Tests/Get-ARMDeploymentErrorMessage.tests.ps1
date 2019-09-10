@@ -10,7 +10,7 @@ Describe 'Check Get-ARMDEploymentErrorMessage' -Tag @("Mock") {
     InModuleScope ARMHelper {
         $Parameters = @{
             resourcegroupname     = "Arm"
-            templatefile          = ".\azuredeploy.json"
+            templatefile          = "$PSScriptRoot\MockObjects\azuredeploy.json"
             templateparameterfile = ".\azuredeploy.parameters.json"
         }
         Context 'Basic functionality AzureRM' {
@@ -18,20 +18,31 @@ Describe 'Check Get-ARMDEploymentErrorMessage' -Tag @("Mock") {
 
             function Get-AzureRMLog([String]$Name, [Object]$Value, [Switch]$Clobber) { }
             Mock Test-ARMAzureModule { "AzureRM" }
-            It "Works with a parameterFile"{
+            It "Works with a parameterFile" {
                 Mock Test-AzureRmResourceGroupDeployment -parameterfilter { $Parameters } { $null }
                 $Result = Get-ARMDeploymentErrorMessage @Parameters
                 $Result | Should -Be "deployment is correct"
             }
-            It "works with a parameter object"{
+            It "works with a parameter object" {
                 $Parameterobject = @{
                     storageAccountPrefix = "armsta"
-                    storageAccountType = "LRS"
+                    storageAccountType   = "LRS"
                 }
                 $Parameters = @{
-                    resourcegroupname     = "Arm"
-                    templatefile          = ".\azuredeploy.json"
+                    resourcegroupname       = "Arm"
+                    templatefile            = "$PSScriptRoot\MockObjects\azuredeploy.json"
                     templateparameterobject = $Parameterobject
+                }
+                Mock Test-AzureRmResourceGroupDeployment -parameterfilter { $Parameters } { $null }
+                $Result = Get-ARMDeploymentErrorMessage @Parameters
+                $Result | Should -Be "deployment is correct"
+            }
+            It "works with added Parameters" {
+                $Parameters = @{
+                    resourcegroupname    = "Arm"
+                    templatefile         = "$PSScriptRoot\MockObjects\azuredeploy.json"
+                    storageAccountPrefix = "armsta"
+                    storageAccountType   = "LRS"
                 }
                 Mock Test-AzureRmResourceGroupDeployment -parameterfilter { $Parameters } { $null }
                 $Result = Get-ARMDeploymentErrorMessage @Parameters
@@ -115,20 +126,31 @@ Describe 'Check Get-ARMDEploymentErrorMessage' -Tag @("Mock") {
             function Get-AzLog([String]$Name, [Object]$Value, [Switch]$Clobber) { }
 
             Mock Test-ARMAzureModule { "Az" }
-            It "Works with a parameterFile"{
+            It "Works with a parameterFile" {
                 Mock Test-AzResourceGroupDeployment -parameterfilter { $Parameters } { $null }
                 $Result = Get-ARMDeploymentErrorMessage @Parameters
                 $Result | Should -Be "deployment is correct"
             }
-            It "works with a parameter object"{
+            It "works with a parameter object" {
                 $Parameterobject = @{
                     storageAccountPrefix = "armsta"
-                    storageAccountType = "LRS"
+                    storageAccountType   = "LRS"
                 }
                 $Parameters = @{
-                    resourcegroupname     = "Arm"
-                    templatefile          = ".\azuredeploy.json"
+                    resourcegroupname       = "Arm"
+                    templatefile            = "$PSScriptRoot\MockObjects\azuredeploy.json"
                     templateparameterobject = $Parameterobject
+                }
+                Mock Test-AzResourceGroupDeployment -parameterfilter { $Parameters } { $null }
+                $Result = Get-ARMDeploymentErrorMessage @Parameters
+                $Result | Should -Be "deployment is correct"
+            }
+            It "works with added Parameters" {
+                $Parameters = @{
+                    resourcegroupname    = "Arm"
+                    templatefile         = "$PSScriptRoot\MockObjects\azuredeploy.json"
+                    storageAccountPrefix = "armsta"
+                    storageAccountType   = "LRS"
                 }
                 Mock Test-AzResourceGroupDeployment -parameterfilter { $Parameters } { $null }
                 $Result = Get-ARMDeploymentErrorMessage @Parameters

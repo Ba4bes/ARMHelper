@@ -12,7 +12,7 @@ Describe 'Check Test-ARMExistingResource without Azure' -Tag @("Mock") {
             function Get-AzResource([String]$Name, [Object]$Value, [Switch]$Clobber) { }
             $Parameters = @{
                 resourcegroupname     = "Arm"
-                templatefile          = ".\azuredeploy.json"
+                templatefile          = "$PSScriptRoot\MockObjects\azuredeploy.json"
                 templateparameterfile = ".\azuredeploy.parameters.json"
                 Mode                  = "Incremental"
             }
@@ -22,7 +22,7 @@ Describe 'Check Test-ARMExistingResource without Azure' -Tag @("Mock") {
                 [object]$Mockobject
             }
             It "When all resources are new, output shows they will be created" {
-                Mock Get-AzResource {$null}
+                Mock Get-AzResource { $null }
                 $Result = Test-ARMExistingResource @Parameters
                 $Result[0] | Should -Be "Mode for deployment is Incremental `n"
                 $Result[1] | Should -Be "The following resources do not exist and will be created:"
@@ -40,14 +40,23 @@ Describe 'Check Test-ARMExistingResource without Azure' -Tag @("Mock") {
                 $Result[2].Type | Should -Be "Microsoft.Storage/storageAccounts"
                 $Result[2].ResourceGroupName | Should -Be "Arm"
             }
+            it "When a Microsoft.Deploy is used, a warning is given."{
+                $Mockobject = (Get-Content "$PSScriptRoot\MockObjects\NestedResult.json") | ConvertFrom-Json
+                Mock Get-ARMResource {
+                    [object]$Mockobject
+                }
+                $Result = (Test-ARMExistingResource @Parameters 3>&1)
+                $Result.Message[0] | Should -Be "This command does not work for the resourcetype Microsoft.Resources/deployments. Please check linkedTemplate manually."
+
+            }
         }
-        Context 'Az Complete '{
+        Context 'Az Complete ' {
             function Get-AzResource([String]$Name, [Object]$Value, [Switch]$Clobber) { }
             $Parameters = @{
                 resourcegroupname     = "Arm"
-                templatefile          = ".\azuredeploy.json"
+                templatefile          = "$PSScriptRoot\MockObjects\azuredeploy.json"
                 templateparameterfile = ".\azuredeploy.parameters.json"
-                Mode    	          = "Complete"
+                Mode                  = "Complete"
             }
             $Mockobject = (Get-Content "$PSScriptRoot\MockObjects\ResultComplete.json") | ConvertFrom-Json
             Mock Get-ARMResource {
@@ -64,7 +73,7 @@ Describe 'Check Test-ARMExistingResource without Azure' -Tag @("Mock") {
                 $Result[1] | Should -Be "THE FOLLOWING RESOURCES WILL BE OVERWRITTEN! `n Resources exist and mode is complete:"
                 $Result[2].Type | Should -Be "Microsoft.Storage/storageAccounts"
                 $Result[2].ResourceGroupName | Should -Be "Arm"
-          }
+            }
             it "When resources would be deleted, they are shown as deleted" {
                 $MockAZResource = (Get-Content "$PSScriptRoot\MockObjects\ExistingResourcesDeleted.json") | ConvertFrom-Json
                 Mock Get-AzResource {
@@ -76,19 +85,19 @@ Describe 'Check Test-ARMExistingResource without Azure' -Tag @("Mock") {
                 $Result[9].Type | Should -Be "Microsoft.Storage/storageAccounts"
                 $Result[9].ResourceGroupName | Should -Be "Arm"
             }
-             it "When ThrowWhenRemoving is used, it will throw if resources are deleted" {
+            it "When ThrowWhenRemoving is used, it will throw if resources are deleted" {
                 $MockAZResource = (Get-Content "$PSScriptRoot\MockObjects\ExistingResourcesDeleted.json") | ConvertFrom-Json
                 Mock Get-AzResource {
                     [object]$MockAZResource
                 }
-                { Test-ARMExistingResource @Parameters -ThrowWhenRemoving }  | Should throw
-             }
-            it "When ThrowWhenRemoving is used, but  nothing would be overwritten, it will not throw"{
+                { Test-ARMExistingResource @Parameters -ThrowWhenRemoving } | Should throw
+            }
+            it "When ThrowWhenRemoving is used, but  nothing would be overwritten, it will not throw" {
                 $MockAZResource = (Get-Content "$PSScriptRoot\MockObjects\ExistingResources.json") | ConvertFrom-Json
                 Mock Get-AzResource {
                     [object]$MockAZResource
                 }
-                { Test-ARMExistingResource @Parameters -ThrowWhenRemoving }  | Should throw
+                { Test-ARMExistingResource @Parameters -ThrowWhenRemoving } | Should throw
             }
             it "Should throw when no result is found" {
                 Mock Get-ARMResource { $null }
@@ -105,7 +114,7 @@ Describe 'Check Test-ARMExistingResource without Azure' -Tag @("Mock") {
             function Get-AzureRMResource([String]$Name, [Object]$Value, [Switch]$Clobber) { }
             $Parameters = @{
                 resourcegroupname     = "Arm"
-                templatefile          = ".\azuredeploy.json"
+                templatefile          = "$PSScriptRoot\MockObjects\azuredeploy.json"
                 templateparameterfile = ".\azuredeploy.parameters.json"
                 Mode                  = "Incremental"
             }
@@ -116,7 +125,7 @@ Describe 'Check Test-ARMExistingResource without Azure' -Tag @("Mock") {
             }
             It "When all resources are new, output shows they will be created" {
 
-                Mock Get-AzureRMResource {$null}
+                Mock Get-AzureRMResource { $null }
                 $Result = Test-ARMExistingResource @Parameters
                 $Result[0] | Should -Be "Mode for deployment is Incremental `n"
                 $Result[1] | Should -Be "The following resources do not exist and will be created:"
@@ -136,14 +145,14 @@ Describe 'Check Test-ARMExistingResource without Azure' -Tag @("Mock") {
 
             }
         }
-        Context 'Complete '{
+        Context 'Complete ' {
 
             function Get-AzureRMResource([String]$Name, [Object]$Value, [Switch]$Clobber) { }
             $Parameters = @{
                 resourcegroupname     = "Arm"
-                templatefile          = ".\azuredeploy.json"
+                templatefile          = "$PSScriptRoot\MockObjects\azuredeploy.json"
                 templateparameterfile = ".\azuredeploy.parameters.json"
-                Mode    	          = "Complete"
+                Mode                  = "Complete"
             }
             $Mockobject = (Get-Content "$PSScriptRoot\MockObjects\ResultComplete.json") | ConvertFrom-Json
             Mock Get-ARMResource {
@@ -160,7 +169,7 @@ Describe 'Check Test-ARMExistingResource without Azure' -Tag @("Mock") {
                 $Result[1] | Should -Be "THE FOLLOWING RESOURCES WILL BE OVERWRITTEN! `n Resources exist and mode is complete:"
                 $Result[2].Type | Should -Be "Microsoft.Storage/storageAccounts"
                 $Result[2].ResourceGroupName | Should -Be "Arm"
-          }
+            }
             it "When resources would be deleted, they are shown as deleted" {
                 $MockAZResource = (Get-Content "$PSScriptRoot\MockObjects\ExistingResourcesDeleted.json") | ConvertFrom-Json
                 Mock Get-AzureRMResource {
@@ -172,19 +181,19 @@ Describe 'Check Test-ARMExistingResource without Azure' -Tag @("Mock") {
                 $Result[9].Type | Should -Be "Microsoft.Storage/storageAccounts"
                 $Result[9].ResourceGroupName | Should -Be "Arm"
             }
-             it "When ThrowWhenRemoving is used, it will throw if resources are deleted" {
+            it "When ThrowWhenRemoving is used, it will throw if resources are deleted" {
                 $MockAZResource = (Get-Content "$PSScriptRoot\MockObjects\ExistingResourcesDeleted.json") | ConvertFrom-Json
                 Mock Get-AzureRMResource {
                     [object]$MockAZResource
                 }
-                { Test-ARMExistingResource @Parameters -ThrowWhenRemoving }  | Should throw
-             }
-            it "When ThrowWhenRemoving is used, but  nothing would be overwritten, it will not throw"{
+                { Test-ARMExistingResource @Parameters -ThrowWhenRemoving } | Should throw
+            }
+            it "When ThrowWhenRemoving is used, but  nothing would be overwritten, it will not throw" {
                 $MockAZResource = (Get-Content "$PSScriptRoot\MockObjects\ExistingResources.json") | ConvertFrom-Json
                 Mock Get-AzureRMResource {
                     [object]$MockAZResource
                 }
-                { Test-ARMExistingResource @Parameters -ThrowWhenRemoving }  | Should throw
+                { Test-ARMExistingResource @Parameters -ThrowWhenRemoving } | Should throw
             }
             it "Should throw when no result is found" {
                 Mock Get-ARMResource { $null }

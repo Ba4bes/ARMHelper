@@ -1,39 +1,34 @@
+parameters:
+  platform: ''
+
 steps:
-- task: AzurePowerShell@3
-  displayName: 'Pester testing with Azure'
-  inputs:
-    azureSubscription: AzureConnection
-    ScriptType: InlineScript
-    Inline: |
-      $outputFile = "$(Build.SourcesDirectory)\TEST-RESULTS.xml"
-      Invoke-Pester -Script @{
-      Path =  '$(Build.SourcesDirectory)\Tests\AzureTesting\pipelinetest.ps1'
-      Parameters = @{
-      TemplatePath = '$(Build.SourcesDirectory)\Tests\AzureTesting'
-      }
-      } -OutputFile $outputFile -OutputFormat NUnitXml -enableExit
-    FailOnStandardError: false
-    azurePowerShellVersion: LatestVersion
 - task: AzurePowerShell@4
-  displayName: 'Pester testing with Azure'
+  displayName: 'Pester testing with Azure -v4 ${{ parameters.platform }}'
   inputs:
     azureSubscription: AzureConnection
     ScriptType: InlineScript
     Inline: |
       $outputFile = "$(Build.SourcesDirectory)\TEST-RESULTS.xml"
-      Invoke-Pester -Script @{
-      Path =  '$(Build.SourcesDirectory)\Tests\AzureTesting\pipelinetest.ps1'
-      Parameters = @{
-      TemplatePath = '$(Build.SourcesDirectory)\Tests\AzureTesting'
-      }
-      } -OutputFile $outputFile -OutputFormat NUnitXml -enableExit
+      Invoke-Pester -Script '$(Build.SourcesDirectory)\Tests\AzureTesting\pipelinetest.ps1' -OutputFile $outputFile -OutputFormat NUnitXml -enableExit
     FailOnStandardError: false
     azurePowerShellVersion: LatestVersion
-- task: PublishTestResults@2
-  displayName: 'Publish Online Test Results'
+
+- task: AzurePowerShell@3
+  displayName: 'Pester testing with Azure - v3 ${{ parameters.platform }}'
   inputs:
-    testRunTitle: 'online Pester Results Azure'
-    buildPlatform: 'Azure'
+    azureSubscription: AzureConnection
+    ScriptType: InlineScript
+    Inline: |
+      $outputFile = "$(Build.SourcesDirectory)\TEST-RESULTS.xml"
+      Invoke-Pester -Script '$(Build.SourcesDirectory)\Tests\AzureTesting\pipelinetest.ps1' -OutputFile $outputFile -OutputFormat NUnitXml -enableExit
+    FailOnStandardError: false
+    azurePowerShellVersion: LatestVersion
+
+- task: PublishTestResults@2
+  displayName: 'Publish Online Test Results ${{ parameters.platform }}'
+  inputs:
+    testRunTitle: 'online Pester Results Azure ${{ parameters.platform }}'
+    buildPlatform: 'Azure ${{ parameters.platform }}'
     testRunner: 'NUnit'
     testResultsFiles: './TEST-RESULTS.xml'
     failTaskOnFailedTests: true

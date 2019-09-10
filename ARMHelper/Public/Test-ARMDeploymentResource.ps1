@@ -48,6 +48,7 @@ Tags: displayName : armsta12356
 mode              : Incremental
 
 .NOTES
+Dynamic Parameters like in the orginal Test-AzResourcegroupDeployment-cmdlet are supported
 Script can be used in a CICD pipeline
 Author: Barbara Forbes
 Module: ARMHelper
@@ -93,62 +94,97 @@ function Test-ARMDeploymentResource {
         [ValidateSet("Incremental", "Complete")]
         [string] $Mode = "Incremental"
     )
+    DynamicParam {
+        if ($TemplateFile) {
+            #create a new ParameterAttribute Object
+            $OverRideParameter = New-Object System.Management.Automation.ParameterAttribute
+            $OverRideParameter.Mandatory = $false
+            #create an attributecollection object for the attribute we just created.
+            $AttributeCollection = new-object System.Collections.ObjectModel.Collection[System.Attribute]
+            $AttributeCollection.Add($OverRideParameter)
+            $paramDictionary = New-Object System.Management.Automation.RuntimeDefinedParameterDictionary
+            $Parameters = (Get-Content $TemplateFile | ConvertFrom-Json).parameters
+            $ParameterValues = $parameters | Get-Member -MemberType NoteProperty
+            ForEach ($Param in $ParameterValues) {
+                $Name = $Param.Name
+                $type = ($Parameters.$Name).type
+                #add our paramater specifying the attribute collection
+                $ExtraParam = New-Object System.Management.Automation.RuntimeDefinedParameter($Param.Name, ($Type -as [type]), $attributeCollection)
 
+                #expose the name of our parameter
 
-    $Parameters = @{
-        ResourceGroupName = $ResourceGroupName
-        TemplateFile      = $TemplateFile
-        Mode              = $Mode
-    }
-    if (-not[string]::IsNullOrEmpty($TemplateParameterFile) ) {
-        $Parameters.Add("TemplateParameterFile", $TemplateParameterFile)
-    }
-    if (-not[string]::IsNullOrEmpty($TemplateParameterObject) ) {
-        $Parameters.Add("TemplateParameterObject", $TemplateParameterObject)
-    }
-
-    $Result = Get-ARMResource @Parameters
-    if ([string]::IsNullOrEmpty($Result.Mode)) {
-        Throw "Something is wrong with the output, no resources found. Please check your deployment with Get-ARMdeploymentErrorMessage"
-    }
-
-    # A list of securestrings is created to mask the output at a later time
-    $Resultparameters = ($Result.parameters) | get-member -MemberType NoteProperty
-    $SecureParameters = [System.Collections.Generic.List[string]]::new()
-
-    Foreach ($parameter in $Resultparameters) {
-        $Type = $result.parameters.$($parameter.Name).Type
-        If ($Type -eq "SecureString") {
-            $SecureParameters.Add($Parameter.Name)
+                $paramDictionary.Add($Param.Name, $ExtraParam)
+            }
+            return $paramDictionary
         }
     }
+    process {
 
-    $ValidatedResources = $Result.ValidatedResources
-
-    #go through each deployed Resource
-    foreach ($Resource in $ValidatedResources) {
-
-        $ResourceTypeShort = $($Resource.type.Split("/")[-1])
-
-        $ResourceReadable = [PSCustomObject] @{
-            Resource = $ResourceTypeShort
-            Name     = $Resource.name
-            Type     = $Resource.type
-            ID       = $Resource.id
-            Location = $Resource.location
+        $Parameters = @{
+            ResourceGroupName = $ResourceGroupName
+            TemplateFile      = $TemplateFile
+            Mode              = $Mode
         }
-        $PropertiesReadable = Get-ResourceProperty -Object $Resource
-
-        foreach ($Property in $PropertiesReadable.keys) {
-            $ResourceReadable | Add-Member -MemberType NoteProperty -Name $Property -Value ($PropertiesReadable.$Property) -ErrorAction SilentlyContinue
+        if (-not[string]::IsNullOrEmpty($TemplateParameterFile) ) {
+            $Parameters.Add("TemplateParameterFile", $TemplateParameterFile)
         }
-        #Add mode when it is not defined
-        if ([string]::IsNullOrEmpty($ResourceReadable.mode)) {
-            $ResourceReadable | Add-Member -MemberType NoteProperty -Name "mode" -Value ($Result.mode) -ErrorAction SilentlyContinue
+        if (-not[string]::IsNullOrEmpty($TemplateParameterObject) ) {
+            $Parameters.Add("TemplateParameterObject", $TemplateParameterObject)
         }
-        $ResourceReadable.PSObject.TypeNames.Insert(0, 'ARMHelper.Default')
+        $CustomParameters = (Get-Content $TemplateFile | ConvertFrom-Json).parameters
+        $CustomParameterValues = $Customparameters | Get-Member -MemberType NoteProperty
+        foreach ($param in $CustomParameterValues) {
+            $paramname = $param.Name
+            if (-not[string]::IsNullOrEmpty($PSBoundParameters.$paramname)) {
+                $Key = $paramname
+                $Value = $PSBoundParameters.$paramname
+                $Parameters.Add($Key, $Value)
+            }
+        }
 
-        $ResourceReadable
+        $Result = Get-ARMResource @Parameters
+        if ([string]::IsNullOrEmpty($Result.Mode)) {
+            Throw "Something is wrong with the output, no resources found. Please check your deployment with Get-ARMdeploymentErrorMessage"
+        }
+
+        # A list of securestrings is created to mask the output at a later time
+        $Resultparameters = ($Result.parameters) | get-member -MemberType NoteProperty
+        $SecureParameters = [System.Collections.Generic.List[string]]::new()
+
+        Foreach ($parameter in $Resultparameters) {
+            $Type = $result.parameters.$($parameter.Name).Type
+            If ($Type -eq "SecureString") {
+                $SecureParameters.Add($Parameter.Name)
+            }
+        }
+
+        $ValidatedResources = $Result.ValidatedResources
+
+        #go through each deployed Resource
+        foreach ($Resource in $ValidatedResources) {
+
+            $ResourceTypeShort = $($Resource.type.Split("/")[-1])
+
+            $ResourceReadable = [PSCustomObject] @{
+                Resource = $ResourceTypeShort
+                Name     = $Resource.name
+                Type     = $Resource.type
+                ID       = $Resource.id
+                Location = $Resource.location
+            }
+            $PropertiesReadable = Get-ResourceProperty -Object $Resource
+
+            foreach ($Property in $PropertiesReadable.keys) {
+                $ResourceReadable | Add-Member -MemberType NoteProperty -Name $Property -Value ($PropertiesReadable.$Property) -ErrorAction SilentlyContinue
+            }
+            #Add mode when it is not defined
+            if ([string]::IsNullOrEmpty($ResourceReadable.mode)) {
+                $ResourceReadable | Add-Member -MemberType NoteProperty -Name "mode" -Value ($Result.mode) -ErrorAction SilentlyContinue
+            }
+            $ResourceReadable.PSObject.TypeNames.Insert(0, 'ARMHelper.Default')
+
+            $ResourceReadable
+        }
     }
 }
 

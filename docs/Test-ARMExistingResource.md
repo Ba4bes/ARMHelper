@@ -153,6 +153,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## OUTPUTS
 
 ## NOTES
+Dynamic Parameters like in the orginal Test-AzResourcegroupDeployment-cmdlet are supported
 Author: Barbara Forbes
 Module: ARMHelper
 https://4bes.nl

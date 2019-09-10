@@ -24,7 +24,7 @@ Function Test-ARMAzureModule {
         if ($Module -eq "Az") {
             $null = Get-AzContext
         }
-        elseif ($Module -eq "AzurRM") {
+        elseif ($Module -eq "AzureRM") {
             $null = Get-AzureRMContext
         }
     }
