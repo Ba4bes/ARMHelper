@@ -12,6 +12,7 @@ steps:
       Invoke-Pester -Script '$(Build.SourcesDirectory)\Tests\AzureTesting\pipelinetest.ps1' -OutputFile $outputFile -OutputFormat NUnitXml -enableExit
     FailOnStandardError: false
     azurePowerShellVersion: LatestVersion
+    continueOnError: true
 
 - task: AzurePowerShell@3
   displayName: 'Pester testing with Azure - v3 ${{ parameters.platform }}'
@@ -23,6 +24,7 @@ steps:
       Invoke-Pester -Script '$(Build.SourcesDirectory)\Tests\AzureTesting\pipelinetest.ps1' -OutputFile $outputFile -OutputFormat NUnitXml -enableExit
     FailOnStandardError: false
     azurePowerShellVersion: LatestVersion
+    continueOnError: true
 
 - task: PublishTestResults@2
   displayName: 'Publish Online Test Results ${{ parameters.platform }}'
