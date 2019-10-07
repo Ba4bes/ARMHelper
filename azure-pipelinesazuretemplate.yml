@@ -2,6 +2,18 @@ parameters:
   platform: ''
 
 steps:
+- task: AzurePowerShell@3
+  displayName: 'Pester testing with Azure - v3 ${{ parameters.platform }}'
+  inputs:
+    azureSubscription: AzureConnection
+    ScriptType: InlineScript
+    Inline: |
+      $outputFile = "$(Build.SourcesDirectory)\TEST-RESULTS.xml"
+      Invoke-Pester -Script '$(Build.SourcesDirectory)\Tests\AzureTesting\pipelinetest.ps1' -OutputFile $outputFile -OutputFormat NUnitXml -enableExit
+    FailOnStandardError: false
+    azurePowerShellVersion: LatestVersion
+    continueOnError: true
+
 - task: AzurePowerShell@4
   displayName: 'Pester testing with Azure -v4 ${{ parameters.platform }}'
   inputs:
@@ -14,17 +26,6 @@ steps:
     azurePowerShellVersion: LatestVersion
     continueOnError: true
 
-- task: AzurePowerShell@3
-  displayName: 'Pester testing with Azure - v3 ${{ parameters.platform }}'
-  inputs:
-    azureSubscription: AzureConnection
-    ScriptType: InlineScript
-    Inline: |
-      $outputFile = "$(Build.SourcesDirectory)\TEST-RESULTS.xml"
-      Invoke-Pester -Script '$(Build.SourcesDirectory)\Tests\AzureTesting\pipelinetest.ps1' -OutputFile $outputFile -OutputFormat NUnitXml -enableExit
-    FailOnStandardError: false
-    azurePowerShellVersion: LatestVersion
-    continueOnError: true
 
 - task: PublishTestResults@2
   displayName: 'Publish Online Test Results ${{ parameters.platform }}'
