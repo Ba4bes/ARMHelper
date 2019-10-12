@@ -58,7 +58,7 @@ Describe 'Check Test-ARMExistingResource without Azure' -Tag @("Mock") {
                 templateparameterfile = ".\azuredeploy.parameters.json"
                 Mode                  = "Complete"
             }
-            $Mockobject = (Get-Content "$PSScriptRoot\MockObjects\ResultCompleteAz.json") | ConvertFrom-Json
+            $Mockobject = (Get-Content "$PSScriptRoot\MockObjects\ResultCompleteaz.json") | ConvertFrom-Json
             Mock Get-ARMResource {
                 [object]$Mockobject
             }
