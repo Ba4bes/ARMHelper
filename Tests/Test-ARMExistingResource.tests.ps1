@@ -17,7 +17,7 @@ Describe 'Check Test-ARMExistingResource without Azure' -Tag @("Mock") {
                 Mode                  = "Incremental"
             }
             Mock Test-ARMAzureModule { "Az" }
-            $Mockobject = (Get-Content "$PSScriptRoot\MockObjects\Result.json") | ConvertFrom-Json
+            $Mockobject = (Get-Content "$PSScriptRoot\MockObjects\Resultaz.json") | ConvertFrom-Json
             Mock Get-ARMResource {
                 [object]$Mockobject
             }
@@ -58,7 +58,7 @@ Describe 'Check Test-ARMExistingResource without Azure' -Tag @("Mock") {
                 templateparameterfile = ".\azuredeploy.parameters.json"
                 Mode                  = "Complete"
             }
-            $Mockobject = (Get-Content "$PSScriptRoot\MockObjects\ResultComplete.json") | ConvertFrom-Json
+            $Mockobject = (Get-Content "$PSScriptRoot\MockObjects\ResultCompleteAz.json") | ConvertFrom-Json
             Mock Get-ARMResource {
                 [object]$Mockobject
             }

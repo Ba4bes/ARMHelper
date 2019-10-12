@@ -1,0 +1,74 @@
+{
+  "templateHash": "1220693435534564543",
+  "parameters": {
+    "adminUsername": {
+      "type": "String",
+      "value": "Test"
+    },
+    "adminPassword": {
+      "type": "SecureString"
+    },
+    "dnsLabelPrefix": {
+      "type": "String",
+      "value": "eandomrlkajelnadada"
+    },
+    "windowsOSVersion": {
+      "type": "String",
+      "value": "2016-Datacenter"
+    },
+    "location": {
+      "type": "String",
+      "value": "westeurope"
+    }
+  },
+  "mode": "Complete",
+  "provisioningState": "Succeeded",
+  "timestamp": "2019-07-05T20:45:58.2062472Z",
+  "duration": "PT0S",
+  "correlationId":  "93690b-4ba0-461b-a5da-dc7b0",
+  "providers": [
+    {
+      "namespace": "Microsoft.Storage",
+      "resourceTypes": ""
+    },
+    {
+      "namespace": "Microsoft.Network",
+      "resourceTypes": "  "
+    },
+    {
+      "namespace": "Microsoft.Compute",
+      "resourceTypes": ""
+    }
+  ],
+  "dependencies": [
+    {
+      "dependsOn": " ",
+      "id": "/subscriptions/12345678-abcd-1234-1234-12345678/resourceGroups/armtesting/providers/Microsoft.Network/networkInterfaces/myVMNic",
+      "resourceType": "Microsoft.Network/networkInterfaces",
+      "resourceName": "myVMNic"
+    },
+    {
+      "dependsOn": " ",
+      "id": "/subscriptions/12345678-abcd-1234-1234-12345678/resourceGroups/armtesting/providers/Microsoft.Compute/virtualMachines/SimpleWinVM",
+      "resourceType": "Microsoft.Compute/virtualMachines",
+      "resourceName": "SimpleWinVM"
+    }
+  ],
+  "validatedResources": [
+    {
+      "id": "/subscriptions/12345678-abcd-1234-1234-12345678/resourceGroups/armtesting/providers/Microsoft.Storage/storageAccounts/mstaqkc32c2qmmw"
+    },
+    {
+      "id": "/subscriptions/12345678-abcd-1234-1234-12345678/resourceGroups/armtesting/providers/Microsoft.Network/publicIPAddresses/myPublicIP"
+    },
+    {
+      "id": "/subscriptions/12345678-abcd-1234-1234-12345678/resourceGroups/armtesting/providers/Microsoft.Network/virtualNetworks/MyVNET"
+    },
+    {
+      "id": "/subscriptions/12345678-abcd-1234-1234-12345678/resourceGroups/armtesting/providers/Microsoft.Network/networkInterfaces/myVMNic"
+    },
+    {
+      "id": "/subscriptions/12345678-abcd-1234-1234-12345678/resourceGroups/armtesting/providers/Microsoft.Compute/virtualMachines/SimpleWinVM"
+    }
+  ]
+}

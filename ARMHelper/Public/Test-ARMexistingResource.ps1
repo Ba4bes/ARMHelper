@@ -160,7 +160,7 @@ Function Test-ARMExistingResource {
             Throw "Something went wrong, No AzureRM of AZ module found"
         }
         foreach ($CheckRGResource in $CheckRGResources) {
-            if ($ValidatedResources.Name -notcontains $CheckRGResource.Name -and $Mode -eq "Complete") {
+            if ($ValidatedResources.Id -notcontains $CheckRGResource.ResourceId -and $Mode -eq "Complete") {
                 Write-Verbose "Resource $($Resource.name) exists in the resourcegroup and mode is set to Complete"
                 Write-Verbose "RESOURCE WILL BE DELETED!"
                 $CheckRGResource.PSObject.TypeNames.Insert(0, 'ArmHelper.ExistingResource')
@@ -169,6 +169,11 @@ Function Test-ARMExistingResource {
         }
 
         foreach ($Resource in $ValidatedResources) {
+            $Resourceparts = $Resource.Id.Split('/')
+            if ([string]::IsNullOrEmpty($resource.type)){
+            $Resource | add-member -MemberType NoteProperty -Name "Name" -Value $Resourceparts[-1]
+            $resource | Add-Member -MemberType NoteProperty -Name "Type" -Value ($Resourceparts[-3] + "/" + $Resourceparts[-2])
+            }
             #Give a warning that Deployments can give unexpected results
             If ($Resource.Type -eq "Microsoft.Resources/deployments") {
                 Write-Warning "This command does not work for the resourcetype Microsoft.Resources/deployments. Please check $($Resource.Name) manually."
