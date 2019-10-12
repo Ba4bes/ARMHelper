@@ -14,7 +14,7 @@ Describe 'Check Test-ARMDeploymentResource without Azure' -Tag @("Mock") {
         }
         Context 'AZ Basic functionality' {
             Mock Test-ARMAzureModule { "Az" }
-            $Mockobject = (Get-Content "$PSScriptRoot\MockObjects\ResultAz.json") | ConvertFrom-Json
+            $Mockobject = (Get-Content "$PSScriptRoot\MockObjects\Resultaz.json") | ConvertFrom-Json
             Mock Get-ARMResource {
                 [object]$Mockobject
             }
