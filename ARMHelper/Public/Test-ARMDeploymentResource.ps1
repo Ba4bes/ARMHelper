@@ -159,30 +159,49 @@ function Test-ARMDeploymentResource {
         }
 
         $ValidatedResources = $Result.ValidatedResources
+        # Check the module version used, as AZ has limited output
+        $Module = Test-ARMAzureModule
+        if ($Module -eq "Az"){
+        Write-Warning "The AZ-module is used. This limits the results of this cmdlet. `n
+        To get full results, consider temporary switching to the AzureRM-module"
+        }
 
         #go through each deployed Resource
         foreach ($Resource in $ValidatedResources) {
-
-            $ResourceTypeShort = $($Resource.type.Split("/")[-1])
-
-            $ResourceReadable = [PSCustomObject] @{
-                Resource = $ResourceTypeShort
-                Name     = $Resource.name
-                Type     = $Resource.type
-                ID       = $Resource.id
-                Location = $Resource.location
+            if ([string]::IsNullOrEmpty($Resource.Type) ) {
+                $Resourceparts = $Resource.Id.Split('/')
+                $ResourceName = $Resourceparts[-1]
+                $ResourceType = $Resourceparts[-3] + "/" + $Resourceparts[-2]
+                $ResourceTypeshort = $Resourceparts[-2]
+                $ResourceReadable = [PSCustomObject]@{
+                    Resource = $ResourceTypeShort
+                    Name     = $ResourceName
+                    Type     = $Resourcetype
+                    ID       = $Resource.id
+                }
             }
-            $PropertiesReadable = Get-ResourceProperty -Object $Resource
+            else {
 
-            foreach ($Property in $PropertiesReadable.keys) {
-                $ResourceReadable | Add-Member -MemberType NoteProperty -Name $Property -Value ($PropertiesReadable.$Property) -ErrorAction SilentlyContinue
-            }
-            #Add mode when it is not defined
-            if ([string]::IsNullOrEmpty($ResourceReadable.mode)) {
-                $ResourceReadable | Add-Member -MemberType NoteProperty -Name "mode" -Value ($Result.mode) -ErrorAction SilentlyContinue
-            }
-            $ResourceReadable.PSObject.TypeNames.Insert(0, 'ARMHelper.Default')
+                $ResourceTypeShort = $($Resource.type.Split("/")[-1])
 
+                $ResourceReadable = [PSCustomObject] @{
+                    Resource = $ResourceTypeShort
+                    Name     = $Resource.name
+                    Type     = $Resource.type
+                    ID       = $Resource.id
+                    Location = $Resource.location
+                }
+                $PropertiesReadable = Get-ResourceProperty -Object $Resource
+
+                foreach ($Property in $PropertiesReadable.keys) {
+                    $ResourceReadable | Add-Member -MemberType NoteProperty -Name $Property -Value ($PropertiesReadable.$Property) -ErrorAction SilentlyContinue
+                }
+                #Add mode when it is not defined
+                if ([string]::IsNullOrEmpty($ResourceReadable.mode)) {
+                    $ResourceReadable | Add-Member -MemberType NoteProperty -Name "mode" -Value ($Result.mode) -ErrorAction SilentlyContinue
+                }
+                $ResourceReadable.PSObject.TypeNames.Insert(0, 'ARMHelper.Default')
+            }
             $ResourceReadable
         }
     }
